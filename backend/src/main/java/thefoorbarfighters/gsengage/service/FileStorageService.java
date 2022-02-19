@@ -36,7 +36,7 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file) {
-        // Normalize file name
+        // Normalize file name by suppressing sequences like "path/.." and inner simple dots.
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {

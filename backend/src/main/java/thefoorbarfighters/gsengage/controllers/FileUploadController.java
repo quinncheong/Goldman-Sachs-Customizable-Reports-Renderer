@@ -23,6 +23,7 @@ public class FileUploadController {
 
     @PostMapping("/uploadFile")
     public Response uploadFile(@RequestParam("file") MultipartFile file) {
+        // MultipartFile- A representation of an uploaded file received in a multipart request.
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
