@@ -1,0 +1,128 @@
+{
+  "header": {
+    "request param": {
+      "dataSourcesQueryParam": [
+        {
+          "name": "account",
+          "queryParams": [
+            {
+              "dataType": "String",
+              "name": "accountNumber",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ],
+          "paramMapping": {
+            "accountNumber": [
+              "132132"
+            ]
+          }
+        },
+        {
+          "name": "consultant",
+          "queryParams": [
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210930",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "Last",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "asOfDate"
+            },
+            {
+              "dataType": "String",
+              "name": "consultantName",
+              "value": "CHOCOLATE_CAKE",
+              "dataFormat": ""
+            },
+            {
+              "dataType": "String",
+              "name": "groupAccount",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "body": {
+    "NAV Details": {
+      "columns": [
+        {
+          "name": "groupAccount",
+          "type": "string",
+          "field": "groupAccount"
+        },
+        {
+          "name": "totalCompositionRate",
+          "type": "decimal",
+          "field": "totalCompositionRate"
+        },
+        {
+          "name": "clientContribution",
+          "type": "decimal",
+          "field": "clientContribution"
+        },
+        {
+          "name": "clientWithdrawal",
+          "type": "decimal",
+          "field": "clientWithdrawal"
+        },
+        {
+          "name": "managementFeeTrusteeFee",
+          "type": "decimal",
+          "field": "managementFeeTrusteeFee"
+        },
+        {
+          "name": "netIncreaseDecrease",
+          "type": "decimal",
+          "field": "netIncreaseDecrease"
+        },
+        {
+          "name": "totalCashInflow",
+          "type": "decimal",
+          "field": "totalCashInflow"
+        },
+        {
+          "name": "totalCashOutflow",
+          "type": "decimal",
+          "field": "totalCashOutflow"
+        },
+        {
+          "name": "totalCurrentMonthNAV",
+          "type": "decimal",
+          "field": "totalCurrentMonthNAV"
+        },
+        {
+          "name": "totalExposure",
+          "type": "decimal",
+          "field": "totalExposure"
+        },
+        {
+          "name": "totalPreviousMonthNAV",
+          "type": "decimal",
+          "field": "totalPreviousMonthNAV"
+        }
+      ],
+      "rows": [
+        {
+          "groupAccount": "132132",
+          "managementFeeTrusteeFee": 7833894,
+          "totalPreviousMonthNAV": 3155645822,
+          "totalCompositionRate": 1,
+          "clientContribution": 0,
+          "clientWithdrawal": 0,
+          "totalCashOutflow": 7833894,
+          "netIncreaseDecrease": -7833894,
+          "totalCashInflow": 0,
+          "totalExposure": 3169984225,
+          "totalCurrentMonthNAV": 3169984225
+        }
+      ]
+    }
+  }
+}
