@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import pandas as pd
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def test():

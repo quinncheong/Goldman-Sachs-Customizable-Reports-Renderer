@@ -94,16 +94,19 @@ export const Upload = (props) => {
     },
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const file = e.target.files[0];
     console.log(file);
     const fileReader = new FileReader();
     console.log(fileReader);
-    // const endpoint = "http://localhost:5000/upload";
+    const endpoint = "http://localhost:5000/create";
     fileReader.onloadend = () => {
       console.log(fileReader);
       try {
-        console.log(JSON.parse(fileReader.result));
+        let reqData = JSON.parse(fileReader.result);
+        axios.post(endpoint, reqData.body["SIMPLE_REPORT"].rows).then((res) => {
+          console.log(res.data);
+        });
       } catch (e) {
         // Input some error message here
         // setErrorData("**Not valid JSON file!**");
