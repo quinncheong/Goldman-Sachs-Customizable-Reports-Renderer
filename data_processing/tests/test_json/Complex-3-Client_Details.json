@@ -1,0 +1,110 @@
+{
+  "header": {
+    "request param": {
+      "dataSourcesQueryParam": [
+        {
+          "name": "account",
+          "queryParams": [
+            {
+              "dataType": "String",
+              "name": "accountNumber",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ],
+          "paramMapping": {
+            "accountNumber": [
+              "132132"
+            ]
+          }
+        },
+        {
+          "name": "consultant",
+          "queryParams": [
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210930",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "Last",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "asOfDate"
+            },
+            {
+              "dataType": "String",
+              "name": "consultantName",
+              "value": "CHOCOLATE_CAKE",
+              "dataFormat": ""
+            },
+            {
+              "dataType": "String",
+              "name": "groupAccount",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "body": {
+    "Client Details": {
+      "columns": [
+        {
+          "name": "DateMonth",
+          "type": "string",
+          "field": "DateMonth"
+        },
+        {
+          "name": "DateYear",
+          "type": "string",
+          "field": "DateYear"
+        },
+        {
+          "name": "TerminationDate",
+          "type": "string",
+          "field": "TerminationDate"
+        },
+        {
+          "name": "clientName",
+          "type": "string",
+          "field": "clientName"
+        },
+        {
+          "name": "clientCode1",
+          "type": "string",
+          "field": "clientCode1"
+        },
+        {
+          "name": "assetManagerCode1",
+          "type": "string",
+          "field": "assetManagerCode1"
+        },
+        {
+          "name": "assetManagerCode2",
+          "type": "string",
+          "field": "assetManagerCode2"
+        },
+        {
+          "name": "reportingMonth",
+          "type": "string",
+          "field": "reportingMonth"
+        }
+      ],
+      "rows": [
+        {
+          "clientCode1": "1010",
+          "clientName": "ABC株式会社",
+          "assetManagerCode1": "1011",
+          "TerminationDate": "",
+          "reportingMonth": "09/30/2021",
+          "assetManagerCode2": "1",
+          "DateYear": "2021",
+          "DateMonth": "9"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "header": {
+    "request param": {
+      "dataSourcesQueryParam": [
+        {
+          "name": "account",
+          "queryParams": [
+            {
+              "dataType": "String",
+              "name": "accountNumber",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ],
+          "paramMapping": {
+            "accountNumber": [
+              "132132"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "body": {
+    "Syntax Report": {
+      "columns": [
+        {
+          "name": "market_value_bs",
+          "type": "decimal",
+          "field": "market_value_bs"
+        },
+        {
+          "name": "securityDescription",
+          "type": "string",
+          "field": "securityDescription"
+        },
+        {
+          "name": "security_cd",
+          "type": "string",
+          "field": "security_cd"
+        },
+        {
+          "name": "trade_ccy_cd",
+          "type": "string",
+          "field": "trade_ccy_cd"
+        }
+      ],
+      "rows": [
+        {
+          "security_cd": "XY0000000001",
+          "trade_ccy_cd": "USD",
+          "securityDescription": "POLLPOLLOFFSHORE",
+          "market_value_bs": 131622258
+        },
+        {
+          "security_cd": "00ABC1111111111",
+          "trade_ccy_cd": "JPY",
+          "securityDescription": "ANEWCOMPANY1",
+          "market_value_bs": 1344762582
+        },
+        {
+          "security_cd": "1820MN444221",
+          "trade_ccy_cd": "USD",
+          "securityDescription": "APPLEPIE1010",
+          "market_value_bs": 1561662185
+        },
+        {
+          "security_cd": "LMB100100101",
+          "trade_ccy_cd": "USD",
+          "securityDescription": "OCEANWAVELP",
+          "market_value_bs": 55714753
+        },
+        {
+          "security_cd": "FG120012001",
+          "trade_ccy_cd": "USD",
+          "securityDescription": "JAMESANDCO1221",
+          "market_value_bs": 93126520
+        }
+      ]
+    }
+  }
+}
