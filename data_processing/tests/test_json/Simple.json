@@ -1,0 +1,346 @@
+{
+    "body": {
+        "SIMPLE_REPORT": {
+            "columns": [
+                {
+                    "name": "positionDate",
+                    "type": "string",
+                    "field": "positionDate"
+                },
+                {
+                    "name": "ISIN",
+                    "type": "string",
+                    "field": "ISIN"
+                },
+                {
+                    "name": "contractCode",
+                    "type": "string",
+                    "field": "contractCode"
+                },
+                {
+                    "name": "coupon",
+                    "type": "double",
+                    "field": "coupon"
+                },
+                {
+                    "name": "currentFace",
+                    "type": "decimal",
+                    "field": "currentFace"
+                },
+                {
+                    "name": "instrumentType",
+                    "type": "string",
+                    "field": "instrumentType"
+                },
+                {
+                    "name": "portfolio",
+                    "type": "string",
+                    "field": "portfolio"
+                },
+                {
+                    "name": "marketValue",
+                    "type": "decimal",
+                    "field": "marketValue"
+                },
+                {
+                    "name": "maturityDate",
+                    "type": "string",
+                    "field": "maturityDate"
+                },
+                {
+                    "name": "originalFace",
+                    "type": "decimal",
+                    "field": "originalFace"
+                },
+                {
+                    "name": "price",
+                    "type": "decimal",
+                    "field": "price"
+                },
+                {
+                    "name": "currency",
+                    "type": "string",
+                    "field": "currency"
+                },
+                {
+                    "name": "ticker",
+                    "type": "string",
+                    "field": "ticker"
+                }
+            ],
+            "rows": [
+                {
+                    "instrumentType": "CASH",
+                    "ticker": "CASH",
+                    "coupon": 0,
+                    "originalFace": 5.85,
+                    "marketValue": 5.85,
+                    "ISIN": "CASH",
+                    "portfolio": "100001",
+                    "maturityDate": null,
+                    "price": 1,
+                    "positionDate": "20210730",
+                    "currentFace": 5.85,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBA",
+                    "ticker": "TEA",
+                    "coupon": 0,
+                    "originalFace": -26,
+                    "marketValue": -6441175,
+                    "ISIN": "01H0000A2",
+                    "portfolio": "100001",
+                    "maturityDate": "4/1/2021",
+                    "price": 99.09,
+                    "positionDate": "20210730",
+                    "currentFace": -26,
+                    "currency": "USD",
+                    "contractCode": "TE"
+                },
+                {
+                    "instrumentType": "BD",
+                    "ticker": "FL01",
+                    "coupon": 0,
+                    "originalFace": -70,
+                    "marketValue": -8711171.88,
+                    "ISIN": "US00000CAA01",
+                    "portfolio": "100001",
+                    "maturityDate": "1/1/2021",
+                    "price": 124.45,
+                    "positionDate": "20210730",
+                    "currentFace": -70,
+                    "currency": "USD",
+                    "contractCode": "FL"
+                },
+                {
+                    "instrumentType": "BD",
+                    "ticker": "FA02",
+                    "coupon": 0,
+                    "originalFace": -81,
+                    "marketValue": -17873156.25,
+                    "ISIN": "US00000CAA02",
+                    "portfolio": "100001",
+                    "maturityDate": "1/1/2021",
+                    "price": 110.33,
+                    "positionDate": "20210730",
+                    "currentFace": -81,
+                    "currency": "USD",
+                    "contractCode": "FA"
+                },
+                {
+                    "instrumentType": "BD",
+                    "ticker": "FI403",
+                    "coupon": 0,
+                    "originalFace": 139,
+                    "marketValue": 18688984.38,
+                    "ISIN": "US00000CAA03",
+                    "portfolio": "100001",
+                    "maturityDate": "1/1/2021",
+                    "price": 134.45,
+                    "positionDate": "20210730",
+                    "currentFace": 139,
+                    "currency": "USD",
+                    "contractCode": "FI"
+                },
+                
+                {
+                    "instrumentType": "TBILL",
+                    "ticker": "GB",
+                    "coupon": 2,
+                    "originalFace": 112000000,
+                    "marketValue": 114713211.2,
+                    "ISIN": "US000000A001",
+                    "portfolio": "100001",
+                    "maturityDate": "5/1/2021",
+                    "price": 102.42,
+                    "positionDate": "20210730",
+                    "currentFace": 112000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBILL",
+                    "ticker": "TB",
+                    "coupon": 2.5,
+                    "originalFace": 121000000,
+                    "marketValue": 125817070.5,
+                    "ISIN": "US000000A002",
+                    "portfolio": "100001",
+                    "maturityDate": "5/1/2021",
+                    "price": 103.98,
+                    "positionDate": "20210730",
+                    "currentFace": 121000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBILL",
+                    "ticker": "PB",
+                    "coupon": 3,
+                    "originalFace": 82000000,
+                    "marketValue": 85808301.4,
+                    "ISIN": "US000000A003",
+                    "portfolio": "100001",
+                    "maturityDate": "5/1/2021",
+                    "price": 104.64,
+                    "positionDate": "20210730",
+                    "currentFace": 82000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBILL",
+                    "ticker": "B",
+                    "coupon": 3,
+                    "originalFace": 31000000,
+                    "marketValue": 32390074.1,
+                    "ISIN": "US000000A004",
+                    "portfolio": "100001",
+                    "maturityDate": "5/1/2021",
+                    "price": 104.48,
+                    "positionDate": "20210730",
+                    "currentFace": 31000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBA",
+                    "ticker": "RD4",
+                    "coupon": 3.5,
+                    "originalFace": 2777250,
+                    "marketValue": 205768.65,
+                    "ISIN": "01H0000A3",
+                    "portfolio": "100001",
+                    "maturityDate": "4/1/2021",
+                    "price": 109.1,
+                    "positionDate": "20210730",
+                    "currentFace": 188101.42,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBA",
+                    "ticker": "P4U",
+                    "coupon": 3.5,
+                    "originalFace": 287764,
+                    "marketValue": 142323.92,
+                    "ISIN": "01H0000A4",
+                    "portfolio": "100001",
+                    "maturityDate": "4/1/2021",
+                    "price": 109.1,
+                    "positionDate": "20210730",
+                    "currentFace": 130104.03,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "TBA",
+                    "ticker": "DKNG",
+                    "coupon": 3,
+                    "originalFace": 23300000,
+                    "marketValue": 14440294.34,
+                    "ISIN": "01H0000A1",
+                    "portfolio": "100001",
+                    "maturityDate": "3/1/2021",
+                    "price": 104.7,
+                    "positionDate": "20210730",
+                    "currentFace": 13758656.12,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "POOL",
+                    "ticker": "GS1",
+                    "coupon": 0,
+                    "originalFace": 64000000,
+                    "marketValue": 63999526.4,
+                    "ISIN": "GSAM1",
+                    "portfolio": "100001",
+                    "maturityDate": "6/1/2021",
+                    "price": 100,
+                    "positionDate": "20210730",
+                    "currentFace": 64000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "POOL",
+                    "ticker": "GS2",
+                    "coupon": 0,
+                    "originalFace": 92000000,
+                    "marketValue": 91998535.35,
+                    "ISIN": "GSAM2",
+                    "portfolio": "100001",
+                    "maturityDate": "6/1/2021",
+                    "price": 100,
+                    "positionDate": "20210730",
+                    "currentFace": 92000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "POOL",
+                    "ticker": "GS3",
+                    "coupon": 0,
+                    "originalFace": 26500000,
+                    "marketValue": 26495621.67,
+                    "ISIN": "GSAM3",
+                    "portfolio": "100001",
+                    "maturityDate": "6/1/2021",
+                    "price": 99.98,
+                    "positionDate": "20210730",
+                    "currentFace": 26500000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "POOL",
+                    "ticker": "GS4",
+                    "coupon": 0,
+                    "originalFace": 41000000,
+                    "marketValue": 40992687.24,
+                    "ISIN": "GSAM4",
+                    "portfolio": "100001",
+                    "maturityDate": "6/1/2021",
+                    "price": 99.98,
+                    "positionDate": "20210730",
+                    "currentFace": 41000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "POOL",
+                    "ticker": "GS5",
+                    "coupon": 0,
+                    "originalFace": 24000000,
+                    "marketValue": 23998877.76,
+                    "ISIN": "GSAM5",
+                    "portfolio": "100001",
+                    "maturityDate": "6/1/2021",
+                    "price": 100,
+                    "positionDate": "20210730",
+                    "currentFace": 24000000,
+                    "currency": "USD",
+                    "contractCode": ""
+                },
+                {
+                    "instrumentType": "CMO",
+                    "ticker": "C1",
+                    "coupon": 1,
+                    "originalFace": 9880000,
+                    "marketValue": 9877014.07,
+                    "ISIN": "US00000CMO01",
+                    "portfolio": "100001",
+                    "maturityDate": "2/1/2021",
+                    "price": 99.97,
+                    "positionDate": "20210730",
+                    "currentFace": 9880000,
+                    "currency": "USD",
+                    "contractCode": ""
+                }
+            ]
+        }
+    }
+}

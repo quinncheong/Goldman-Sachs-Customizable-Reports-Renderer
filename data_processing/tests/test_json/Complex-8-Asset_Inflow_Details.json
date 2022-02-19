@@ -1,0 +1,140 @@
+{
+  "header": {
+    "request param": {
+      "dataSourcesQueryParam": [
+        {
+          "name": "account",
+          "queryParams": [
+            {
+              "dataType": "String",
+              "name": "accountNumber",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ],
+          "paramMapping": {
+            "accountNumber": [
+              "132132"
+            ]
+          }
+        },
+        {
+          "name": "consultant",
+          "queryParams": [
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210930",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "Last",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "asOfDate"
+            },
+            {
+              "dataType": "String",
+              "name": "consultantName",
+              "value": "CHOCOLATE_CAKE",
+              "dataFormat": ""
+            },
+            {
+              "dataType": "String",
+              "name": "groupAccount",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "body": {
+    "Asset NAV Details": {
+      "columns": [
+        {
+          "name": "assetCode",
+          "type": "string",
+          "field": "assetCode"
+        },
+        {
+          "name": "assetName",
+          "type": "string",
+          "field": "assetName"
+        },
+        {
+          "name": "compositionRate",
+          "type": "decimal",
+          "field": "compositionRate"
+        },
+        {
+          "name": "currentMonthNAV",
+          "type": "decimal",
+          "field": "currentMonthNAV"
+        },
+        {
+          "name": "exposure",
+          "type": "decimal",
+          "field": "exposure"
+        },
+        {
+          "name": "groupAccount",
+          "type": "string",
+          "field": "groupAccount"
+        },
+        {
+          "name": "previousMonthNAV",
+          "type": "decimal",
+          "field": "previousMonthNAV"
+        }
+      ],
+      "rows": [
+        {
+          "currentMonthNAV": 8060568,
+          "groupAccount": "132132",
+          "assetCode": "100",
+          "exposure": 8060568,
+          "assetName": "クッキー",
+          "previousMonthNAV": 15386579,
+          "compositionRate": 0.002542778584331914
+        },
+        {
+          "currentMonthNAV": 1536697544,
+          "groupAccount": "132132",
+          "assetCode": "200",
+          "exposure": 1536697544,
+          "assetName": "MONDAY(MON)",
+          "previousMonthNAV": 1517092239,
+          "compositionRate": 0.4847650445326743
+        },
+        {
+          "currentMonthNAV": 131622258,
+          "groupAccount": "132132",
+          "assetCode": "300",
+          "exposure": 131622258,
+          "assetName": "チョコレート(CHOC)",
+          "previousMonthNAV": 146077741,
+          "compositionRate": 0.04152142365945055
+        },
+        {
+          "currentMonthNAV": 148841273,
+          "groupAccount": "132132",
+          "assetCode": "400",
+          "exposure": 148841273,
+          "assetName": "コーヒー(COF)",
+          "previousMonthNAV": 144401851,
+          "compositionRate": 0.0469533166209999
+        },
+        {
+          "currentMonthNAV": 1344762582,
+          "groupAccount": "132132",
+          "assetCode": "500",
+          "exposure": 1344762582,
+          "assetName": "PA(パイナップル)",
+          "previousMonthNAV": 1332687412,
+          "compositionRate": 0.4242174366025433
+        }
+      ]
+    }
+  }
+}
