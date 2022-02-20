@@ -31,6 +31,7 @@ def get_all_rows(dict_data, headers):
     return
 
 
+# Run app
 app = get_application()
 
 origins = [
@@ -52,7 +53,7 @@ async def homepage():
     return {"msg": "Welcome to data processing"}
 
 
-# Main process endpoint
+# Process datatype and size endpoint
 @app.post("/process")
 async def get_body(request: Request):
     input =  await request.json()
@@ -78,13 +79,22 @@ async def get_body(request: Request):
     print(data_schema)
     return {"result": data_schema}
 
-@app.post("/create")
-def create_table(request: Request):
+
+# Create excel report endpoint
+# TODO: Make cols and cols_rename to be dynamic
+# TODO: Upload excel file to S3 bucket
+@app.post("/report")
+async def create_table(request: Request):
     cols = ['positionDate', 'portfolio', 'instrumentType', 'ISIN', 'ticker', 'contractCode', 'coupon', 'maturityDate', 'currency', 'currentFace', 'originalFace', 'price', 'marketValue']
     cols_rename = {'positionDate': 'Position Date', 'portfolio': 'Portfolio', 'instrumentType': 'Instrument Type', 'ticker': 'Ticker', 'contractCode': 'Contract Code', 'coupon': 'Coupon', 'maturityDate': 'Maturity', 'currency': 'Currency', 'currentFace': 'Current Face', 'originalFace': 'Original Face', 'price': 'Price', 'marketValue': 'Market Value'}
-    if True:
-        r = request.json()
-        test = pd.DataFrame(r)
+    
+    try:
+        input = await request.json()
+    except Exception as e:
+        return {"error_msg": repr(e)}
+    
+    try:
+        test = pd.DataFrame(input)
         new = test[cols]
         new.rename(columns=cols_rename, inplace=True)
 
@@ -102,10 +112,11 @@ def create_table(request: Request):
         worksheet.set_column(0, max_col, 20)
         writer.save()
 
-        send_file("output.xlsx", as_attachment=True)
-        return jsonify({"code": 200, "message": "Table created."}), 200
-    else:
-        return jsonify({"code": 400, "message": "Something went wrong."}), 400       
+        # send_file("output.xlsx", as_attachment=True)
+        return {"code": 200, "message": "Excel report created."}
+    
+    except Exception as e:
+        return {"error_msg": repr(e)}
 
 
 if __name__ == "__main__":
