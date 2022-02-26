@@ -152,7 +152,6 @@ export const DashboardSidebar = (props) => {
         <Divider sx={{ borderColor: "#2D3748", my: 3 }} />
         <Box sx={{ flexGrow: 0 }}>
           {items.map((item, index) => {
-            console.log(index);
             if (index > 1 && index < 5) {
               return (
                 <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
@@ -164,7 +163,6 @@ export const DashboardSidebar = (props) => {
 
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item, index) => {
-            console.log(index);
             if (index == items.length - 1) {
               return (
                 <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
