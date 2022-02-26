@@ -9,6 +9,7 @@ import {
   CardHeader,
   Divider,
   useTheme,
+  Typography,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -116,13 +117,13 @@ export const Upload = (props) => {
   };
 
   return (
-    <Card {...props}>
-      <CardHeader title="Create New Report " />
+    <Card variant="outlined" {...props}>
+      <CardHeader sx={{ fontSize: "600px" }} title="Create New Report " />
       <Divider />
       <CardContent>
         <Box
           sx={{
-            height: 300,
+            height: 280,
             position: "relative",
             display: "flex",
             justifyContent: "center",
@@ -138,23 +139,21 @@ export const Upload = (props) => {
               gap: 3,
             }}
           >
-            <Input
-              type="file"
-              color="primary"
-              endIcon={<UploadIcon fontSize="large" />}
-              variant="outlined"
-              size="large"
-              onChange={handleChange}
-            >
-              Upload File
-            </Input>
+            <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
+              <Typography color="" variant="body2">
+                Upload File
+              </Typography>
+              <input type="file" onChange={handleChange} hidden />
+            </Button>
             <Button
               color="primary"
               endIcon={<FolderIcon fontSize="large" />}
               variant="outlined"
               size="large"
             >
-              Load File
+              <Typography color="" variant="body2">
+                Load File
+              </Typography>
             </Button>
             <Button
               color="primary"
@@ -162,7 +161,9 @@ export const Upload = (props) => {
               variant="outlined"
               size="large"
             >
-              Input Text
+              <Typography color="" variant="body2">
+                Input Text
+              </Typography>
             </Button>
           </Box>
         </Box>
