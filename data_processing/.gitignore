@@ -2,3 +2,6 @@ test/test_json
 
 # env
 env
+
+# test output files
+output.*
