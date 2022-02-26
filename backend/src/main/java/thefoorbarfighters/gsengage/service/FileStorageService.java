@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import thefoorbarfighters.gsengage.exception.FileStorageException;
-import thefoorbarfighters.gsengage.exception.FileNotFoundException;
+import thefoorbarfighters.gsengage.exceptions.FileStorageException;
+import thefoorbarfighters.gsengage.exceptions.FileNotFoundException;
 import thefoorbarfighters.gsengage.properties.FileStorageProperties;
 
 @Service
