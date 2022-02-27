@@ -45,7 +45,7 @@ public class FileService {
     public S3ObjectInputStream findByName(String fileName) {
         LOG.info("Downloading file with name {}", fileName);
         return amazonS3.getObject(s3BucketName, fileName).getObjectContent();
-    }c
+    }
 
     @Async
     public void save(final MultipartFile multipartFile) {
