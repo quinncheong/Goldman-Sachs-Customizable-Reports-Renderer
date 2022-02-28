@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,8 +29,8 @@ public class FileController {
                 .ok()
                 .cacheControl(CacheControl.noCache())
                 .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment; filename=\"" + "test.xlsx" + "\"")
-                .body(new InputStreamResource(fileService.findByName("test.xlsx")));
+                .header("Content-disposition", "attachment; filename=\"" + params.get(FILE_NAME) + "\"")
+                .body(new InputStreamResource(fileService.findByName(params.get(FILE_NAME))));
     }
 
     @PostMapping

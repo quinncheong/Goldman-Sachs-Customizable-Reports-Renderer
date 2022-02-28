@@ -4,18 +4,18 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FileConfiguration {
+    Dotenv dotenv = Dotenv.load();
 
-    @Value("${access.key.id}")
-    private String accessKeyId;
+    private final String accessKeyId  = dotenv.get("ACCESS_KEY");
 
-    @Value("${access.key.secret}")
-    private String accessKeySecret;
+    private final String accessKeySecret  = dotenv.get("SECRET_KEY");
 
     @Value("${s3.region.name}")
     private String s3RegionName;
