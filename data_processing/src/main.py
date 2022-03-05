@@ -1,6 +1,7 @@
 from traceback import print_tb
 from fastapi import Request, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import uvicorn
 import pandas as pd
@@ -130,7 +131,7 @@ async def create_table(request: Request):
                 worksheet.set_column(0, max_col, 20)
                 start_row += (max_row + 3)
         writer.save()   
-        return send_file('output.xlsx', as_attachment=True)
+        return FileResponse('output.xlsx')
         
     except Exception as e:
         return {"error_msg": repr(e)}
