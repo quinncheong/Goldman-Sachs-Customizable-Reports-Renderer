@@ -103,37 +103,41 @@ async def create_table(request: Request):
             data[k] = df
         # build each dataframe/table
         for k,v in compiled_data.items():
-            for table in v:
-                series_list = []
-                for col, json_data in table.items():
-                    if json_data in data:
-                        tmp_series = data[json_data][col]
-                        if col == 'maturityDate':
-                            tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
-                            tmp_series.name = 'Maturity'
-                        elif col == 'positionDate':
-                            tmp_series = pd.to_datetime(tmp_series, format='%Y%m%d').dt.date
-                            tmp_series.name = 'Position Date'
-                        elif col.islower():
-                            tmp_series.name = col.capitalize()
-                        elif not col.isupper():
-                            substr = ''
-                            lst = []
-                            for ch in col:
-                                if ch.isupper():
-                                    if substr != '':
-                                        lst.append(substr.capitalize())
-                                        substr = ''
-                                if ch != '_':
-                                    substr += ch
-                            if substr != '':
-                                lst.append(substr.capitalize())
-                            tmp_series.name = ' '.join(lst)
+            for table_row in v:
+                row_list = []
+                for table in table_row:
+                    series_list = []
+                    for col, json_data in table.items():
+                        if json_data in data:
+                            tmp_series = data[json_data][col]
+                            if col == 'maturityDate':
+                                tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
+                                tmp_series.name = 'Maturity'
+                            elif col == 'positionDate':
+                                tmp_series = pd.to_datetime(tmp_series, format='%Y%m%d').dt.date
+                                tmp_series.name = 'Position Date'
+                            elif col.islower():
+                                tmp_series.name = col.capitalize()
+                            elif not col.isupper():
+                                substr = ''
+                                lst = []
+                                for ch in col:
+                                    if ch.isupper():
+                                        if substr != '':
+                                            lst.append(substr.capitalize())
+                                            substr = ''
+                                    if ch != '_':
+                                        substr += ch
+                                if substr != '':
+                                    lst.append(substr.capitalize())
+                                tmp_series.name = ' '.join(lst)
                         series_list.append(tmp_series)
-                # build dataframe
-                if series_list != []:
-                    tmp_df = pd.concat(series_list, axis=1)
-                    df_list.append(tmp_df)
+                    # build dataframe
+                    if series_list != []:
+                        tmp_df = pd.concat(series_list, axis=1)
+                        row_list.append(tmp_df)
+                if row_list != []:
+                    df_list.append(row_list)
             if df_list != []:
                 sheet_dict[k] = df_list
                 df_list = []
@@ -143,15 +147,21 @@ async def create_table(request: Request):
                                 date_format='yyyymmdd')
         workbook = writer.book
         for sheet_name, tables in sheet_dict.items():
-            start_row = 1
             start_col = 0
-            for table_df in tables:
-                table_df.to_excel(writer, sheet_name=sheet_name, startrow=start_row, startcol=start_col, index=False)
-                (max_row, max_col) = table_df.shape
-                worksheet = writer.sheets[sheet_name]
-                worksheet.set_column(0, max_col, 20)
-                start_row += (max_row + 3)
-        writer.save()   
+            start_row = 0
+            for table_rows in tables:
+                max_row = 0
+                for table_df in table_rows:
+                    table_df.to_excel(writer, sheet_name=sheet_name, startrow=start_row, startcol=start_col, index=False)
+                    (r, c) = table_df.shape
+                    if r > max_row:
+                        max_row = r
+                    worksheet = writer.sheets[sheet_name]
+                    worksheet.set_column(start_col, c, 20)
+                    start_col += c + 1
+                start_col = 0
+                start_row += max_row + 3
+        writer.save() 
         return FileResponse('output.xlsx')
         
     except Exception as e:
