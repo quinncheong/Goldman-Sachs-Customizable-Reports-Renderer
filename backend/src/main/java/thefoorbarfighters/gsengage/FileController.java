@@ -18,24 +18,30 @@ import java.util.Map;
 public class FileController {
 
     private static final String MESSAGE_1 = "Uploaded the file successfully";
-    private static final String FILE_NAME = "test.js";
 
     @Autowired
     FileService fileService;
 
     @GetMapping
-    public ResponseEntity<Object> findByName(@RequestBody(required = false) Map<String, String> params) {
+    public ResponseEntity<Object> findByName(@RequestBody(required = false) @RequestParam String name, @RequestParam int fileNumber) {
+        String fullname = fileNumber + "/" + name;
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.noCache())
                 .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment; filename=\"" + params.get(FILE_NAME) + "\"")
-                .body(new InputStreamResource(fileService.findByName(params.get(FILE_NAME))));
+                .header("Content-disposition", "attachment; filename=\"" + fullname + "\"")
+                .body(new InputStreamResource(fileService.findByName(fullname)));
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestParam("file") MultipartFile multipartFile) {
-        fileService.save(multipartFile);
+    public ResponseEntity<Object> save(@RequestParam("file") MultipartFile multipartFile, @RequestParam int fileNumber) {
+        fileService.save(multipartFile, fileNumber);
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
+    }
+
+    @GetMapping("/number")
+    public ResponseEntity<Object> findNumberOfFiles() {
+        int filecount = fileService.getBucketFileCount();
+        return new ResponseEntity<>(filecount, HttpStatus.OK);
     }
 }
