@@ -1,4 +1,4 @@
-package thefoorbarfighters.gsengage.exception;
+package thefoorbarfighters.gsengage.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

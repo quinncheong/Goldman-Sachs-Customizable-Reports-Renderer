@@ -1,4 +1,4 @@
-package thefoorbarfighters.gsengage.exception;
+package thefoorbarfighters.gsengage.exceptions;
 
 public class FileStorageException extends RuntimeException {
 
