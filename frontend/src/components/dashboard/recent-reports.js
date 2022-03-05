@@ -1,4 +1,4 @@
-import { formatDistanceToNow, subHours } from "date-fns";
+import { formatDistanceToNow, subHours, format } from "date-fns";
 import { v4 as uuid } from "uuid";
 import {
   Avatar,
@@ -17,6 +17,7 @@ import { red } from "@mui/material/colors";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
 
@@ -24,7 +25,7 @@ export const RecentReports = ({ reports = [], ...props }) => {
   const renderReports = reports.map((report) => {
     return (
       <Card
-      variant="outlined"
+        variant="outlined"
         sx={{
           flexShrink: 0,
           maxWidth: 345,
@@ -43,9 +44,12 @@ export const RecentReports = ({ reports = [], ...props }) => {
           <Typography gutterBottom variant="h5" component="div">
             {report.name}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {report.date}
-          </Typography>
+          <Box sx={{ display: "flex" }}>
+            <CalendarTodayIcon size="small" sx={{ mr: 1,  }} />
+            <Typography variant="body2" color="text.secondary">
+              {format(report.dateModified, "dd/MM/yyyy")}
+            </Typography>
+          </Box>
         </CardContent>
         <CardActions>
           <Button size="small">Share</Button>
