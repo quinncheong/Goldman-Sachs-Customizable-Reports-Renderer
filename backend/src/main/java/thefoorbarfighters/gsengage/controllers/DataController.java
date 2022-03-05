@@ -1,13 +1,15 @@
 package thefoorbarfighters.gsengage.controllers;
 
-import net.minidev.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
-import thefoorbarfighters.gsengage.service.DatatypeService;
+import thefoorbarfighters.gsengage.service.DataService;
 
 @RestController
-@RequestMapping("/datatype")
-public class DatatypeController {
-    // Send POST request to python data processing API
+@RequestMapping(value = "/data")
+public class DataController {
+    // Send POST request to python APIs
     // Return API response
 
     @GetMapping("/")
@@ -17,12 +19,12 @@ public class DatatypeController {
 
     @PostMapping(value = "/analyze", headers = "Accept=application/json")
     public JSONObject analyzeDatatype(@RequestBody JSONObject rawData){
-        return DatatypeService.getDatatype(rawData);
+        return DataService.getDatatype(rawData);
     }
 
     @PostMapping(value = "/report", headers = "Accept=application/json")
     public JSONObject createData(@RequestBody JSONObject rawData){
-        return DatatypeService.getReport(rawData);
+        return DataService.getReport(rawData);
     }
 
 }

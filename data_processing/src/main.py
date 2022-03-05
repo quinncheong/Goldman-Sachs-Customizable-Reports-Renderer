@@ -1,3 +1,4 @@
+from dateutil.parser import parse
 from traceback import print_tb
 from fastapi import Request, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,9 +17,20 @@ def get_all_rows(dict_data, headers):
     for key in dict_data:
         if key == 'columns':
             continue
-        if key not in headers and not isinstance(dict_data[key], (tuple, dict, list)):
-            headers[key] = {"datatype": type(dict_data[key]).__name__, "row_count": 1}
-        elif key not in headers and isinstance(dict_data[key], (tuple, dict, list)):
+        if key not in headers and not isinstance(dict_data[key], (set, tuple, dict, list)):
+            datatype = type(dict_data[key])
+            # Check if non-string datatype
+            if datatype != str:
+                headers[key] = {"datatype": datatype.__name__, "row_count": 1}
+            else:
+            # Check if is datetime
+                try:
+                    parse(dict_data[key])
+                    headers[key] = {"datatype": "datetime", "row_count": 1}
+            # If error, attach other datatype
+                except ValueError:
+                    headers[key] = {"datatype": datatype.__name__, "row_count": 1}
+        elif key not in headers and isinstance(dict_data[key], (set, tuple, dict, list)):
             headers[key] = {}
         else:
             curr_datatype = type(dict_data[key]).__name__
@@ -57,15 +69,7 @@ async def homepage():
 # Process datatype and size endpoint
 @app.post("/process")
 async def get_body(request: Request):
-    input =  await request.json()
-    
-    try:
-        input_body = input["body"]
-    except Exception as e:
-        if repr(e) == "KeyError('body')":
-            return {"error_msg": "body data not available in provided json"}
-        else:            
-            return {"error_msg": repr(e)}
+    input_body =  await request.json()
     
     data_schema = {}
     
@@ -76,9 +80,8 @@ async def get_body(request: Request):
             data_schema[report] = headers
     except Exception as e:
         return {"error_msg": repr(e)}
-    
-    print(data_schema)
-    return {"result": data_schema}
+
+    return data_schema
 
 
 # Create excel report endpoint
