@@ -108,6 +108,27 @@ async def create_table(request: Request):
                 for col, json_data in table.items():
                     if json_data in data:
                         tmp_series = data[json_data][col]
+                        if col == 'maturityDate':
+                            tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
+                            tmp_series.name = 'Maturity'
+                        elif col == 'positionDate':
+                            tmp_series = pd.to_datetime(tmp_series, format='%Y%m%d').dt.date
+                            tmp_series.name = 'Position Date'
+                        elif col.islower():
+                            tmp_series.name = col.capitalize()
+                        elif not col.isupper():
+                            substr = ''
+                            lst = []
+                            for ch in col:
+                                if ch.isupper():
+                                    if substr != '':
+                                        lst.append(substr.capitalize())
+                                        substr = ''
+                                if ch != '_':
+                                    substr += ch
+                            if substr != '':
+                                lst.append(substr.capitalize())
+                            tmp_series.name = ' '.join(lst)
                         series_list.append(tmp_series)
                 # build dataframe
                 if series_list != []:
