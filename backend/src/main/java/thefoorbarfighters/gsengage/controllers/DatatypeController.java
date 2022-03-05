@@ -10,9 +10,9 @@ public class DatatypeController {
     // Send POST request to python data processing API
     // Return API response
 
-    @GetMapping("/health")
+    @GetMapping("/")
     public String index() {
-        return "Welcome to Backend";
+        return "Report Generation Backend";
     }
 
     @PostMapping(value = "/analyze", headers = "Accept=application/json")
