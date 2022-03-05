@@ -11,12 +11,12 @@ import {
   Typography
 } from '@mui/material';
 
-export const SettingsNotifications = (props) => (
+export const SettingsNotifications = ({ data ,...props }) => (
   <form {...props}>
     <Card>
       <CardHeader
-        subheader="Manage the notifications"
-        title="Notifications"
+        subheader="Edit the data"
+        title={ data.name }
       />
       <Divider />
       <CardContent>
