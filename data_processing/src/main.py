@@ -85,8 +85,9 @@ async def get_body(request: Request):
 # TODO: Upload excel file to S3 bucket
 @app.post("/report")
 async def create_table(request: Request):
-    cols = ['positionDate', 'portfolio', 'instrumentType', 'ISIN', 'ticker', 'contractCode', 'coupon', 'maturityDate', 'currency', 'currentFace', 'originalFace', 'price', 'marketValue']
-    cols_rename = {'positionDate': 'Position Date', 'portfolio': 'Portfolio', 'instrumentType': 'Instrument Type', 'ticker': 'Ticker', 'contractCode': 'Contract Code', 'coupon': 'Coupon', 'maturityDate': 'Maturity', 'currency': 'Currency', 'currentFace': 'Current Face', 'originalFace': 'Original Face', 'price': 'Price', 'marketValue': 'Market Value'}
+    df_list = []
+    sheet_names = []
+    sheet_dict = {}
     
     try:
         input = await request.json()
@@ -94,27 +95,43 @@ async def create_table(request: Request):
         return {"error_msg": repr(e)}
     
     try:
-        test = pd.DataFrame(input)
-        new = test[cols]
-        new.rename(columns=cols_rename, inplace=True)
-
-        new = new.round(decimals=2)
-        new['Coupon'] = new['Coupon'].apply(lambda x: '' if x == 0.0 else x)
-        new['Position Date'] = pd.to_datetime(new['Position Date'], format='%Y%m%d').dt.date
-        new['Maturity'] = pd.to_datetime(new['Maturity'], format='%m/%d/%Y').dt.date
+        compiled_data = input['compiled']
+        data = input['data']
+        for k,v in data.items():
+            df = pd.DataFrame(v)
+            data[k] = df
+        # build each dataframe/table
+        for k,v in compiled_data.items():
+            for table in v:
+                series_list = []
+                for col, json_data in table.items():
+                    if json_data in data:
+                        tmp_series = data[json_data][col]
+                        series_list.append(tmp_series)
+                # build dataframe
+                if series_list != []:
+                    tmp_df = pd.concat(series_list, axis=1)
+                    df_list.append(tmp_df)
+            if df_list != []:
+                sheet_dict[k] = df_list
+                df_list = []
+        # write excel
         writer = pd.ExcelWriter('output.xlsx',
-                        engine='xlsxwriter',
-                        date_format='yyyymmdd')
-        new.to_excel(writer, sheet_name='Holdings', index=False)
-        workbook  = writer.book
-        worksheet = writer.sheets['Holdings']
-        (max_row, max_col) = new.shape
-        worksheet.set_column(0, max_col, 20)
-        writer.save()
-
-        # send_file("output.xlsx", as_attachment=True)
-        return {"code": 200, "message": "Excel report created."}
-    
+                                engine='xlsxwriter',
+                                date_format='yyyymmdd')
+        workbook = writer.book
+        for sheet_name, tables in sheet_dict.items():
+            start_row = 1
+            start_col = 0
+            for table_df in tables:
+                table_df.to_excel(writer, sheet_name=sheet_name, startrow=start_row, startcol=start_col, index=False)
+                (max_row, max_col) = table_df.shape
+                worksheet = writer.sheets[sheet_name]
+                worksheet.set_column(0, max_col, 20)
+                start_row += (max_row + 3)
+        writer.save()   
+        return send_file('output.xlsx', as_attachment=True)
+        
     except Exception as e:
         return {"error_msg": repr(e)}
 
