@@ -1,0 +1,184 @@
+{
+  "header": {
+    "request param": {
+      "dataSourcesQueryParam": [
+        {
+          "name": "transaction",
+          "queryParams": [
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210930",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "Last",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "endDate"
+            },
+            {
+              "dataType": "String",
+              "name": "account",
+              "value": "132132",
+              "dataFormat": ""
+            },
+            {
+              "dataType": "String",
+              "name": "reportType",
+              "value": "NEW",
+              "dataFormat": ""
+            },
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210901",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "First",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "startDate"
+            }
+          ],
+          "paramMapping": {
+            "account": [
+              "132132"
+            ]
+          }
+        },
+        {
+          "name": "account",
+          "queryParams": [
+            {
+              "dataType": "String",
+              "name": "accountNumber",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ],
+          "paramMapping": {
+            "accountNumber": [
+              "132132"
+            ]
+          }
+        },
+        {
+          "name": "consultant",
+          "queryParams": [
+            {
+              "calorbizday": "Calendar",
+              "holidaycal": "",
+              "value": "20210930",
+              "numprioroffset": "1",
+              "firstorlastdayoftheperiod": "Last",
+              "dataFormat": "yyyyMMdd",
+              "usecustomdate": 1,
+              "dataType": "Date",
+              "name": "asOfDate"
+            },
+            {
+              "dataType": "String",
+              "name": "consultantName",
+              "value": "CHOCOLATE_CAKE",
+              "dataFormat": ""
+            },
+            {
+              "dataType": "String",
+              "name": "groupAccount",
+              "value": "132132",
+              "dataFormat": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "body": {
+    "Asset Inflow Details": {
+      "columns": [
+        {
+          "name": "assetCode",
+          "type": "string",
+          "field": "assetCode"
+        },
+        {
+          "name": "assetName",
+          "type": "string",
+          "field": "assetName"
+        },
+        {
+          "name": "daysInflow",
+          "type": "decimal",
+          "field": "daysInflow"
+        },
+        {
+          "name": "daysInflowCalc",
+          "type": "decimal",
+          "field": "daysInflowCalc"
+        },
+        {
+          "name": "groupAccount",
+          "type": "string",
+          "field": "groupAccount"
+        },
+        {
+          "name": "inflow",
+          "type": "decimal",
+          "field": "inflow"
+        },
+        {
+          "name": "reportDate_Day",
+          "type": "decimal",
+          "field": "reportDate_Day"
+        }
+      ],
+      "rows": [
+        {
+          "groupAccount": "132132",
+          "daysInflow": 24,
+          "assetCode": "100",
+          "reportDate_Day": 30,
+          "assetName": "クッキー",
+          "inflow": 16540500,
+          "daysInflowCalc": 0
+        },
+        {
+          "groupAccount": "132132",
+          "daysInflow": 15,
+          "assetCode": "200",
+          "reportDate_Day": 30,
+          "assetName": "MONDAY(MON)",
+          "inflow": 16020444,
+          "daysInflowCalc": 0
+        },
+        {
+          "groupAccount": "132132",
+          "daysInflow": 0,
+          "assetCode": "300",
+          "reportDate_Day": 30,
+          "assetName": "チョコレート(CHOC)",
+          "inflow": 0,
+          "daysInflowCalc": 0
+        },
+        {
+          "groupAccount": "132132",
+          "daysInflow": 0,
+          "assetCode": "400",
+          "reportDate_Day": 30,
+          "assetName": "コーヒー(COF)",
+          "inflow": 0,
+          "daysInflowCalc": 0
+        },
+        {
+          "groupAccount": "132132",
+          "daysInflow": 0,
+          "assetCode": "500",
+          "reportDate_Day": 30,
+          "assetName": "PA(パイナップル)",
+          "inflow": 0,
+          "daysInflowCalc": 0
+        }
+      ]
+    }
+  }
+}
