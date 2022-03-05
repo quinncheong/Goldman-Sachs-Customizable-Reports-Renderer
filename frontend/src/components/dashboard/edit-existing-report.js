@@ -76,7 +76,7 @@ export const EditExistingReport = ({ reports = [], ...props }) => {
           p: 2,
         }}
       >
-        <Button color="primary" endIcon={<ArrowRightIcon fontSize="small" />} size="small">
+        <Button sx={{ ml: "auto" }} color="primary" endIcon={<ArrowRightIcon fontSize="small" />} size="small">
           View More Reports
         </Button>
       </Box>

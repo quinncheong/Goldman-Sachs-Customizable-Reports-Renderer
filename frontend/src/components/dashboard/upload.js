@@ -17,7 +17,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-export const Upload = ({ setPageType, ...props }) => {
+export const Upload = ({ setPageType, sendRawJson, ...props }) => {
   const [file, setfile] = useState("");
   const theme = useTheme();
   const router = useRouter();
@@ -46,28 +46,6 @@ export const Upload = ({ setPageType, ...props }) => {
       },
     ],
     labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 aug"],
-  };
-
-  const handleChange = async (e) => {
-    const file = e.target.files[0];
-    console.dir(e.target);
-    console.log(file);
-    const fileReader = new FileReader();
-    // console.log(fileReader);
-    const endpoint = "http://localhost:5000/create";
-    // fileReader.onloadend = () => {
-    //   // console.log(fileReader);
-    //   try {
-    //     let reqData = JSON.parse(fileReader.result);
-    //     axios.post(endpoint, reqData.body["SIMPLE_REPORT"].rows).then((res) => {
-    //       // console.log(res.data);
-    //     });
-    //   } catch (e) {
-    //     // Input some error message here
-    //     // setErrorData("**Not valid JSON file!**");
-    //   }
-    // };
-    // if (file !== undefined) fileReader.readAsText(file);
   };
 
   const pushToGenerator = (e) => {
@@ -102,7 +80,7 @@ export const Upload = ({ setPageType, ...props }) => {
               <Typography color="" variant="body2">
                 Upload JSON
               </Typography>
-              <input type="file" onChange={handleChange} hidden multiple />
+              <input type="file" onChange={sendRawJson} hidden multiple />
             </Button>
             <Button
               color="primary"
