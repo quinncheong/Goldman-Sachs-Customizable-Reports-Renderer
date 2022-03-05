@@ -38,7 +38,7 @@ const items = [
     title: "Schedule Report",
   },
   {
-    href: "/settings",
+    href: "/register",
     icon: <CogIcon fontSize="small" />,
     title: "View Report",
   },

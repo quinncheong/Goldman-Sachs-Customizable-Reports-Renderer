@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import {
   Box,
@@ -16,9 +17,10 @@ import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-export const Upload = (props) => {
+export const Upload = ({ setPageType, ...props }) => {
   const [file, setfile] = useState("");
   const theme = useTheme();
+  const router = useRouter();
 
   const data = {
     datasets: [
@@ -46,74 +48,31 @@ export const Upload = (props) => {
     labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 aug"],
   };
 
-  const options = {
-    animation: false,
-    cornerRadius: 20,
-    layout: { padding: 0 },
-    legend: { display: false },
-    maintainAspectRatio: false,
-    responsive: true,
-    xAxes: [
-      {
-        ticks: {
-          fontColor: theme.palette.text.secondary,
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false,
-        },
-      },
-    ],
-    yAxes: [
-      {
-        ticks: {
-          fontColor: theme.palette.text.secondary,
-          beginAtZero: true,
-          min: 0,
-        },
-        gridLines: {
-          borderDash: [2],
-          borderDashOffset: [2],
-          color: theme.palette.divider,
-          drawBorder: false,
-          zeroLineBorderDash: [2],
-          zeroLineBorderDashOffset: [2],
-          zeroLineColor: theme.palette.divider,
-        },
-      },
-    ],
-    tooltips: {
-      backgroundColor: theme.palette.background.paper,
-      bodyFontColor: theme.palette.text.secondary,
-      borderColor: theme.palette.divider,
-      borderWidth: 1,
-      enabled: true,
-      footerFontColor: theme.palette.text.secondary,
-      intersect: false,
-      mode: "index",
-      titleFontColor: theme.palette.text.primary,
-    },
-  };
-
   const handleChange = async (e) => {
     const file = e.target.files[0];
+    console.dir(e.target);
     console.log(file);
     const fileReader = new FileReader();
-    console.log(fileReader);
+    // console.log(fileReader);
     const endpoint = "http://localhost:5000/create";
-    fileReader.onloadend = () => {
-      console.log(fileReader);
-      try {
-        let reqData = JSON.parse(fileReader.result);
-        axios.post(endpoint, reqData.body["SIMPLE_REPORT"].rows).then((res) => {
-          console.log(res.data);
-        });
-      } catch (e) {
-        // Input some error message here
-        // setErrorData("**Not valid JSON file!**");
-      }
-    };
-    if (file !== undefined) fileReader.readAsText(file);
+    // fileReader.onloadend = () => {
+    //   // console.log(fileReader);
+    //   try {
+    //     let reqData = JSON.parse(fileReader.result);
+    //     axios.post(endpoint, reqData.body["SIMPLE_REPORT"].rows).then((res) => {
+    //       // console.log(res.data);
+    //     });
+    //   } catch (e) {
+    //     // Input some error message here
+    //     // setErrorData("**Not valid JSON file!**");
+    //   }
+    // };
+    // if (file !== undefined) fileReader.readAsText(file);
+  };
+
+  const pushToGenerator = (e) => {
+    console.log(router);
+    setPageType("generate");
   };
 
   return (
@@ -141,9 +100,9 @@ export const Upload = (props) => {
           >
             <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
               <Typography color="" variant="body2">
-                Upload File
+                Upload JSON
               </Typography>
-              <input type="file" onChange={handleChange} hidden />
+              <input type="file" onChange={handleChange} hidden multiple />
             </Button>
             <Button
               color="primary"
@@ -176,10 +135,65 @@ export const Upload = (props) => {
           p: 2,
         }}
       >
-        <Button color="primary" endIcon={<ArrowRightIcon fontSize="small" />} size="small">
+        <Button
+          onClick={pushToGenerator}
+          color="primary"
+          endIcon={<ArrowRightIcon fontSize="small" />}
+          size="small"
+        >
           Overview
         </Button>
       </Box>
     </Card>
   );
 };
+
+// old Components
+// const options = {
+//   animation: false,
+//   cornerRadius: 20,
+//   layout: { padding: 0 },
+//   legend: { display: false },
+//   maintainAspectRatio: false,
+//   responsive: true,
+//   xAxes: [
+//     {
+//       ticks: {
+//         fontColor: theme.palette.text.secondary,
+//       },
+//       gridLines: {
+//         display: false,
+//         drawBorder: false,
+//       },
+//     },
+//   ],
+//   yAxes: [
+//     {
+//       ticks: {
+//         fontColor: theme.palette.text.secondary,
+//         beginAtZero: true,
+//         min: 0,
+//       },
+//       gridLines: {
+//         borderDash: [2],
+//         borderDashOffset: [2],
+//         color: theme.palette.divider,
+//         drawBorder: false,
+//         zeroLineBorderDash: [2],
+//         zeroLineBorderDashOffset: [2],
+//         zeroLineColor: theme.palette.divider,
+//       },
+//     },
+//   ],
+//   tooltips: {
+//     backgroundColor: theme.palette.background.paper,
+//     bodyFontColor: theme.palette.text.secondary,
+//     borderColor: theme.palette.divider,
+//     borderWidth: 1,
+//     enabled: true,
+//     footerFontColor: theme.palette.text.secondary,
+//     intersect: false,
+//     mode: "index",
+//     titleFontColor: theme.palette.text.primary,
+//   },
+// };
