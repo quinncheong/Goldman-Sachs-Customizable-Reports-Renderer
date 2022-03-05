@@ -31,48 +31,28 @@ const Dashboard = () => {
 
     setReports([
       {
+        reportID: 1,
         name: "SaaSFinancialPlan.xlsx",
         date: "2 Feb 2022",
+        status: "Pending",
+        dateCreated: Date.now(),
+        dateModified: Date.now(),
       },
       {
+        reportID: 2,
         name: "SaaSFinancialPlan2.xlsx",
         date: "2 Feb 2022",
+        status: "Completed",
+        dateCreated: Date.now(),
+        dateModified: Date.now(),
       },
       {
+        reportID: 3,
         name: "SaaSFinancialPlan3.xlsx",
         date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
-      },
-      {
-        name: "SaaSFinancialPlan3.xlsx",
-        date: "2 Feb 2022",
+        status: "Cancelled",
+        dateCreated: Date.now(),
+        dateModified: Date.now(),
       },
     ]);
   }, []);
@@ -91,17 +71,17 @@ const Dashboard = () => {
       >
         <Container maxWidth={false}>
           <Grid container spacing={3}>
-            <Grid item lg={6} md={6} xl={3} xs={12}>
+            <Grid item md={6} xs={12}>
               <Upload sx={{ height: 500 }} />
             </Grid>
-            <Grid item lg={6} md={6} xl={3} xs={12}>
+            <Grid item md={6} xs={12}>
               <EditExistingReport reports={reports} sx={{ height: 500 }} />
             </Grid>
-            <Grid item lg={8} md={12} xl={9} xs={12}>
+            <Grid item  xs={12}>
               <RecentReports reports={reports} sx={{ height: "100%" }} />
             </Grid>
-            <Grid item lg={4} md={6} xl={3} xs={12}>
-              <LatestOrders />
+            <Grid item  xs={12}>
+              <LatestOrders reports={reports} sx={{ height: "100%" }} />
             </Grid>
           </Grid>
         </Container>
