@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import thefoorbarfighters.gsengage.FileController;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 
 @Service
@@ -44,6 +45,7 @@ public class DataService{
         Map<String, Object> datasets = new HashMap<>();
         for (String filename: filenames) {
             // TODO: get dataset data
+            Map<String, Object> data = FileController.findByName(name=filename, fileNumber=projectName);
             datasets.put(filename, data);
         }
 
