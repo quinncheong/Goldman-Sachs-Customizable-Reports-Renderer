@@ -2,9 +2,9 @@ package thefoorbarfighters.gsengage.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import thefoorbarfighters.gsengage.service.DataService;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/data")
@@ -17,13 +17,13 @@ public class DataController {
         return "Report Generation Backend";
     }
 
-    @PostMapping(value = "/analyze", headers = "Accept=application/json")
-    public JSONObject analyzeDatatype(@RequestBody JSONObject rawData){
+    @PostMapping(value = "/analyze")
+    public Map<String, Object> analyzeDatatype(@RequestBody Map<String, Object> rawData){
         return DataService.getDatatype(rawData);
     }
 
     @PostMapping(value = "/report", headers = "Accept=application/json")
-    public JSONObject createData(@RequestBody JSONObject rawData){
+    public Map<String, Object> createData(@RequestBody Map<String, Object> rawData){
         return DataService.getReport(rawData);
     }
 

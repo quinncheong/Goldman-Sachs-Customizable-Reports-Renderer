@@ -1,60 +1,47 @@
 package thefoorbarfighters.gsengage.service;
 
+import java.util.HashMap;
 import java.util.Iterator;
-import org.json.JSONObject;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 
 @Service
 public class DataService{
 
-    public static JSONObject getDatatype(JSONObject rawData){
+    public static Map<String, Object> getDatatype(Map<String, Object> rawData){
         final String apiUrl = "http://localhost:8000/process";
-//        JSONObject compiledResponse = new JSONObject();
-//        return rawData;
+        Map<String, Object> compiledResponse = new HashMap<>();
 
-//        for (Iterator iterator = rawData.keySet().iterator(); iterator.hasNext();) {
-//            String key = (String) iterator.next();
-//            JSONObject reportData = rawData.getJSONObject(key);
-//            try {
-//                ApiConnectionClient connection = new ApiConnectionClient();
-//                connection.sendPost(apiUrl, reportData);
-//                JSONObject response = connection.getResponse();
-//                compiledResponse.put(key, response);
-//            } catch (Exception e) {
-////                JSONObject errorResponse = new JSONObject();
-////                errorResponse.put(keyStr, e);
-//                compiledResponse.put(key, e);
-//            }
-//        }
-//        return compiledResponse.toString();
-        ApiConnectionClient connection = new ApiConnectionClient();
-        try {
-            connection.sendPost(apiUrl, rawData);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Map.Entry<String, Object> report : rawData.entrySet()) {
+            String reportName = report.getKey();
+//            Object reportValue = report.getValue();
+            Map<String, Object> reportValue = new HashMap<>();
+            reportValue.put(reportName, report.getValue());
+
+            try {
+                ApiConnectionClient connection = new ApiConnectionClient();
+                connection.sendPost(apiUrl, reportValue);
+                Map<String, Object> message = connection.getResponse();
+                compiledResponse.put(reportName, message.get(reportName));
+            } catch (Exception e) {
+                compiledResponse.put("error", e);
+                e.printStackTrace();
+            }
         }
-        try {
-//            JSONObject response = ApiConnectionClient.sendPost(apiUrl, rawData);
-
-              return connection.getResponse()
-        } catch (Exception e) {
-            JSONObject errorResponse = new JSONObject();
-            errorResponse.put("error", e);
-            return errorResponse.toString();
-        }
-
+        return compiledResponse;
     }
 
-    public static JSONObject getReport(JSONObject rawData){
-//        final String apiUrl = "http://localhost:8000/report";
-//        try {
-//            return ApiConnectionClient.sendPost(apiUrl, rawData);
-//        } catch (Exception e) {
-//            JSONObject errorResponse = new JSONObject();
-//            errorResponse.put("error", e);
-//            return errorResponse;
-//        }
-        return null;
+    public static Map<String, Object> getReport(Map<String, Object> rawData){
+        final String apiUrl = "http://localhost:8000/report";
+        try {
+            ApiConnectionClient connection = new ApiConnectionClient();
+            connection.sendPost(apiUrl, rawData);
+            return connection.getResponse();
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", e);
+            return response;
+        }
     }
 }

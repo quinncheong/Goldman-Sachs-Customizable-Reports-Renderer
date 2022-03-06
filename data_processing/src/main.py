@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import uvicorn
 import pandas as pd
+import traceback
 
 # Helper functions
 def get_application() -> FastAPI:
@@ -76,9 +77,11 @@ async def get_body(request: Request):
     try:
         for report in input_body:
             headers = {}
+            print(input_body[report])
             get_all_rows(input_body[report], headers)
             data_schema[report] = headers
     except Exception as e:
+        traceback.print_exception(type(e), e, e.__traceback__)
         return {"error_msg": repr(e)}
 
     return data_schema
