@@ -24,6 +24,8 @@
 
 3. What else to install / commands to run them
 
+- Create a copy of `.env.example` in `/backend` and rename it to `.env`
+  - Include ACCESS_KEY and SECRET KEY of AWS IAM User with write access to AWS S3 in `.env` 
 - cd backend, mvn spring-boot:run
 
 4. Any other things that might be usefull like port number etc
