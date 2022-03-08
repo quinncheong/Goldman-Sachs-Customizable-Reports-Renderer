@@ -1,10 +1,14 @@
-package thefoorbarfighters.gsengage;
+package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.HttpMethod;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.amazonaws.services.s3.model.ListObjectsV2Request;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 // import software.amazon.awssdk.core.sync.RequestBody;
 // import software.amazon.awssdk.services.s3.S3Client;
@@ -23,7 +24,9 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
@@ -49,30 +52,32 @@ public class FileService {
 
     // @Async annotation ensures that the method is executed in a different thread
 
-    @Async
-    public S3ObjectInputStream findByName(String fileName) {
+    @Async // download file by name
+    public S3ObjectInputStream downloadFile(String fileName) {
         LOG.info("Downloading file with name {}", fileName);
         return amazonS3.getObject(s3BucketName, fileName).getObjectContent();
     }
 
-    // @Async
-    // public void save(final MultipartFile multipartFile) {
-    //     try {
-    //         final File file = convertMultiPartFileToFile(multipartFile);
-    //         final String fileName = LocalDateTime.now() + "_" + file.getName();
-    //         LOG.info("Uploading file with name {}", fileName);
-    //         final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
-    //         amazonS3.putObject(putObjectRequest);
-    //         Files.delete(file.toPath()); // Remove the file locally created in the project folder
-    //     } catch (AmazonServiceException e) {
-    //         LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
-    //     } catch (IOException ex) {
-    //         LOG.error("Error {} occurred while deleting temporary file", ex.getLocalizedMessage());
-    //     }
-    // }
+     @Async // save file without file number
+     public void upload(final MultipartFile multipartFile) {
+         try {
+             final File file = convertMultiPartFileToFile(multipartFile);
+             int folderCount = this.findNumberOfFolders();
+             folderCount++;
+             final String fileName = folderCount + "/" + file.getName();
+             LOG.info("Uploading file with name {}", fileName);
+             final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
+             amazonS3.putObject(putObjectRequest);
+             Files.delete(file.toPath()); // Remove the file locally created in the project folder
+         } catch (AmazonServiceException e) {
+             LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
+         } catch (IOException ex) {
+             LOG.error("Error {} occurred while deleting temporary file", ex.getLocalizedMessage());
+         }
+     }
 
     @Async
-    public void save(final MultipartFile multipartFile, int fileNumber) {
+    public void uploadWithFileNumber(final MultipartFile multipartFile, int fileNumber) {
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
             final String fileName = fileNumber + "/" + file.getName();
@@ -88,11 +93,11 @@ public class FileService {
     }
 
     @Async
-    public int getBucketFileCount() {
+    public int findNumberOfFolders() {
         ListObjectsV2Request req = new ListObjectsV2Request(); 
         req.setBucketName(s3BucketName);
         ListObjectsV2Result result;
-        int fileCount = 0;
+        int folderCount = 0;
         LOG.info("Counting s3 files");
      
         do {
@@ -100,14 +105,30 @@ public class FileService {
            for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
             String fileName = objectSummary.getKey();
             int number = Integer.parseInt(fileName.split("/")[0]);
-            if (number > fileCount) {
-                fileCount = number;
+            if (number > folderCount) {
+                folderCount = number;
             }
            }
            req.setContinuationToken(result.getNextContinuationToken());
      
         } while (result.isTruncated() == true);
-            return fileCount;
+            return folderCount;
      }
+
+    public String getFileURL(String objectKey) {
+        // Set the presigned URL to expire after one hour.
+        java.util.Date expiration = new java.util.Date();
+        long expTimeMillis = Instant.now().toEpochMilli();
+        expTimeMillis += 1000 * 60 * 60;
+        expiration.setTime(expTimeMillis);
+
+        // Generate the presigned URL.
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(s3BucketName, objectKey)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration);
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toString();
+    }
 
 }
