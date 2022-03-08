@@ -1,0 +1,60 @@
+{
+	"result": {
+		"SIMPLE_REPORT": {
+			"rows": {
+				"instrumentType": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"ticker": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"coupon": {
+					"datatype": "int",
+					"row_count": 18
+				},
+				"originalFace": {
+					"datatype": "float",
+					"row_count": 18
+				},
+				"marketValue": {
+					"datatype": "float",
+					"row_count": 18
+				},
+				"ISIN": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"portfolio": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"maturityDate": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"price": {
+					"datatype": "int",
+					"row_count": 18
+				},
+				"positionDate": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"currentFace": {
+					"datatype": "float",
+					"row_count": 18
+				},
+				"currency": {
+					"datatype": "str",
+					"row_count": 18
+				},
+				"contractCode": {
+					"datatype": "str",
+					"row_count": 18
+				}
+			}
+		}
+	}
+}

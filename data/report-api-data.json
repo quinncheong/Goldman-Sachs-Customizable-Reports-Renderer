@@ -1,0 +1,454 @@
+{
+	"compiled": {
+		// From quinn's side
+		"Holdings": [
+			// Holdings is an excel sheet and contains one row
+			[
+				// row 1 contains one table
+				{
+					"instrumentType": "json0",
+					"ticker": "json0",
+					"coupon": "json0",
+					"originalFace": "json0",
+					"marketValue": "json0",
+					"ISIN": "json0",
+					"portfolio": "json0",
+					"maturityDate": "json0",
+					"price": "json0",
+					"positionDate": "json0",
+					"currentFace": "json0",
+					"currency": "json0",
+					"contractCode": "json0"
+				}
+			]
+		],
+		"Pension Invesment Status": [
+			// Pension Investment Status is an excel sheet and contains 3 rows
+			[
+				// row 1 contains 3 tables
+				{
+					"assetCode": "json1",
+					"assetName": "json1",
+					"groupAccount": "json1",
+					"outflow": "json1",
+					"daysOutflowCalc": "json1"
+				},
+				{
+					"groupAccount": "json2",
+					"totalTransDaysInflow": "json2",
+					"reportDate_Day": "json2",
+					"checkInflow": "json2"
+				},
+				{
+					"assetCode": "json1",
+					"assetName": "json1",
+					"groupAccount": "json1",
+					"outflow": "json1",
+					"daysOutflowCalc": "json1"
+				}
+			],
+			[
+				// row 2 contains 2 tables
+				{
+					"security_cd": "json3",
+					"securityDescription": "json3",
+					"trade_ccy_cd": "json3",
+					"market_value_bs": "json3"
+				},
+				{
+					"instrumentType": "json0",
+					"ticker": "json0",
+					"coupon": "json0",
+					"originalFace": "json0",
+					"marketValue": "json0",
+					"ISIN": "json0",
+					"portfolio": "json0",
+					"maturityDate": "json0",
+					"price": "json0",
+					"positionDate": "json0",
+					"currentFace": "json0",
+					"currency": "json0",
+					"contractCode": "json0"
+				}
+			],
+			[
+				// row 3 contains 1 table
+				{
+					"assetCode": "json1",
+					"assetName": "json1",
+					"groupAccount": "json1",
+					"outflow": "json1",
+					"daysOutflowCalc": "json1"
+				}
+			]
+		],
+		"Stock Balance": [
+			[
+				{
+					"security_cd": "json3",
+					"securityDescription": "json3",
+					"trade_ccy_cd": "json3",
+					"market_value_bs": "json3"
+				}
+			]
+		]
+	},
+	"data": {
+		// json0 earlier corresponds to this json0; keys must match
+		"json0": [
+			{
+				"instrumentType": "CASH",
+				"ticker": "CASH",
+				"coupon": 0,
+				"originalFace": 5.85,
+				"marketValue": 5.85,
+				"ISIN": "CASH",
+				"portfolio": "100001",
+				"maturityDate": null,
+				"price": 1,
+				"positionDate": "20210730",
+				"currentFace": 5.85,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBA",
+				"ticker": "TEA",
+				"coupon": 0,
+				"originalFace": -26,
+				"marketValue": -6441175,
+				"ISIN": "01H0000A2",
+				"portfolio": "100001",
+				"maturityDate": "4/1/2021",
+				"price": 99.09,
+				"positionDate": "20210730",
+				"currentFace": -26,
+				"currency": "USD",
+				"contractCode": "TE"
+			},
+			{
+				"instrumentType": "BD",
+				"ticker": "FL01",
+				"coupon": 0,
+				"originalFace": -70,
+				"marketValue": -8711171.88,
+				"ISIN": "US00000CAA01",
+				"portfolio": "100001",
+				"maturityDate": "1/1/2021",
+				"price": 124.45,
+				"positionDate": "20210730",
+				"currentFace": -70,
+				"currency": "USD",
+				"contractCode": "FL"
+			},
+			{
+				"instrumentType": "BD",
+				"ticker": "FA02",
+				"coupon": 0,
+				"originalFace": -81,
+				"marketValue": -17873156.25,
+				"ISIN": "US00000CAA02",
+				"portfolio": "100001",
+				"maturityDate": "1/1/2021",
+				"price": 110.33,
+				"positionDate": "20210730",
+				"currentFace": -81,
+				"currency": "USD",
+				"contractCode": "FA"
+			},
+			{
+				"instrumentType": "BD",
+				"ticker": "FI403",
+				"coupon": 0,
+				"originalFace": 139,
+				"marketValue": 18688984.38,
+				"ISIN": "US00000CAA03",
+				"portfolio": "100001",
+				"maturityDate": "1/1/2021",
+				"price": 134.45,
+				"positionDate": "20210730",
+				"currentFace": 139,
+				"currency": "USD",
+				"contractCode": "FI"
+			},
+
+			{
+				"instrumentType": "TBILL",
+				"ticker": "GB",
+				"coupon": 2,
+				"originalFace": 112000000,
+				"marketValue": 114713211.2,
+				"ISIN": "US000000A001",
+				"portfolio": "100001",
+				"maturityDate": "5/1/2021",
+				"price": 102.42,
+				"positionDate": "20210730",
+				"currentFace": 112000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBILL",
+				"ticker": "TB",
+				"coupon": 2.5,
+				"originalFace": 121000000,
+				"marketValue": 125817070.5,
+				"ISIN": "US000000A002",
+				"portfolio": "100001",
+				"maturityDate": "5/1/2021",
+				"price": 103.98,
+				"positionDate": "20210730",
+				"currentFace": 121000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBILL",
+				"ticker": "PB",
+				"coupon": 3,
+				"originalFace": 82000000,
+				"marketValue": 85808301.4,
+				"ISIN": "US000000A003",
+				"portfolio": "100001",
+				"maturityDate": "5/1/2021",
+				"price": 104.64,
+				"positionDate": "20210730",
+				"currentFace": 82000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBILL",
+				"ticker": "B",
+				"coupon": 3,
+				"originalFace": 31000000,
+				"marketValue": 32390074.1,
+				"ISIN": "US000000A004",
+				"portfolio": "100001",
+				"maturityDate": "5/1/2021",
+				"price": 104.48,
+				"positionDate": "20210730",
+				"currentFace": 31000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBA",
+				"ticker": "RD4",
+				"coupon": 3.5,
+				"originalFace": 2777250,
+				"marketValue": 205768.65,
+				"ISIN": "01H0000A3",
+				"portfolio": "100001",
+				"maturityDate": "4/1/2021",
+				"price": 109.1,
+				"positionDate": "20210730",
+				"currentFace": 188101.42,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBA",
+				"ticker": "P4U",
+				"coupon": 3.5,
+				"originalFace": 287764,
+				"marketValue": 142323.92,
+				"ISIN": "01H0000A4",
+				"portfolio": "100001",
+				"maturityDate": "4/1/2021",
+				"price": 109.1,
+				"positionDate": "20210730",
+				"currentFace": 130104.03,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "TBA",
+				"ticker": "DKNG",
+				"coupon": 3,
+				"originalFace": 23300000,
+				"marketValue": 14440294.34,
+				"ISIN": "01H0000A1",
+				"portfolio": "100001",
+				"maturityDate": "3/1/2021",
+				"price": 104.7,
+				"positionDate": "20210730",
+				"currentFace": 13758656.12,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "POOL",
+				"ticker": "GS1",
+				"coupon": 0,
+				"originalFace": 64000000,
+				"marketValue": 63999526.4,
+				"ISIN": "GSAM1",
+				"portfolio": "100001",
+				"maturityDate": "6/1/2021",
+				"price": 100,
+				"positionDate": "20210730",
+				"currentFace": 64000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "POOL",
+				"ticker": "GS2",
+				"coupon": 0,
+				"originalFace": 92000000,
+				"marketValue": 91998535.35,
+				"ISIN": "GSAM2",
+				"portfolio": "100001",
+				"maturityDate": "6/1/2021",
+				"price": 100,
+				"positionDate": "20210730",
+				"currentFace": 92000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "POOL",
+				"ticker": "GS3",
+				"coupon": 0,
+				"originalFace": 26500000,
+				"marketValue": 26495621.67,
+				"ISIN": "GSAM3",
+				"portfolio": "100001",
+				"maturityDate": "6/1/2021",
+				"price": 99.98,
+				"positionDate": "20210730",
+				"currentFace": 26500000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "POOL",
+				"ticker": "GS4",
+				"coupon": 0,
+				"originalFace": 41000000,
+				"marketValue": 40992687.24,
+				"ISIN": "GSAM4",
+				"portfolio": "100001",
+				"maturityDate": "6/1/2021",
+				"price": 99.98,
+				"positionDate": "20210730",
+				"currentFace": 41000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "POOL",
+				"ticker": "GS5",
+				"coupon": 0,
+				"originalFace": 24000000,
+				"marketValue": 23998877.76,
+				"ISIN": "GSAM5",
+				"portfolio": "100001",
+				"maturityDate": "6/1/2021",
+				"price": 100,
+				"positionDate": "20210730",
+				"currentFace": 24000000,
+				"currency": "USD",
+				"contractCode": ""
+			},
+			{
+				"instrumentType": "CMO",
+				"ticker": "C1",
+				"coupon": 1,
+				"originalFace": 9880000,
+				"marketValue": 9877014.07,
+				"ISIN": "US00000CMO01",
+				"portfolio": "100001",
+				"maturityDate": "2/1/2021",
+				"price": 99.97,
+				"positionDate": "20210730",
+				"currentFace": 9880000,
+				"currency": "USD",
+				"contractCode": ""
+			}
+		],
+		"json1": [
+			{
+				"groupAccount": "132132",
+				"outflow": 23854338,
+				"assetCode": "100",
+				"assetName": "クッキー",
+				"daysOutflow": 10.40232405527246,
+				"daysOutflowCalc": 7833894
+			},
+			{
+				"groupAccount": "132132",
+				"outflow": 0,
+				"assetCode": "200",
+				"assetName": "MONDAY(MON)",
+				"daysOutflow": 0,
+				"daysOutflowCalc": 0
+			},
+			{
+				"groupAccount": "132132",
+				"outflow": 16540500,
+				"assetCode": "300",
+				"assetName": "チョコレート(CHOC)",
+				"daysOutflow": 24,
+				"daysOutflowCalc": 0
+			},
+			{
+				"groupAccount": "132132",
+				"outflow": 0,
+				"assetCode": "400",
+				"assetName": "コーヒー(COF)",
+				"daysOutflow": 0,
+				"daysOutflowCalc": 0
+			},
+			{
+				"groupAccount": "132132",
+				"outflow": 0,
+				"assetCode": "500",
+				"assetName": "PA(パイナップル)",
+				"daysOutflow": 0,
+				"daysOutflowCalc": 0
+			}
+		],
+		"json2": [
+			{
+				"groupAccount": "132132",
+				"totalTransDaysInflow": 0,
+				"reportDate_Day": 30,
+				"checkInflow": 32560944
+			}
+		],
+		"json3": [
+			{
+				"security_cd": "XY0000000001",
+				"trade_ccy_cd": "USD",
+				"securityDescription": "POLLPOLLOFFSHORE",
+				"market_value_bs": 131622258
+			},
+			{
+				"security_cd": "00ABC1111111111",
+				"trade_ccy_cd": "JPY",
+				"securityDescription": "ANEWCOMPANY1",
+				"market_value_bs": 1344762582
+			},
+			{
+				"security_cd": "1820MN444221",
+				"trade_ccy_cd": "USD",
+				"securityDescription": "APPLEPIE1010",
+				"market_value_bs": 1561662185
+			},
+			{
+				"security_cd": "LMB100100101",
+				"trade_ccy_cd": "USD",
+				"securityDescription": "OCEANWAVELP",
+				"market_value_bs": 55714753
+			},
+			{
+				"security_cd": "FG120012001",
+				"trade_ccy_cd": "USD",
+				"securityDescription": "JAMESANDCO1221",
+				"market_value_bs": 93126520
+			}
+		]
+	}
+}
