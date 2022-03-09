@@ -1,12 +1,16 @@
 package thefoorbarfighters.gsengage.service;
 
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
+import thefoorbarfighters.gsengage.controllers.FileController;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +18,12 @@ import java.util.Map;
 @Service
 public class DataService{
 
+    @Autowired
+    FileService fileService;
+
     private static String dataAPI = "http://localhost:8000/api/v1";
 
-    public static Map<String, Object> getDatatype(Map<String, Object> rawData){
+    public Map<String, Object> getDatatype(Map<String, Object> rawData){
         final String apiUrl = dataAPI + "/process";
         System.out.println(apiUrl);
         Map<String, Object> compiledResponse = new HashMap<>();
@@ -40,7 +47,7 @@ public class DataService{
         return compiledResponse;
     }
 
-    public static Map<String, Object> getReport(Map<String, Object> rawData){
+    public Map<String, Object> getReport(Map<String, Object> rawData){
         final String apiUrl = dataAPI + "/report";
         // Get required dataset names
         Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
@@ -56,37 +63,48 @@ public class DataService{
             // TODO: get dataset data
             final String path = projectName + "/" + filename;
             System.out.println(path);
-            FileService fileService = new FileService();
             InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile(path));
-//            S3ObjectInputStream s3Data = (S3ObjectInputStream) FileController.downloadFile(filename=path);
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> data = null;
+            InputStream s3DataStream = null;
             try {
-                data = mapper.readValue((DataInput) s3Data, Map.class);
+                s3DataStream = s3Data.getInputStream();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            datasets.put(filename, data);
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> data = null;
+            try {
+                data = mapper.readValue(s3DataStream, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (Map.Entry<String, Object> pair : data.entrySet()) {
+                datasets.put(pair.getKey(), pair.getValue());
+            }
         }
 
-        return datasets;
-//
-//        // Recompile data for /report
-//        Map<String, Object> reportData = new HashMap<>();
-//        reportData.put("metadata", (Map<String, Object>) metadata.get("filename"));
-//        reportData.put("compiled", (Map<String, Object>) rawData.get("compiled"));
-//        reportData.put("data", datasets);
-//
-//        // Get report from /report
-//        try {
-//            ApiConnectionClient connection = new ApiConnectionClient();
-//            connection.sendPost(apiUrl, reportData);
-//            return connection.getResponse();
-//        } catch (Exception e) {
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("error", e);
-//            return response;
-//        }
+        // Recompile data for /report
+        Map<String, Object> subMetadata = new HashMap<>();
+        subMetadata.put("filename", (String) metadata.get("filename"));
+        subMetadata.put("project", (String) metadata.get("project"));
+
+        Map<String, Object> reportData = new HashMap<>();
+        reportData.put("metadata", (Map<String, Object>) subMetadata);
+        reportData.put("compiled", (Map<String, Object>) rawData.get("compiled"));
+        reportData.put("data", datasets);
+
+        // Get report from /report
+        Map<String, Object> outputResponse = new HashMap<>();
+        try {
+            ApiConnectionClient connection = new ApiConnectionClient();
+            connection.sendPost(apiUrl, reportData);
+            outputResponse = connection.getResponse();
+        } catch (Exception e) {
+            outputResponse.put("error", e);
+        }
+
+        return outputResponse;
 
         // TODO: @Joel to help with uploading to S3 bucket and returning report
         // Upload to AWS S3 bucket
