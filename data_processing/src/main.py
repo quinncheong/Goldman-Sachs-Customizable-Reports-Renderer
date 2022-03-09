@@ -9,11 +9,6 @@ import pandas as pd
 import traceback
 
 # Helper functions
-def get_application() -> FastAPI:
-    application = FastAPI()
-    return application
-
-
 def get_all_rows(dict_data, headers):
     for key in dict_data:
         if key == 'columns':
@@ -46,7 +41,8 @@ def get_all_rows(dict_data, headers):
 
 
 # Run app
-app = get_application()
+PREFIX='/api/v1'
+app = FastAPI()
 
 origins = [
     "http://localhost:3000",
@@ -62,13 +58,13 @@ app.add_middleware(
 
 
 # Placeholder homepage
-@app.get("/")
+@app.get(f"{PREFIX}/")
 async def homepage():
     return {"msg": "Welcome to data processing"}
 
 
 # Process datatype and size endpoint
-@app.post("/process")
+@app.post(f"{PREFIX}/process")
 async def get_body(request: Request):
     input_body =  await request.json()
     
@@ -77,7 +73,6 @@ async def get_body(request: Request):
     try:
         for report in input_body:
             headers = {}
-            print(input_body[report])
             get_all_rows(input_body[report], headers)
             data_schema[report] = headers
     except Exception as e:
@@ -89,8 +84,7 @@ async def get_body(request: Request):
 
 # Create excel report endpoint
 # TODO: Make cols and cols_rename to be dynamic
-# TODO: Upload excel file to S3 bucket
-@app.post("/report")
+@app.post(f"{PREFIX}/report")
 async def create_table(request: Request):
     df_list = []
     sheet_names = []

@@ -5,14 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
-import thefoorbarfighters.gsengage.FileController;
+import thefoorbarfighters.gsengage.controllers.FileController;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 
 @Service
 public class DataService{
 
+    private static String dataAPI = "http://localhost:8000/api/v1";
+
     public static Map<String, Object> getDatatype(Map<String, Object> rawData){
-        final String apiUrl = "http://localhost:8000/process";
+        final String apiUrl = dataAPI.concat("/process");
+        System.out.println(apiUrl);
         Map<String, Object> compiledResponse = new HashMap<>();
 
         for (Map.Entry<String, Object> report : rawData.entrySet()) {
@@ -35,19 +38,20 @@ public class DataService{
     }
 
     public static Map<String, Object> getReport(Map<String, Object> rawData){
-        final String apiUrl = "http://localhost:8000/report";
+        final String apiUrl = dataAPI.concat("/report");
         // Get required dataset names
         Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
-        String projectName = (String) metaData.get("project");
+        String projectName = (String) metadata.get("project");
         List<String> filenames = (List<String>) metadata.get("files");
 
         // Get datasets from S3
         Map<String, Object> datasets = new HashMap<>();
-        for (String filename: filenames) {
-            // TODO: get dataset data
-            Map<String, Object> data = FileController.findByName(name=filename, fileNumber=projectName);
-            datasets.put(filename, data);
-        }
+        // TODO: @Joel to help with downloading each data file and adding it to the map
+//        for (String filename: filenames) {
+//            // TODO: get dataset data
+//            Map<String, Object> data = FileController.downloadFile(name=filename);
+//            datasets.put(filename, data);
+//        }
 
         // Recompile data for /report
         Map<String, Object> reportData = new HashMap<>();
@@ -66,6 +70,7 @@ public class DataService{
             return response;
         }
 
+        // TODO: @Joel to help with uploading to S3 bucket and returning report
         // Upload to AWS S3 bucket
 
         // Return excel report

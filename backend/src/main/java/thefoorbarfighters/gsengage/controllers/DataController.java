@@ -7,7 +7,7 @@ import thefoorbarfighters.gsengage.service.DataService;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/data")
+@RequestMapping(value = "/api/v1/data")
 public class DataController {
     // Send POST request to python APIs
     // Return API response
