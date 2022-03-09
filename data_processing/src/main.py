@@ -5,6 +5,8 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import uvicorn
 import pandas as pd
+from io import BytesIO
+from fastapi.responses import StreamingResponse
 
 # Helper functions
 def get_application() -> FastAPI:
@@ -84,7 +86,7 @@ async def get_body(request: Request):
 # Create excel report endpoint
 # TODO: Make cols and cols_rename to be dynamic
 # TODO: Upload excel file to S3 bucket
-@app.post("/report")
+@app.post("/report", response_description='xlsx')
 async def create_table(request: Request):
     df_list = []
     sheet_names = []
@@ -142,7 +144,8 @@ async def create_table(request: Request):
                 sheet_dict[k] = df_list
                 df_list = []
         # write excel
-        writer = pd.ExcelWriter('output.xlsx',
+        output_excel = BytesIO()
+        writer = pd.ExcelWriter(output_excel,
                                 engine='xlsxwriter',
                                 date_format='yyyymmdd')
         workbook = writer.book
@@ -162,7 +165,10 @@ async def create_table(request: Request):
                 start_col = 0
                 start_row += max_row + 3
         writer.save() 
-        return FileResponse('output.xlsx')
+        headers = {
+            'Content-Disposition': 'attachment; filename = "output.xlsx"'
+        }
+        return StreamingResponse(output_excel, headers=headers)
         
     except Exception as e:
         return {"error_msg": repr(e)}
