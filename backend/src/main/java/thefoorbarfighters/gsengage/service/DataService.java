@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 import thefoorbarfighters.gsengage.controllers.FileController;
 
 import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class DataService{
     private static String dataAPI = "http://localhost:8000/api/v1";
 
     public Map<String, Object> getDatatype(Map<String, Object> rawData){
+        final boolean parseFile = false;
         final String apiUrl = dataAPI + "/process";
         System.out.println(apiUrl);
         Map<String, Object> compiledResponse = new HashMap<>();
@@ -36,8 +39,8 @@ public class DataService{
 
             try {
                 ApiConnectionClient connection = new ApiConnectionClient();
-                connection.sendPost(apiUrl, reportValue);
-                Map<String, Object> message = connection.getResponse();
+                connection.sendPost(apiUrl, reportValue, parseFile);
+                Map<String, Object> message = connection.getMapResponse();
                 compiledResponse.put(reportName, message.get(reportName));
             } catch (Exception e) {
                 compiledResponse.put("error", e);
@@ -47,7 +50,8 @@ public class DataService{
         return compiledResponse;
     }
 
-    public Map<String, Object> getReport(Map<String, Object> rawData){
+    public Path getReport(Map<String, Object> rawData){
+        final boolean parseFile = true;
         final String apiUrl = dataAPI + "/report";
         // Get required dataset names
         Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
@@ -95,20 +99,22 @@ public class DataService{
         reportData.put("data", datasets);
 
         // Get report from /report
-        Map<String, Object> outputResponse = new HashMap<>();
+        Path outputResponse = null;
         try {
             ApiConnectionClient connection = new ApiConnectionClient();
-            connection.sendPost(apiUrl, reportData);
-            outputResponse = connection.getResponse();
+            connection.sendPost(apiUrl, reportData, parseFile);
+            outputResponse = connection.getFileResponse();
         } catch (Exception e) {
-            outputResponse.put("error", e);
+            e.printStackTrace();
         }
 
         return outputResponse;
-
         // TODO: @Joel to help with uploading to S3 bucket and returning report
         // Upload to AWS S3 bucket
-
+//        if (outputResponse != null) {
+//            fileService.upload((MultipartFile) outputResponse);
+//        }
+//        return null;
         // Return excel report
     }
 }

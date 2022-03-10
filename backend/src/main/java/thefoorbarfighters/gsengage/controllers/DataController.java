@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thefoorbarfighters.gsengage.service.DataService;
+
+import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
@@ -27,7 +29,7 @@ public class DataController {
     }
 
     @PostMapping(value = "/report", headers = "Accept=application/json")
-    public Map<String, Object> createData(@RequestBody Map<String, Object> rawData){
+    public Path createData(@RequestBody Map<String, Object> rawData){
         return dataService.getReport(rawData);
     }
 
