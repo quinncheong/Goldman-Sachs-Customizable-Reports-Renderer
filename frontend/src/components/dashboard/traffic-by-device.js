@@ -65,7 +65,7 @@ export const TrafficByDevice = (props) => {
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Edit Existing Report" />
       <Divider />
       <CardContent>
         <Box

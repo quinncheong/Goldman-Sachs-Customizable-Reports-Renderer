@@ -144,7 +144,8 @@ async def create_table(request: Request):
                 sheet_dict[k] = df_list
                 df_list = []
         # write excel
-        writer = pd.ExcelWriter('output.xlsx',
+        output_excel = BytesIO()
+        writer = pd.ExcelWriter(output_excel,
                                 engine='xlsxwriter',
                                 date_format='yyyymmdd')
         workbook = writer.book
@@ -164,8 +165,13 @@ async def create_table(request: Request):
                 start_col = 0
                 start_row += max_row + 3
         writer.save() 
-        return FileResponse('output.xlsx')
-        
+        xlsx_data = output_excel.getvalue()
+        file_name = 'output'
+
+        return StreamingResponse(BytesIO(xlsx_data), media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers={
+            "Content-Disposition": f'attachment; filename="{file_name}.xlsx"'
+        })
+
     except Exception as e:
         return {"error_msg": repr(e)}
 
