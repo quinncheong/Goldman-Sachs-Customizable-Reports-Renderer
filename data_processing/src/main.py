@@ -7,6 +7,8 @@ from pydantic import BaseModel
 import uvicorn
 import pandas as pd
 import traceback
+from io import BytesIO
+from fastapi.responses import StreamingResponse
 
 # Helper functions
 def get_all_rows(dict_data, headers):
@@ -84,7 +86,7 @@ async def get_body(request: Request):
 
 # Create excel report endpoint
 # TODO: Make cols and cols_rename to be dynamic
-@app.post(f"{PREFIX}/report")
+@app.post(f"{PREFIX}/report", response_description='xlsx')
 async def create_table(request: Request):
     df_list = []
     sheet_names = []
