@@ -77,10 +77,10 @@ public class FileService {
      }
 
     @Async
-    public void uploadWithFileNumber(final MultipartFile multipartFile, int fileNumber) {
+    public void uploadWithFolderNumber(final MultipartFile multipartFile, int folderNumber) {
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
-            final String fileName = fileNumber + "/" + file.getName();
+            final String fileName = folderNumber + "/" + file.getName();
             LOG.info("Uploading file with name {}", fileName);
             final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
             amazonS3.putObject(putObjectRequest);
