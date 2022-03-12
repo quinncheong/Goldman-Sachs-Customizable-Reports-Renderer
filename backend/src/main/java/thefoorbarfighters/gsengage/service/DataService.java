@@ -11,7 +11,6 @@ import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 import thefoorbarfighters.gsengage.controllers.FileController;
 import org.springframework.mock.web.MockMultipartFile;
 
-
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +51,36 @@ public class DataService{
         return compiledResponse;
     }
 
+    private Map<String, Object> jobSucess(Map<String, Object> apiResponse) {
+        if (apiResponse.containsKey("success")) {
+            apiResponse.put("success", apiResponse.get("success") + 1);
+        } else {
+            apiResponse.put("success", 1);
+        }
+
+        if (! apiResponse.containsKey("fail")) {
+            apiResponse.put("fail", 0);
+        }
+
+        return apiResponse;
+    }
+
+    private Map<String, Object> jobFail(Map<String, Object> apiResponse) {
+        if (apiResponse.containsKey("fail")) {
+            apiResponse.put("fail", apiResponse.get("success") + 1);
+        } else {
+            apiResponse.put("fail", 1);
+        }
+
+        if (! apiResponse.containsKey("success")) {
+            apiResponse.put("success", 0);
+        }
+
+        return apiResponse;
+    }
+
     public Map<String, Object> getReport(Map<String, Object> rawData){
+        Map<String, Object> reportResults = new HashMap();
         final boolean parseFile = true;
         final String apiUrl = dataAPI + "/report";
         // Get required dataset names
@@ -127,7 +155,7 @@ public class DataService{
         final String newReportPath = projectName + "/" + fileName;
         String reportUrl = fileService.getFileURL(newReportPath);
 
-        Map<String, Object> reportResults = new HashMap();
+
         reportResults.put("success", 1);
         reportResults.put("report_url", reportUrl);
         reportResults.put("failed", 0);

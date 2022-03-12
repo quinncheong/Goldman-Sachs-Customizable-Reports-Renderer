@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/v1/data")
+@RequestMapping(value = "/api/v1/")
 public class DataController {
     // Send POST request to python APIs
     // Return API response
@@ -24,12 +24,12 @@ public class DataController {
         return "Report Generation Backend";
     }
 
-    @PostMapping(value = "/analyze")
+    @PostMapping(value = "/custom/analyze")
     public Map<String, Object> analyzeDatatype(@RequestBody Map<String, Object> rawData){
         return dataService.getDatatype(rawData);
     }
 
-    @PostMapping(value = "/report", headers = "Accept=application/json")
+    @PostMapping(value = "/custom/report", headers = "Accept=application/json")
     public Map<String, Object> createData(@RequestBody Map<String, Object> rawData){
         return dataService.getReport(rawData);
     }
