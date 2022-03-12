@@ -4,13 +4,16 @@ import axios from "axios";
 import {
   Box,
   Button,
-  Input,
   Card,
   CardContent,
   CardHeader,
   Divider,
   useTheme,
   Typography,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -19,6 +22,8 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 export const Upload = ({ setPageType, sendRawJson, ...props }) => {
   const [file, setfile] = useState("");
+  const [reportType, setReportType] = useState("Simple");
+
   const theme = useTheme();
   const router = useRouter();
 
@@ -48,14 +53,76 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
     labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 aug"],
   };
 
+  const changeReportType = (event) => {
+    setReportType(event.target.value);
+  };
+
   const pushToGenerator = (e) => {
-    console.log(router);
     setPageType("generate");
   };
 
+  const renderUploadButtons = () => (
+    <>
+      <Box
+        sx={{
+          height: 50,
+          display: "flex",
+          justifyContent: "center",
+          gap: 3,
+        }}
+      >
+        <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
+          <Typography color="" variant="body2">
+            Upload JSON
+          </Typography>
+          <input type="file" onChange={sendRawJson} hidden multiple />
+        </Button>
+      </Box>
+    </>
+  );
+
+  const renderReportType = () => (
+    <>
+      <Box
+        sx={{
+          height: 80,
+          display: "flex",
+          alignItems: "center",
+          gap: 3,
+        }}
+      >
+        <FormControl required sx={{ m: 1, minWidth: 280 }}>
+          <InputLabel
+            sx={{
+              typography: "body1",
+            }}
+            focused
+            color="primary"
+            id="report-select-label"
+          >
+            Select Report Type:
+          </InputLabel>
+          <Select
+            required
+            classes={"sizeLarge"}
+            labelId="report-select-label"
+            id="report-select"
+            value={reportType}
+            label="reportType"
+            onChange={changeReportType}
+          >
+            <MenuItem value={"Simple"}>Simple</MenuItem>
+            <MenuItem value={"Complex"}>Complex</MenuItem>
+            <MenuItem value={"Custom"}>Custom</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+    </>
+  );
+
   return (
     <Card variant="outlined" {...props}>
-      <CardHeader sx={{ fontSize: "600px" }} title="Create New Report " />
+      <CardHeader sx={{}} title="Create New Report " />
       <Divider />
       <CardContent>
         <Box
@@ -63,46 +130,14 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
             height: 280,
             position: "relative",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: 3,
+            gap: 2,
           }}
         >
-          <Box
-            sx={{
-              height: 50,
-              display: "flex",
-              justifyContent: "center",
-              gap: 3,
-            }}
-          >
-            <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
-              <Typography color="" variant="body2">
-                Upload JSON
-              </Typography>
-              <input type="file" onChange={sendRawJson} hidden multiple />
-            </Button>
-            <Button
-              color="primary"
-              endIcon={<FolderIcon fontSize="large" />}
-              variant="outlined"
-              size="large"
-            >
-              <Typography color="" variant="body2">
-                Load File
-              </Typography>
-            </Button>
-            <Button
-              color="primary"
-              endIcon={<TextFormatIcon fontSize="large" />}
-              variant="outlined"
-              size="large"
-            >
-              <Typography color="" variant="body2">
-                Input Text
-              </Typography>
-            </Button>
-          </Box>
+          {renderReportType()}
+          {renderUploadButtons()}
         </Box>
       </CardContent>
       <Divider />
