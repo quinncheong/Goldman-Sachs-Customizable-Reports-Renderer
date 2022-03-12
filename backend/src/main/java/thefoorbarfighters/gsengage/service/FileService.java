@@ -99,21 +99,20 @@ public class FileService {
         ListObjectsV2Result result;
         int folderCount = 0;
         LOG.info("Counting s3 files");
-     
         do {
-           result = amazonS3.listObjectsV2(req);
-           for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
-            String fileName = objectSummary.getKey();
-            int number = Integer.parseInt(fileName.split("/")[0]);
-            if (number > folderCount) {
-                folderCount = number;
+            result = amazonS3.listObjectsV2(req);
+            for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+                String fileName = objectSummary.getKey();
+                int number = Integer.parseInt(fileName.split("/")[0]);
+                if (number > folderCount) {
+                    folderCount = number;
+                }
             }
-           }
-           req.setContinuationToken(result.getNextContinuationToken());
-     
+            req.setContinuationToken(result.getNextContinuationToken());
+
         } while (result.isTruncated() == true);
-            return folderCount;
-     }
+        return folderCount;
+    }
 
     public String getFileURL(String objectKey) {
         // Set the presigned URL to expire after one hour.
