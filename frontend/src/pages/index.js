@@ -7,8 +7,11 @@ import { EditExistingReport } from "../components/dashboard/edit-existing-report
 import { RecentReports } from "../components/dashboard/recent-reports";
 import { DashboardLayout } from "../components/dashboard-layout";
 
+import axios from "axios";
+
 // Report generation
 import { Generator } from "../components/dashboard/generator/generator";
+import { javaTemplateEndpoint } from "../config/endpoints";
 
 const Dashboard = () => {
   const [reports, setReports] = useState([
@@ -53,6 +56,7 @@ const Dashboard = () => {
       dateModified: Date.now(),
     },
   ]);
+  const [reportTemplate, setReportTemplate] = useState("Simple");
   const [pageType, setPageType] = useState("home");
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -233,7 +237,6 @@ const Dashboard = () => {
       },
     },
   });
-  console.log(jsonData);
 
   useEffect(() => {
     // Function to get report stuff
@@ -249,25 +252,44 @@ const Dashboard = () => {
   }, []);
 
   const sendRawJson = async (e) => {
-    const file = e.target.files[0];
-    console.dir(e.target);
-    console.log(file);
-    const fileReader = new FileReader();
-    // console.log(fileReader);
-    const endpoint = "http://localhost:5000/create";
-    // fileReader.onloadend = () => {
-    //   // console.log(fileReader);
-    //   try {
-    //     let reqData = JSON.parse(fileReader.result);
-    //     axios.post(endpoint, reqData.body["SIMPLE_REPORT"].rows).then((res) => {
-    //       // console.log(res.data);
-    //     });
-    //   } catch (e) {
-    //     // Input some error message here
-    //     // setErrorData("**Not valid JSON file!**");
-    //   }
-    // };
-    // if (file !== undefined) fileReader.readAsText(file);
+    const files = e.target.files;
+    const promises = [];
+    let jsonObject = {};
+
+    if (files.length) {
+      for (let i = 0; i < files.length; i++) {
+        promises.push(
+          new Promise((resolve) => {
+            const reader = new FileReader();
+            console.log(files);
+            const file = files[i];
+            reader.readAsBinaryString(file);
+            reader.onloadend = async (loadendEvent) => {
+              jsonObject[file.name] = JSON.parse(reader.result);
+              resolve();
+            };
+          })
+        );
+      }
+    }
+
+    Promise.all(promises).then(() => {
+      console.log(jsonObject);
+      let reqBean = {
+        data: jsonObject,
+        templateType: reportTemplate,
+      };
+      sendJsonObj(reqBean);
+    });
+
+    async function sendJsonObj(data) {
+      try {
+        let templateRes = await axios.post(javaTemplateEndpoint, data);
+        console.log(templateRes);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -287,7 +309,13 @@ const Dashboard = () => {
           <Container maxWidth={false}>
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
-                <Upload sendRawJson={sendRawJson} setPageType={setPageType} sx={{ height: 500 }} />
+                <Upload
+                  reportTemplate={reportTemplate}
+                  setReportTemplate={setReportTemplate}
+                  sendRawJson={sendRawJson}
+                  setPageType={setPageType}
+                  sx={{ height: 500 }}
+                />
               </Grid>
               <Grid item md={6} xs={12}>
                 <EditExistingReport reports={reports} sx={{ height: 500 }} />

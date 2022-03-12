@@ -20,41 +20,15 @@ import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-export const Upload = ({ setPageType, sendRawJson, ...props }) => {
-  const [file, setfile] = useState("");
-  const [reportType, setReportType] = useState("Simple");
-
-  const theme = useTheme();
-  const router = useRouter();
-
-  const data = {
-    datasets: [
-      {
-        backgroundColor: "#3F51B5",
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: "This year",
-        maxBarThickness: 10,
-      },
-      {
-        backgroundColor: "#EEEEEE",
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: "Last year",
-        maxBarThickness: 10,
-      },
-    ],
-    labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 aug"],
-  };
-
-  const changeReportType = (event) => {
-    setReportType(event.target.value);
+export const Upload = ({
+  setPageType,
+  reportTemplate,
+  setReportTemplate,
+  sendRawJson,
+  ...props
+}) => {
+  const changeTemplateType = (event) => {
+    setReportTemplate(event.target.value);
   };
 
   const pushToGenerator = (e) => {
@@ -81,7 +55,7 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
     </>
   );
 
-  const renderReportType = () => (
+  const renderTemplateTypes = () => (
     <>
       <Box
         sx={{
@@ -107,9 +81,9 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
             classes={"sizeLarge"}
             labelId="report-select-label"
             id="report-select"
-            value={reportType}
-            label="reportType"
-            onChange={changeReportType}
+            value={reportTemplate}
+            label="templateType"
+            onChange={changeTemplateType}
           >
             <MenuItem value={"Simple"}>Simple</MenuItem>
             <MenuItem value={"Complex"}>Complex</MenuItem>
@@ -136,7 +110,7 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
             gap: 2,
           }}
         >
-          {renderReportType()}
+          {renderTemplateTypes()}
           {renderUploadButtons()}
         </Box>
       </CardContent>
