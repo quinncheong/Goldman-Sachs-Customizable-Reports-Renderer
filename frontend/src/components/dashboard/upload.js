@@ -27,6 +27,7 @@ export const Upload = ({
   sendRawJson,
   ...props
 }) => {
+  console.log(reportTemplate);
   const changeTemplateType = (event) => {
     setReportTemplate(event.target.value);
   };
@@ -49,7 +50,12 @@ export const Upload = ({
           <Typography color="" variant="body2">
             Upload JSON
           </Typography>
-          <input type="file" onChange={sendRawJson} hidden multiple />
+          <input
+            type="file"
+            onChange={sendRawJson}
+            hidden
+            multiple={reportTemplate === "Simple" ? false : true}
+          />
         </Button>
       </Box>
     </>
@@ -74,7 +80,7 @@ export const Upload = ({
             color="primary"
             id="report-select-label"
           >
-            Select Report Type:
+            Select Report Template:
           </InputLabel>
           <Select
             required
@@ -112,6 +118,11 @@ export const Upload = ({
         >
           {renderTemplateTypes()}
           {renderUploadButtons()}
+          {reportTemplate === "Simple" && (
+            <Typography color="error" variant="body2">
+              *Only 1 JSON file can be uploaded for Simple Templates
+            </Typography>
+          )}
         </Box>
       </CardContent>
       <Divider />
