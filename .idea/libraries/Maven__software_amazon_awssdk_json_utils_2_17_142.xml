@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: software.amazon.awssdk:json-utils:2.17.142">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/software/amazon/awssdk/json-utils/2.17.142/json-utils-2.17.142.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/software/amazon/awssdk/json-utils/2.17.142/json-utils-2.17.142-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/software/amazon/awssdk/json-utils/2.17.142/json-utils-2.17.142-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

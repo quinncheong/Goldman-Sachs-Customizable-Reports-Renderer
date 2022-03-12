@@ -20,8 +20,8 @@ public class FileController {
     FileService fileService;
 
     @GetMapping("/downloadFile")
-    public ResponseEntity<Object> downloadFile(@RequestBody(required = false) @RequestParam String name, @RequestParam int fileNumber) {
-        String fullname = fileNumber + "/" + name;
+    public ResponseEntity<Object> downloadFile(@RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
+        String fullname = folderNumber + "/" + name;
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.noCache())
@@ -31,8 +31,8 @@ public class FileController {
     }
 
     @GetMapping("/getFileURL")
-    public ResponseEntity<Object> getFileURL(@RequestBody(required = false) @RequestParam String name, @RequestParam int fileNumber) {
-        String fullname = fileNumber + "/" + name;
+    public ResponseEntity<Object> getFileURL(@RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
+        String fullname = folderNumber + "/" + name;
         String URL = fileService.getFileURL(fullname);
         return new ResponseEntity<>(URL, HttpStatus.OK);
     }
@@ -43,9 +43,9 @@ public class FileController {
         return new ResponseEntity<>(filecount, HttpStatus.OK);
     }
 
-    @PostMapping("/uploadWithFileNumber")
-    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("file") MultipartFile multipartFile, @RequestParam("fileNumber") int fileNumber) {
-        fileService.uploadWithFileNumber(multipartFile, fileNumber);
+    @PostMapping("/uploadWithFolderNumber")
+    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("file") MultipartFile multipartFile, @RequestParam int folderNumber) {
+        fileService.uploadWithFolderNumber(multipartFile, folderNumber);
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
     }
 
