@@ -91,6 +91,7 @@ async def create_table(request: Request):
     df_list = []
     sheet_names = []
     sheet_dict = {}
+    column_width_dict = {}
     
     try:
         input = await request.json()
@@ -110,6 +111,7 @@ async def create_table(request: Request):
                 for table in table_row:
                     series_list = []
                     for col, json_dict in table.items():
+                        tmp_series = data[json_dict['data']][col]
                         if json_dict['sum']:
                             name = tmp_series.name
                             s = pd.Series([tmp_series.agg('sum')])
@@ -117,7 +119,6 @@ async def create_table(request: Request):
                             tmp_series.name = name
                             
                         if json_dict['data'] in data and col in data[json_dict['data']]:
-                            tmp_series = data[json_dict['data']][col]
                             if col == 'maturityDate':
                                 tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
                                 tmp_series.name = 'Maturity'
@@ -200,6 +201,7 @@ async def create_table(request: Request):
         })
 
     except Exception as e:
+        traceback.print_exc()
         return {"error_msg": repr(e)}
 
 

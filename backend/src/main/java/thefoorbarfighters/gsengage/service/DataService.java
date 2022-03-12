@@ -14,9 +14,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DataService{
@@ -35,6 +33,68 @@ public class DataService{
         baseResponse.put("success", successCountResponse);
         baseResponse.put("failure", failureCountResponse);
         return baseResponse;
+    }
+
+    public Map<String, Object> getReportFromTemplate(Map<String, Object> rawData, String template_type){
+        Map<String, Object> serviceResponse = createBaseResponse();
+        final boolean parseFile = true;
+        final String apiUrl = dataAPI + "/report";
+        try {
+            if (Objects.equals(template_type, "simple")) {
+                Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
+                String fileName = (String) metadata.get("filename");
+                int projectName = (int) metadata.get("project");
+                List<String> sourceFilenames = (List<String>) metadata.get("files");
+                String sourceFilename = sourceFilenames.get(0);
+                String sourceFilenameNoExt = sourceFilename.replaceAll(".json", "");
+
+                // create complied section
+                Map<String, Object> compiled = new HashMap();
+                Map<String, Object> colMap = new HashMap();
+                Map<String, Object> inputData = (Map<String, Object>) rawData.get("data");
+                Map<String, Object> datatypes = getDatatype(inputData);
+                Map<String, Object> successData = (Map<String, Object>) datatypes.get("success");
+                Map<String, Object> datasetData = (Map<String, Object>) successData.get(sourceFilenameNoExt);
+                System.out.println(datasetData);
+                Set<String> columns = datasetData.keySet();
+                Map<String, Object> dataRelationship = new HashMap();
+                dataRelationship.put("data", sourceFilenameNoExt);
+                dataRelationship.put("sum", false);
+                for (String column : columns) {
+                    colMap.put(column, dataRelationship);
+                }
+                compiled.put("Holdings", colMap);
+
+                System.out.println(compiled);
+
+                rawData.put("compiled", compiled);
+
+                // Get report from /report
+                MultipartFile outputResponse = null;
+                ApiConnectionClient connection = new ApiConnectionClient();
+                connection.sendPost(apiUrl, rawData, parseFile);
+                InputStream inputStream = new ByteArrayInputStream(connection.getFileResponse());
+                outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+
+                // Upload to AWS S3 bucket
+                // TODO: upload compiled as json
+                if (outputResponse != null) {
+                    fileService.uploadWithFolderNumber(outputResponse, projectName);
+                }
+
+                // Return excel report
+                final String newReportPath = projectName + "/" + fileName;
+                String reportUrl = fileService.getFileURL(newReportPath);
+                jobSuccess(serviceResponse);
+                Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+                tmpSuccessResponse.put("report_url", reportUrl);
+                serviceResponse.put("success", tmpSuccessResponse);
+            }
+        } catch (Exception e) {
+            jobFail(serviceResponse);
+            e.printStackTrace();
+        }
+        return serviceResponse;
     }
 
     public Map<String, Object> getDatatype(Map<String, Object> rawData){
@@ -85,12 +145,12 @@ public class DataService{
             Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
             String fileName = (String) metadata.get("filename");
             int projectName = (int) metadata.get("project");
-            List<String> filenames = (List<String>) metadata.get("files");
+            List<String> sourceFilenames = (List<String>) metadata.get("files");
 
             // Get datasets from S3
             Map<String, Object> datasets = new HashMap<>();
-            for (String filename : filenames) {
-                final String path = projectName + "/" + filename;
+            for (String sourceFilename : sourceFilenames) {
+                final String path = projectName + "/" + sourceFilename;
                 InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile(path));
                 InputStream s3DataStream = null;
                 s3DataStream = s3Data.getInputStream();
@@ -121,6 +181,7 @@ public class DataService{
             outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 
             // Upload to AWS S3 bucket
+            // TODO: upload compiled as json
             if (outputResponse != null) {
                 fileService.uploadWithFolderNumber(outputResponse, projectName);
             }
