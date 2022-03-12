@@ -4,58 +4,105 @@ import axios from "axios";
 import {
   Box,
   Button,
-  Input,
   Card,
   CardContent,
   CardHeader,
   Divider,
   useTheme,
   Typography,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-export const Upload = ({ setPageType, sendRawJson, ...props }) => {
-  const [file, setfile] = useState("");
-  const theme = useTheme();
-  const router = useRouter();
-
-  const data = {
-    datasets: [
-      {
-        backgroundColor: "#3F51B5",
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: "This year",
-        maxBarThickness: 10,
-      },
-      {
-        backgroundColor: "#EEEEEE",
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: "Last year",
-        maxBarThickness: 10,
-      },
-    ],
-    labels: ["1 Aug", "2 Aug", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 aug"],
+export const Upload = ({
+  setPageType,
+  reportTemplate,
+  setReportTemplate,
+  sendRawJson,
+  ...props
+}) => {
+  console.log(reportTemplate);
+  const changeTemplateType = (event) => {
+    setReportTemplate(event.target.value);
   };
 
   const pushToGenerator = (e) => {
-    console.log(router);
     setPageType("generate");
   };
 
+  const renderUploadButtons = () => (
+    <>
+      <Box
+        sx={{
+          height: 50,
+          display: "flex",
+          justifyContent: "center",
+          gap: 3,
+        }}
+      >
+        <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
+          <Typography color="" variant="body2">
+            Upload JSON
+          </Typography>
+          <input
+            type="file"
+            onChange={sendRawJson}
+            hidden
+            multiple={reportTemplate === "Simple" ? false : true}
+          />
+        </Button>
+      </Box>
+    </>
+  );
+
+  const renderTemplateTypes = () => (
+    <>
+      <Box
+        sx={{
+          height: 80,
+          display: "flex",
+          alignItems: "center",
+          gap: 3,
+        }}
+      >
+        <FormControl required sx={{ m: 1, minWidth: 280 }}>
+          <InputLabel
+            sx={{
+              typography: "body1",
+            }}
+            focused
+            color="primary"
+            id="report-select-label"
+          >
+            Select Report Template:
+          </InputLabel>
+          <Select
+            required
+            classes={"sizeLarge"}
+            labelId="report-select-label"
+            id="report-select"
+            value={reportTemplate}
+            label="templateType"
+            onChange={changeTemplateType}
+          >
+            <MenuItem value={"Simple"}>Simple</MenuItem>
+            <MenuItem value={"Complex"}>Complex</MenuItem>
+            <MenuItem value={"Custom"}>Custom</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+    </>
+  );
+
   return (
     <Card variant="outlined" {...props}>
-      <CardHeader sx={{ fontSize: "600px" }} title="Create New Report " />
+      <CardHeader sx={{}} title="Create New Report " />
       <Divider />
       <CardContent>
         <Box
@@ -63,46 +110,19 @@ export const Upload = ({ setPageType, sendRawJson, ...props }) => {
             height: 280,
             position: "relative",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            gap: 3,
+            gap: 2,
           }}
         >
-          <Box
-            sx={{
-              height: 50,
-              display: "flex",
-              justifyContent: "center",
-              gap: 3,
-            }}
-          >
-            <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
-              <Typography color="" variant="body2">
-                Upload JSON
-              </Typography>
-              <input type="file" onChange={sendRawJson} hidden multiple />
-            </Button>
-            <Button
-              color="primary"
-              endIcon={<FolderIcon fontSize="large" />}
-              variant="outlined"
-              size="large"
-            >
-              <Typography color="" variant="body2">
-                Load File
-              </Typography>
-            </Button>
-            <Button
-              color="primary"
-              endIcon={<TextFormatIcon fontSize="large" />}
-              variant="outlined"
-              size="large"
-            >
-              <Typography color="" variant="body2">
-                Input Text
-              </Typography>
-            </Button>
-          </Box>
+          {renderTemplateTypes()}
+          {renderUploadButtons()}
+          {reportTemplate === "Simple" && (
+            <Typography color="error" variant="body2">
+              *Only 1 JSON file can be uploaded for Simple Templates
+            </Typography>
+          )}
         </Box>
       </CardContent>
       <Divider />
