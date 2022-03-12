@@ -109,16 +109,25 @@ async def create_table(request: Request):
                 row_list = []
                 for table in table_row:
                     series_list = []
-                    for col, json_data in table.items():
-                        if json_data in data:
-                            tmp_series = data[json_data][col]
+                    for col, json_dict in table.items():
+                        if json_dict['sum']:
+                            name = tmp_series.name
+                            s = pd.Series([tmp_series.agg('sum')])
+                            tmp_series = tmp_series.append(s, ignore_index=True)
+                            tmp_series.name = name
+                            
+                        if json_dict['data'] in data and col in data[json_dict['data']]:
+                            tmp_series = data[json_dict['data']][col]
                             if col == 'maturityDate':
                                 tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
                                 tmp_series.name = 'Maturity'
                             elif col == 'positionDate':
                                 tmp_series = pd.to_datetime(tmp_series, format='%Y%m%d').dt.date
                                 tmp_series.name = 'Position Date'
-                            elif col.islower():
+                            elif col == 'compositionRate':
+                                tmp_series = ( 100 * tmp_series ).round(2).astype(str) + "%"
+                                tmp_series.name = 'Allocation'
+                            elif col.islower() and col.isalpha():
                                 tmp_series.name = col.capitalize()
                             elif not col.isupper():
                                 substr = ''
@@ -133,16 +142,20 @@ async def create_table(request: Request):
                                 if substr != '':
                                     lst.append(substr.capitalize())
                                 tmp_series.name = ' '.join(lst)
+                                
                         series_list.append(tmp_series)
+                        tmp_series = pd.Series()
                     # build dataframe
                     if series_list != []:
                         tmp_df = pd.concat(series_list, axis=1)
+                        tmp_df.fillna('', inplace=True)
                         row_list.append(tmp_df)
                 if row_list != []:
                     df_list.append(row_list)
             if df_list != []:
                 sheet_dict[k] = df_list
                 df_list = []
+
         # write excel
         output_excel = BytesIO()
         writer = pd.ExcelWriter(output_excel,
@@ -160,16 +173,30 @@ async def create_table(request: Request):
                     if r > max_row:
                         max_row = r
                     worksheet = writer.sheets[sheet_name]
-                    worksheet.set_column(start_col, c, 20)
+                    for column in table_df:
+                        column_width = max(table_df[column].astype(str).map(len).max(), len(column))
+                        col_idx = table_df.columns.get_loc(column)
+                        col_idx += start_col
+                        if col_idx in column_width_dict:
+                            if column_width_dict[col_idx] < column_width:
+                                column_width_dict[col_idx] = column_width
+                                writer.sheets[sheet_name].set_column(col_idx, col_idx, column_width)
+                        else:
+                            column_width_dict[col_idx] = column_width
+                            writer.sheets[sheet_name].set_column(col_idx, col_idx, column_width)
                     start_col += c + 1
                 start_col = 0
                 start_row += max_row + 3
+            column_width_dict = {}
         writer.save() 
         xlsx_data = output_excel.getvalue()
         file_name = 'output'
 
-        return StreamingResponse(BytesIO(xlsx_data), media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers={
-            "Content-Disposition": f'attachment; filename="{file_name}.xlsx"'
+        return StreamingResponse(
+            BytesIO(xlsx_data), 
+            media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+            headers={
+                "Content-Disposition": f'attachment; filename="{file_name}.xlsx"'
         })
 
     except Exception as e:
