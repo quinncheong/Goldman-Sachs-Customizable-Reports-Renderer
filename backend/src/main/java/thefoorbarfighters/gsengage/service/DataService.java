@@ -35,10 +35,11 @@ public class DataService{
         return baseResponse;
     }
 
-    public Map<String, Object> getReportFromTemplate(Map<String, Object> rawData, String template_type){
+    public Map<String, Object> getReportFromTemplate(Map<String, Object> rawData){
         Map<String, Object> serviceResponse = createBaseResponse();
         final boolean parseFile = true;
         final String apiUrl = dataAPI + "/report";
+        final String template_type = (String) rawData.get("template_type");
         try {
             if (Objects.equals(template_type, "simple")) {
                 Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
@@ -55,29 +56,42 @@ public class DataService{
                 Map<String, Object> datatypes = getDatatype(inputData);
                 Map<String, Object> successData = (Map<String, Object>) datatypes.get("success");
                 Map<String, Object> datasetData = (Map<String, Object>) successData.get(sourceFilenameNoExt);
-                System.out.println(datasetData);
-                Set<String> columns = datasetData.keySet();
+                Map<String, Object> rowTypeData = (Map<String, Object>) datasetData.get("rows");
+                Set<String> columns = rowTypeData.keySet();
+                // define fixed data relationship since there is no need for sums
                 Map<String, Object> dataRelationship = new HashMap();
                 dataRelationship.put("data", sourceFilenameNoExt);
                 dataRelationship.put("sum", false);
                 for (String column : columns) {
                     colMap.put(column, dataRelationship);
                 }
-                compiled.put("Holdings", colMap);
+                // define single table in a single page for compiled
+                List<Map> baseTable = new ArrayList();
+                baseTable.add(colMap);
+                List<List> allTables = new ArrayList();
+                allTables.add(baseTable);
+                compiled.put("Holdings", allTables);
 
-                System.out.println(compiled);
+                // create reformatted data map based of only 'rows' from the raw data
+                Map<String, Object> reformattedData = new HashMap();
+                Map<String, Object> reportData = (Map<String, Object>) inputData.get(sourceFilenameNoExt);
+                List<Map> rowData = (List<Map>) reportData.get("rows");
+                reformattedData.put(sourceFilenameNoExt, rowData);
 
-                rawData.put("compiled", compiled);
+                // create map that conforms to /report requirements (metadata, compiled, data)
+                Map<String, Object> templateRawData = new HashMap();
+                templateRawData.put("metadata", metadata);
+                templateRawData.put("compiled", compiled);
+                templateRawData.put("data", reformattedData);
 
-                // Get report from /report
+                // get report from /report
                 MultipartFile outputResponse = null;
                 ApiConnectionClient connection = new ApiConnectionClient();
-                connection.sendPost(apiUrl, rawData, parseFile);
+                connection.sendPost(apiUrl, templateRawData, parseFile);
                 InputStream inputStream = new ByteArrayInputStream(connection.getFileResponse());
                 outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 
                 // Upload to AWS S3 bucket
-                // TODO: upload compiled as json
                 if (outputResponse != null) {
                     fileService.uploadWithFolderNumber(outputResponse, projectName);
                 }

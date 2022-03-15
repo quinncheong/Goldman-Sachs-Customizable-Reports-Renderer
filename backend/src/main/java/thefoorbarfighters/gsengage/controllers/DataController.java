@@ -25,10 +25,8 @@ public class DataController {
     }
 
     @PostMapping(value="/template", headers = "Accept=application/json")
-    public Map<String, Object> templateToReport(
-            @RequestBody Map<String, Object> rawData,
-            @RequestHeader(name="template_type", required=true) String templateType){
-        return dataService.getReportFromTemplate(rawData, templateType);
+    public Map<String, Object> templateToReport(@RequestBody Map<String, Object> rawData){
+        return dataService.getReportFromTemplate(rawData);
     }
 
     @PostMapping(value = "/custom/analyze", headers = "Accept=application/json")
