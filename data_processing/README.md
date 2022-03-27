@@ -10,7 +10,7 @@ All package requirements provided by requirements.txt
 *Assumes that Python 3.8 and above is available*
 1. Install all package requirements
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 2. Run App under main.py
 

@@ -111,11 +111,19 @@ public class DataService{
         return serviceResponse;
     }
 
-    public Map<String, Object> getDatatype(Map<String, Object> rawData){
+    public Map<String, Object> getDatatype(Map<String, Object> fullData){
         final boolean parseFile = false;
         final String apiUrl = dataAPI + "/process";
         Map<String, Object> serviceResponse = createBaseResponse();
 
+        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
+        
+        // can comment out if just want the data in response
+        final String template_type = fullData.get("template_type").toString();
+        final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
+        serviceResponse.put("template_type", template_type);
+        serviceResponse.put("metadata", metadata);
+        
         for (Map.Entry<String, Object> report : rawData.entrySet()) {
             String reportName = report.getKey();
             try {
@@ -158,23 +166,32 @@ public class DataService{
             // Get required dataset names
             Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
             String fileName = (String) metadata.get("filename");
-            int projectName = (int) metadata.get("project");
+            int projectName = Integer.parseInt(metadata.get("project").toString());
             List<String> sourceFilenames = (List<String>) metadata.get("files");
 
-            // Get datasets from S3
+            // Get template_type
+            String template_type = (String) metadata.get("template_type");
+
+            // Get datasets from S3 and store into datasets
             Map<String, Object> datasets = new HashMap<>();
             for (String sourceFilename : sourceFilenames) {
                 final String path = projectName + "/" + sourceFilename;
+
                 InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile(path));
                 InputStream s3DataStream = null;
                 s3DataStream = s3Data.getInputStream();
 
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> data = mapper.readValue(s3DataStream, Map.class);
+                Map<String, Object> actualdata = (Map<String, Object>) data.get("body");
+                
+                // to get first value which contains data
+                Iterator<Map.Entry<String, Object>> iterator = actualdata.entrySet().iterator();
+                Map.Entry<String, Object> actualValue = iterator.next();
+                Map<String, Object> columnRow = (Map<String, Object>) actualValue.getValue();
+                Object rows = columnRow.get("rows");
 
-                for (Map.Entry<String, Object> pair : data.entrySet()) {
-                    datasets.put(pair.getKey(), pair.getValue());
-                }
+                datasets.put(sourceFilename, rows);
             }
 
             // Recompile data for /report
