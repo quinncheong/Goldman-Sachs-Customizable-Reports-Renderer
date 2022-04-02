@@ -169,7 +169,7 @@ public class DataService{
             Map<String, Object> datasets = new HashMap<>();
             for (String sourceFilename : sourceFilenames) {
                 Map<String, Object> rows = getS3Data(projectName, sourceFilename);
-                datasets.put(sourceFilename, rows);
+                datasets.put(sourceFilename, rows.get(sourceFilename));
             }
 
             // Recompile data for /report
