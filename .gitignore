@@ -3,3 +3,4 @@ HELP.md
 */.env
 .idea
 **/__pycache__/
+*/.idea
