@@ -67,7 +67,7 @@ public class DataService{
         try {
             final String path = projectName + "/" + sourceFilename;
 
-            InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile(path));
+            InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("data", path));
             InputStream s3DataStream = null;
             s3DataStream = s3Data.getInputStream();
 
@@ -98,7 +98,7 @@ public class DataService{
                 byte[] byteReport = stringReport.getBytes();
                 fileToUpload = new MockMultipartFile(reportName, reportName, ContentType.APPLICATION_JSON.toString(), byteReport);
                 if (fileToUpload != null) {
-                    fileService.uploadWithFolderNumber(fileToUpload, projectName);
+                    fileService.uploadWithFolderNumber("data", fileToUpload, projectName);
                     Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
                     serviceResponse.put("success", tmpSuccessResponse);
                     jobSuccess(serviceResponse);
@@ -180,12 +180,12 @@ public class DataService{
             // Upload to AWS S3 bucket
             // TODO: upload compiled as json
             if (outputResponse != null) {
-                fileService.uploadWithFolderNumber(outputResponse, projectName);
+                fileService.uploadWithFolderNumber("data", outputResponse, projectName);
             }
 
             // Return excel report
             final String newReportPath = projectName + "/" + fileName;
-            String reportUrl = fileService.getFileURL(newReportPath);
+            String reportUrl = fileService.getFileURL("data", newReportPath);
             jobSuccess(serviceResponse);
             Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
             tmpSuccessResponse.put("report_url", reportUrl);
@@ -222,7 +222,7 @@ public class DataService{
                 folderName = Integer.parseInt(arr[0]);
                 fileName = arr[1];
                 keyName = folderName + "_" + fileName;
-                fileURL = fileService.getFileURL(fullName);
+                fileURL = fileService.getFileURL("data", fullName);
                 serviceResponse.put(keyName, fileURL);
             }
         }
