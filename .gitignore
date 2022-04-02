@@ -2,3 +2,4 @@
 HELP.md
 */.env
 .idea
+**/__pycache__/
