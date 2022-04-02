@@ -57,18 +57,19 @@ public class TemplateService {
     public Map<String, Object> uploadTemplate(Map<String, Object> rawData) {
         Map<String, Object> serviceResponse = createBaseResponse();
         Map<String, Object> outputResponse = new HashMap<>();
-
+        Object arrays;
 
         try {
             Map<String, Object> compiled = (Map<String, Object>) rawData.get("compiled");
             //iterate through every key
             for (Map.Entry<String, Object> sheet : compiled.entrySet()) {
-//                String tables = sheet.getValue();
-//                System.out.println(tables);
+                arrays = sheet.getValue();
+                System.out.println("New Sheet");
+                System.out.println(arrays);
             }
 
 //            if (outputResponse != null) {
-//                fileService.uploadWithFolderNumber(outputResponse, projectName);
+//                fileService.upload(template, outputResponse);
 //            }
         } catch (Exception e) {
             jobFail(serviceResponse);
