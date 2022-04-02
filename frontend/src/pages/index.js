@@ -265,7 +265,10 @@ const Dashboard = () => {
             const file = files[i];
             reader.readAsBinaryString(file);
             reader.onloadend = async (loadendEvent) => {
-              jsonObject[file.name] = JSON.parse(reader.result);
+              let parsedJson = JSON.parse(reader.result).body;
+              console.log(parsedJson[Object.keys(parsedJson)[0]]);
+              let mainJsonBody = parsedJson[Object.keys(parsedJson)[0]];
+              jsonObject[file.name] = mainJsonBody;
               resolve();
             };
           })
@@ -279,6 +282,7 @@ const Dashboard = () => {
         data: jsonObject,
         templateType: reportTemplate,
       };
+      console.log(reqBean);
       sendJsonObj(reqBean);
     });
 
