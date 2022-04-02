@@ -1,6 +1,9 @@
 package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,19 +84,32 @@ public class TemplateService {
     }
 
     public Map<String, Object> getAllTemplates() {
-        return new HashMap<>();
+        Map<String, Object> serviceResponse = new HashMap<>();
+        String fileURL;
+        String fullName;
+
+        ListObjectsV2Request req = new ListObjectsV2Request();
+        req.setBucketName(fileService.getBucketName("template"));
+        ListObjectsV2Result result;
+        result = amazonS3.listObjectsV2(req);
+
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            fullName = objectSummary.getKey();
+            fileURL = fileService.getFileURL("template", fullName);
+            serviceResponse.put(fullName, fileURL);
+        }
+        return serviceResponse;
     }
 
     public Map<String, Object> getTemplate(String templateName) {
         Map<String, Object> serviceResponse = createBaseResponse();
         try {
             InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", templateName));
-            InputStream s3DataStream = null;
-            s3DataStream = s3Data.getInputStream();
+            InputStream s3DataStream = s3Data.getInputStream();
 
             ObjectMapper objmapper = new ObjectMapper();
             Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-            serviceResponse.put("success", objmapper.readValue(s3DataStream, Map.class));
+            tmpSuccessResponse.put("template", objmapper.readValue(s3DataStream, Map.class));
             jobSuccess(serviceResponse);
         } catch (Exception e) {
             jobFail(serviceResponse);
