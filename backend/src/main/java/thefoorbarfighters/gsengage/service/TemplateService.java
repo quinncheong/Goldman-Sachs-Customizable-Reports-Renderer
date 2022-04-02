@@ -106,7 +106,6 @@ public class TemplateService {
                 }
             }
 
-            System.out.println(compiled);
             MultipartFile fileToUpload = null;
             ObjectMapper objmapper = new ObjectMapper();
             String stringReport = objmapper.writeValueAsString(compiled);
