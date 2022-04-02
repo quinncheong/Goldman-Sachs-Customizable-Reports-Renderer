@@ -84,9 +84,7 @@ public class TemplateService {
     }
 
     public Map<String, Object> getAllTemplates() {
-        Map<String, Object> serviceResponse = new HashMap<>();
-        String fileURL;
-        String fullName;
+        Map<String, Object> serviceResponse = createBaseResponse();
 
         ListObjectsV2Request req = new ListObjectsV2Request();
         req.setBucketName(fileService.getBucketName("template"));
@@ -94,9 +92,20 @@ public class TemplateService {
         result = amazonS3.listObjectsV2(req);
 
         for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
-            fullName = objectSummary.getKey();
-            fileURL = fileService.getFileURL("template", fullName);
-            serviceResponse.put(fullName, fileURL);
+            String fullName = objectSummary.getKey();
+
+            Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+            try {
+                InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", fullName));
+                InputStream s3DataStream = s3Data.getInputStream();
+                ObjectMapper objmapper = new ObjectMapper();
+                Map<String, Object> templateData = objmapper.readValue(s3DataStream, Map.class);
+                tmpSuccessResponse.put(fullName, templateData);
+                jobSuccess(serviceResponse);
+            } catch (Exception e) {
+                jobFail(serviceResponse);
+                e.printStackTrace();
+            }
         }
         return serviceResponse;
     }
@@ -106,10 +115,11 @@ public class TemplateService {
         try {
             InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", templateName));
             InputStream s3DataStream = s3Data.getInputStream();
-
             ObjectMapper objmapper = new ObjectMapper();
+            Map<String, Object> templateData = objmapper.readValue(s3DataStream, Map.class);
+
             Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-            tmpSuccessResponse.put("template", objmapper.readValue(s3DataStream, Map.class));
+            tmpSuccessResponse.put(templateName, templateData);
             jobSuccess(serviceResponse);
         } catch (Exception e) {
             jobFail(serviceResponse);
