@@ -83,6 +83,10 @@ async def get_body(request: Request):
 
     return data_schema
 
+# Cell styling
+def highlight_cols(col):
+    color = '#ffffb3' 
+    return ['background-color: {}'.format(color) for c in col]
 
 # Create excel report endpoint
 # TODO: Make cols and cols_rename to be dynamic
@@ -91,6 +95,7 @@ async def create_table(request: Request):
     df_list = []
     sheet_names = []
     sheet_dict = {}
+    column_width_dict = {}
     
     try:
         input = await request.json()
@@ -101,7 +106,8 @@ async def create_table(request: Request):
         compiled_data = input['compiled']
         data = input['data']
         for k,v in data.items():
-            df = pd.DataFrame(v)
+            all_rows = v['rows']
+            df = pd.DataFrame(all_rows)
             data[k] = df
         # build each dataframe/table
         for k,v in compiled_data.items():
@@ -149,6 +155,9 @@ async def create_table(request: Request):
                     if series_list != []:
                         tmp_df = pd.concat(series_list, axis=1)
                         tmp_df.fillna('', inplace=True)
+
+                        tmp_df = tmp_df.style.apply(highlight_cols, axis=1)
+
                         row_list.append(tmp_df)
                 if row_list != []:
                     df_list.append(row_list)
@@ -169,12 +178,12 @@ async def create_table(request: Request):
                 max_row = 0
                 for table_df in table_rows:
                     table_df.to_excel(writer, sheet_name=sheet_name, startrow=start_row, startcol=start_col, index=False)
-                    (r, c) = table_df.shape
+                    (r, c) = table_df.data.shape
                     if r > max_row:
                         max_row = r
                     worksheet = writer.sheets[sheet_name]
-                    for column in table_df:
-                        column_width = max(table_df[column].astype(str).map(len).max(), len(column))
+                    for column in table_df.data:
+                        column_width = max(table_df.data[column].astype(str).map(len).max(), len(column))
                         col_idx = table_df.columns.get_loc(column)
                         col_idx += start_col
                         if col_idx in column_width_dict:
