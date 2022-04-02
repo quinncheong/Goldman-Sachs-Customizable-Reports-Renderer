@@ -1,8 +1,15 @@
 package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONObject;
 import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -12,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -28,6 +37,18 @@ public class TemplateService {
 
     @Value("${s3.templatebucket.name}")
     private String s3TemplateBucketName;
+
+    private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
+
+    private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
+        final File file = new File(multipartFile.getOriginalFilename());
+        try (final FileOutputStream outputStream = new FileOutputStream(file)) {
+            outputStream.write(multipartFile.getBytes());
+        } catch (IOException e) {
+            LOG.error("Error {} occurred while converting the multipart file", e.getLocalizedMessage());
+        }
+        return file;
+    }
 
     private Map<String, Object> createBaseResponse() {
         Map<String, Object> baseResponse = new HashMap<>();
@@ -59,20 +80,46 @@ public class TemplateService {
     public Map<String, Object> uploadTemplate(Map<String, Object> rawData) {
         Map<String, Object> serviceResponse = createBaseResponse();
         Map<String, Object> outputResponse = new HashMap<>();
-        Object arrays;
+        Map<String, Object> correctValue = new HashMap<>();
+        correctValue.put("data", "");
+        correctValue.put("sum", false);
+
+        // get new Template Name
+        Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
+        String defaultReportName = metadata.get("filename").toString();
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss").format(new java.util.Date());
+        String[] arr = defaultReportName.split("\\.");
+        String templateName = arr[0] + "_" + timeStamp + ".json";
 
         try {
             Map<String, Object> compiled = (Map<String, Object>) rawData.get("compiled");
             //iterate through every key
             for (Map.Entry<String, Object> sheet : compiled.entrySet()) {
-                arrays = sheet.getValue();
-                System.out.println("New Sheet");
-                System.out.println(arrays);
+                List<List> tables = (List<List>) sheet.getValue();
+
+                for (List<Map> tableMap : tables) {
+                    for (Map<String, Object> table : tableMap) {
+                        for (Map.Entry<String, Object> attribute : table.entrySet()) {
+                            table.put(attribute.getKey(), correctValue);
+                        }
+                    }
+                }
             }
 
-//            if (outputResponse != null) {
-//                fileService.upload(template, outputResponse);
-//            }
+            MultipartFile fileToUpload = null;
+            ObjectMapper objmapper = new ObjectMapper();
+            String stringReport = objmapper.writeValueAsString(compiled);
+            byte[] byteReport = stringReport.getBytes();
+            fileToUpload = new MockMultipartFile(templateName, templateName, ContentType.APPLICATION_JSON.toString(), byteReport);
+            if (fileToUpload != null) {
+                File file = convertMultiPartFileToFile(fileToUpload);
+                final PutObjectRequest putObjectRequest = new PutObjectRequest(s3TemplateBucketName, templateName, file);
+                amazonS3.putObject(putObjectRequest);
+                Files.delete(file.toPath());
+                Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+                serviceResponse.put("success", tmpSuccessResponse);
+                jobSuccess(serviceResponse);
+            }
         } catch (Exception e) {
             jobFail(serviceResponse);
             e.printStackTrace();
@@ -81,19 +128,42 @@ public class TemplateService {
     }
 
     public Map<String, Object> getAllTemplates() {
-        return new HashMap<>();
+        Map<String, Object> serviceResponse = createBaseResponse();
+
+        ListObjectsV2Request req = new ListObjectsV2Request();
+        req.setBucketName(fileService.getBucketName("template"));
+        ListObjectsV2Result result;
+        result = amazonS3.listObjectsV2(req);
+
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            String fullName = objectSummary.getKey();
+
+            Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+            try {
+                InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", fullName));
+                InputStream s3DataStream = s3Data.getInputStream();
+                ObjectMapper objmapper = new ObjectMapper();
+                Map<String, Object> templateData = objmapper.readValue(s3DataStream, Map.class);
+                tmpSuccessResponse.put(fullName, templateData);
+                jobSuccess(serviceResponse);
+            } catch (Exception e) {
+                jobFail(serviceResponse);
+                e.printStackTrace();
+            }
+        }
+        return serviceResponse;
     }
 
     public Map<String, Object> getTemplate(String templateName) {
         Map<String, Object> serviceResponse = createBaseResponse();
         try {
             InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", templateName));
-            InputStream s3DataStream = null;
-            s3DataStream = s3Data.getInputStream();
-
+            InputStream s3DataStream = s3Data.getInputStream();
             ObjectMapper objmapper = new ObjectMapper();
+            Map<String, Object> templateData = objmapper.readValue(s3DataStream, Map.class);
+
             Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-            serviceResponse.put("success", objmapper.readValue(s3DataStream, Map.class));
+            tmpSuccessResponse.put(templateName, templateData);
             jobSuccess(serviceResponse);
         } catch (Exception e) {
             jobFail(serviceResponse);

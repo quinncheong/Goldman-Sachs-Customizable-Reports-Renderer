@@ -53,7 +53,7 @@ public class FileService {
         return file;
     }
 
-    private String getBucketName(String bucketType) {
+    public String getBucketName(String bucketType) {
         if (bucketType.equals("data")) {
             return s3DataBucketName;
         } else {
