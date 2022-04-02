@@ -24,17 +24,12 @@ public class DataController {
         return "Report Generation Backend";
     }
 
-    @PostMapping(value="/template", headers = "Accept=application/json")
-    public Map<String, Object> templateToReport(@RequestBody Map<String, Object> rawData){
-        return dataService.getReportFromTemplate(rawData);
-    }
-
-    @PostMapping(value = "/custom/analyze", headers = "Accept=application/json")
+    @PostMapping(value = "/analyze", headers = "Accept=application/json")
     public Map<String, Object> analyzeDatatype(@RequestBody Map<String, Object> rawData){
         return dataService.getDatatype(rawData);
     }
 
-    @PostMapping(value = "/custom/report", headers = "Accept=application/json")
+    @PostMapping(value = "/report", headers = "Accept=application/json")
     public Map<String, Object> createData(@RequestBody Map<String, Object> rawData){
         return dataService.getReport(rawData);
     }

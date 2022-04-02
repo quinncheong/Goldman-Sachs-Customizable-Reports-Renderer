@@ -1,6 +1,7 @@
 package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,9 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
-import thefoorbarfighters.gsengage.controllers.FileController;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -35,102 +33,36 @@ public class DataService{
         return baseResponse;
     }
 
-    public Map<String, Object> getReportFromTemplate(Map<String, Object> rawData){
-        Map<String, Object> serviceResponse = createBaseResponse();
-        final boolean parseFile = true;
-        final String apiUrl = dataAPI + "/report";
-        final String template_type = (String) rawData.get("template_type");
-        try {
-            if (Objects.equals(template_type, "simple")) {
-                Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
-                String fileName = (String) metadata.get("filename");
-                int projectName = (int) metadata.get("project");
-                List<String> sourceFilenames = (List<String>) metadata.get("files");
-                String sourceFilename = sourceFilenames.get(0);
-                String sourceFilenameNoExt = sourceFilename.replaceAll(".json", "");
-
-                // create complied section
-                Map<String, Object> compiled = new HashMap();
-                Map<String, Object> colMap = new HashMap();
-                Map<String, Object> inputData = (Map<String, Object>) rawData.get("data");
-                Map<String, Object> datatypes = getDatatype(inputData);
-                Map<String, Object> successData = (Map<String, Object>) datatypes.get("success");
-                Map<String, Object> datasetData = (Map<String, Object>) successData.get(sourceFilenameNoExt);
-                Map<String, Object> rowTypeData = (Map<String, Object>) datasetData.get("rows");
-                Set<String> columns = rowTypeData.keySet();
-                // define fixed data relationship since there is no need for sums
-                Map<String, Object> dataRelationship = new HashMap();
-                dataRelationship.put("data", sourceFilenameNoExt);
-                dataRelationship.put("sum", false);
-                for (String column : columns) {
-                    colMap.put(column, dataRelationship);
-                }
-                // define single table in a single page for compiled
-                List<Map> baseTable = new ArrayList();
-                baseTable.add(colMap);
-                List<List> allTables = new ArrayList();
-                allTables.add(baseTable);
-                compiled.put("Holdings", allTables);
-
-                // create reformatted data map based of only 'rows' from the raw data
-                Map<String, Object> reformattedData = new HashMap();
-                Map<String, Object> reportData = (Map<String, Object>) inputData.get(sourceFilenameNoExt);
-                List<Map> rowData = (List<Map>) reportData.get("rows");
-                reformattedData.put(sourceFilenameNoExt, rowData);
-
-                // create map that conforms to /report requirements (metadata, compiled, data)
-                Map<String, Object> templateRawData = new HashMap();
-                templateRawData.put("metadata", metadata);
-                templateRawData.put("compiled", compiled);
-                templateRawData.put("data", reformattedData);
-
-                // get report from /report
-                MultipartFile outputResponse = null;
-                ApiConnectionClient connection = new ApiConnectionClient();
-                connection.sendPost(apiUrl, templateRawData, parseFile);
-                InputStream inputStream = new ByteArrayInputStream(connection.getFileResponse());
-                outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
-
-                // Upload to AWS S3 bucket
-                if (outputResponse != null) {
-                    fileService.uploadWithFolderNumber(outputResponse, projectName);
-                }
-
-                // Return excel report
-                final String newReportPath = projectName + "/" + fileName;
-                String reportUrl = fileService.getFileURL(newReportPath);
-                jobSuccess(serviceResponse);
-                Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-                tmpSuccessResponse.put("report_url", reportUrl);
-                serviceResponse.put("success", tmpSuccessResponse);
-            }
-        } catch (Exception e) {
-            jobFail(serviceResponse);
-            e.printStackTrace();
-        }
-        return serviceResponse;
-    }
-
     public Map<String, Object> getDatatype(Map<String, Object> fullData){
         final boolean parseFile = false;
         final String apiUrl = dataAPI + "/process";
         Map<String, Object> serviceResponse = createBaseResponse();
 
-        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
-        
-        // can comment out if just want the data in response
-        final String template_type = fullData.get("template_type").toString();
         final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
-        serviceResponse.put("template_type", template_type);
+        final Integer projectName = (Integer) metadata.get("project");
         serviceResponse.put("metadata", metadata);
-        
+
+        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
+
         for (Map.Entry<String, Object> report : rawData.entrySet()) {
             String reportName = report.getKey();
             try {
+                // upload to S3
+                MultipartFile fileToUpload = null;
+                System.out.println(report);
+                Map<String, Object> reportRows = (Map<String, Object>) report.getValue();
+                System.out.println(reportRows);
+                byte[] byteReport = reportRows.toString().getBytes();
+                fileToUpload = new MockMultipartFile(reportName + ".json", reportName, ContentType.APPLICATION_JSON.toString(), byteReport);
+                if (fileToUpload != null) {
+                    fileService.uploadWithFolderNumber(fileToUpload, projectName);
+                }
+
                 ApiConnectionClient connection = new ApiConnectionClient();
                 connection.sendPost(apiUrl, report, parseFile);
                 Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
                 tmpSuccessResponse.put(reportName, connection.getMapResponse().get(reportName));
+
                 serviceResponse.put("success", tmpSuccessResponse);
                 jobSuccess(serviceResponse);
             } catch (Exception e) {
@@ -183,7 +115,7 @@ public class DataService{
 
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> data = mapper.readValue(s3DataStream, Map.class);
-                Map<String, Object> actualdata = (Map<String, Object>) data.get("body");
+                Map<String, Object> actualdata = (Map<String, Object>) data.get(sourceFilename);
                 
                 // to get first value which contains data
                 Iterator<Map.Entry<String, Object>> iterator = actualdata.entrySet().iterator();
