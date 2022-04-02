@@ -20,38 +20,38 @@ public class FileController {
     FileService fileService;
 
     @GetMapping("/downloadFile")
-    public ResponseEntity<Object> downloadFile(@RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
+    public ResponseEntity<Object> downloadFile(@RequestParam("bucketType") String bucketType, @RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
         String fullname = folderNumber + "/" + name;
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.noCache())
                 .header("Content-type", "application/octet-stream")
                 .header("Content-disposition", "attachment; filename=\"" + fullname + "\"")
-                .body(new InputStreamResource(fileService.downloadFile(fullname)));
+                .body(new InputStreamResource(fileService.downloadFile(bucketType, fullname)));
     }
 
     @GetMapping("/getFileURL")
-    public ResponseEntity<Object> getFileURL(@RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
+    public ResponseEntity<Object> getFileURL(@RequestParam("bucketType") String bucketType, @RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
         String fullname = folderNumber + "/" + name;
-        String URL = fileService.getFileURL(fullname);
+        String URL = fileService.getFileURL(bucketType, fullname);
         return new ResponseEntity<>(URL, HttpStatus.OK);
     }
 
     @GetMapping("/findNumberOfFolders")
-    public ResponseEntity<Object> findNumberOfFolders() {
-        int filecount = fileService.findNumberOfFolders();
+    public ResponseEntity<Object> findNumberOfFolders(@RequestParam("bucketType") String bucketType) {
+        int filecount = fileService.findNumberOfFolders(bucketType);
         return new ResponseEntity<>(filecount, HttpStatus.OK);
     }
 
     @PostMapping("/uploadWithFolderNumber")
-    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("file") MultipartFile multipartFile, @RequestParam int folderNumber) {
-        fileService.uploadWithFolderNumber(multipartFile, folderNumber);
+    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("bucketType") String bucketType, @RequestParam("file") MultipartFile multipartFile, @RequestParam int folderNumber) {
+        fileService.uploadWithFolderNumber(bucketType, multipartFile, folderNumber);
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile multipartFile) {
-        fileService.upload(multipartFile);
+    public ResponseEntity<Object> upload(@RequestParam("bucketType") String bucketType, @RequestParam("file") MultipartFile multipartFile) {
+        fileService.upload(bucketType, multipartFile);
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
     }
 
