@@ -11,9 +11,12 @@ import axios from "axios";
 
 // Report generation
 import { Generator } from "../components/dashboard/generator/generator";
+import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
 const Dashboard = () => {
+  const [pageType, setPageType] = useState("home");
+
   const [reports, setReports] = useState([
     {
       reportID: 1,
@@ -56,8 +59,54 @@ const Dashboard = () => {
       dateModified: Date.now(),
     },
   ]);
-  const [reportTemplate, setReportTemplate] = useState("Simple");
-  const [pageType, setPageType] = useState("home");
+
+  const [reportTemplateType, setReportTemplateType] = useState("Simple");
+  const [reportTemplates, setReportTemplates] = useState([
+    {
+      reportTemplateID: 1,
+      name: "Bulk Create",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+    {
+      reportID: 2,
+      name: "Many to Many",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+    {
+      reportID: 3,
+      name: "Complex",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+    {
+      reportID: 4,
+      name: "Another test",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+    {
+      reportID: 5,
+      name: "Another test",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+    {
+      reportID: 6,
+      name: "Another test",
+      date: "2 Feb 2022",
+      dateCreated: Date.now(),
+      dateModified: Date.now(),
+    },
+  ]);
+  const [selectedTemplateType, setSelectedTemplateType] = useState(null);
+
   const [jsonData, setJsonData] = useState({
     Simple: {
       rawData: require("../../../data/simple.json"),
@@ -280,7 +329,7 @@ const Dashboard = () => {
       console.log(jsonObject);
       let reqBean = {
         data: jsonObject,
-        templateType: reportTemplate,
+        templateType: reportTemplateType,
       };
       console.log(reqBean);
       sendJsonObj(reqBean);
@@ -314,10 +363,13 @@ const Dashboard = () => {
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
                 <Upload
-                  reportTemplate={reportTemplate}
-                  setReportTemplate={setReportTemplate}
+                  reportTemplateType={reportTemplateType}
+                  setReportTemplateType={setReportTemplateType}
                   sendRawJson={sendRawJson}
                   setPageType={setPageType}
+                  reportTemplates={reportTemplates}
+                  selectedTemplateType={selectedTemplateType}
+                  setSelectedTemplateType={setSelectedTemplateType}
                   sx={{ height: 500 }}
                 />
               </Grid>
@@ -335,7 +387,11 @@ const Dashboard = () => {
         </Box>
       )}
 
-      {pageType === "generate" && <Generator setPageType={setPageType} jsonData={jsonData} />}
+      {/* {pageType === "generate" && <Generator setPageType={setPageType} jsonData={jsonData} />} */}
+
+      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
+
+      {pageType === "sheets" && <div>This is a sheets page test</div>}
     </>
   );
 };

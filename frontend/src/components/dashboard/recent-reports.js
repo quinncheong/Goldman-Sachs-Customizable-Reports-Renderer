@@ -45,7 +45,7 @@ export const RecentReports = ({ reports = [], ...props }) => {
             {report.name}
           </Typography>
           <Box sx={{ display: "flex" }}>
-            <CalendarTodayIcon size="small" sx={{ mr: 1,  }} />
+            <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
             <Typography variant="body2" color="text.secondary">
               {format(report.dateModified, "dd/MM/yyyy")}
             </Typography>
@@ -84,6 +84,20 @@ export const RecentReports = ({ reports = [], ...props }) => {
           display: "flex",
           gap: 2,
           overflowX: "scroll",
+          "&::-webkit-scrollbar": {
+            width: "0.2em",
+            height: "14px",
+          },
+          "&::-webkit-scrollbar-track": {
+            boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+            webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            "border-radius": "8px",
+            border: "4px solid rgba(0, 0, 0, 0)",
+            "background-color": "rgba(94, 94, 94, 0.51)",
+            "background-clip": "padding-box",
+          },
         }}
       >
         {renderReports}
