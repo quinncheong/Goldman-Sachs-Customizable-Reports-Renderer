@@ -21,8 +21,11 @@ public class TemplateService {
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
+    @Value("${s3.databucket.name}")
+    private String s3DataBucketName;
+
+    @Value("${s3.templatebucket.name}")
+    private String s3TemplateBucketName;
 
     private Map<String, Object> createBaseResponse() {
         Map<String, Object> baseResponse = new HashMap<>();
@@ -53,6 +56,24 @@ public class TemplateService {
 
     public Map<String, Object> uploadTemplate(Map<String, Object> rawData) {
         Map<String, Object> serviceResponse = createBaseResponse();
+        Map<String, Object> outputResponse = new HashMap<>();
+
+
+        try {
+            Map<String, Object> compiled = (Map<String, Object>) rawData.get("compiled");
+            //iterate through every key
+            for (Map.Entry<String, Object> sheet : compiled.entrySet()) {
+//                String tables = sheet.getValue();
+//                System.out.println(tables);
+            }
+
+//            if (outputResponse != null) {
+//                fileService.uploadWithFolderNumber(outputResponse, projectName);
+//            }
+        } catch (Exception e) {
+            jobFail(serviceResponse);
+            e.printStackTrace();
+        }
         return serviceResponse;
     }
 }

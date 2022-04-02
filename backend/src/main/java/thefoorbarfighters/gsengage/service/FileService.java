@@ -37,8 +37,12 @@ public class FileService {
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
+    @Value("${s3.databucket.name}")
+    private String s3DataBucketName;
+
+    @Value("${s3.templatebucket.name}")
+    private String s3TemplateBucketName;
+
 
     private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
         final File file = new File(multipartFile.getOriginalFilename());
@@ -55,7 +59,7 @@ public class FileService {
     @Async // download file by name
     public S3ObjectInputStream downloadFile(String fileName) {
         LOG.info("Downloading file with name {}", fileName);
-        return amazonS3.getObject(s3BucketName, fileName).getObjectContent();
+        return amazonS3.getObject(s3DataBucketName, fileName).getObjectContent();
     }
 
      @Async // save file without file number
@@ -66,7 +70,7 @@ public class FileService {
              folderCount++;
              final String fileName = folderCount + "/" + file.getName();
              LOG.info("Uploading file with name {}", fileName);
-             final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
+             final PutObjectRequest putObjectRequest = new PutObjectRequest(s3DataBucketName, fileName, file);
              amazonS3.putObject(putObjectRequest);
              Files.delete(file.toPath()); // Remove the file locally created in the project folder
          } catch (AmazonServiceException e) {
@@ -82,7 +86,7 @@ public class FileService {
             final File file = convertMultiPartFileToFile(multipartFile);
             final String fileName = folderNumber + "/" + file.getName();
             LOG.info("Uploading file with name {}", fileName);
-            final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
+            final PutObjectRequest putObjectRequest = new PutObjectRequest(s3DataBucketName, fileName, file);
             amazonS3.putObject(putObjectRequest);
             Files.delete(file.toPath()); // Remove the file locally created in the project folder
         } catch (AmazonServiceException e) {
@@ -95,7 +99,7 @@ public class FileService {
     @Async
     public int findNumberOfFolders() {
         ListObjectsV2Request req = new ListObjectsV2Request(); 
-        req.setBucketName(s3BucketName);
+        req.setBucketName(s3DataBucketName);
         ListObjectsV2Result result;
         int folderCount = 0;
         LOG.info("Counting s3 files");
@@ -123,7 +127,7 @@ public class FileService {
 
         // Generate the presigned URL.
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(s3BucketName, objectKey)
+                new GeneratePresignedUrlRequest(s3DataBucketName, objectKey)
                         .withMethod(HttpMethod.GET)
                         .withExpiration(expiration);
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);

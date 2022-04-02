@@ -27,8 +27,11 @@ public class DataService{
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
+    @Value("${s3.databucket.name}")
+    private String s3DataBucketName;
+
+    @Value("${s3.templatebucket.name}")
+    private String s3TemplateBucketName;
 
     private static String dataAPI = "http://localhost:8000/api/v1";
 
@@ -206,7 +209,7 @@ public class DataService{
         String keyName;
 
         ListObjectsV2Request req = new ListObjectsV2Request();
-        req.setBucketName(s3BucketName);
+        req.setBucketName(s3DataBucketName);
         ListObjectsV2Result result;
         result = amazonS3.listObjectsV2(req);
 
