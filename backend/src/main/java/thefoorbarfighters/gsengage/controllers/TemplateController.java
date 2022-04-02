@@ -19,4 +19,14 @@ public class TemplateController {
         return templateService.uploadTemplate(rawData);
     }
 
+    @GetMapping()
+    public Map<String, Object> getAllTemplates(){
+        return templateService.getAllTemplates();
+    }
+
+    @GetMapping("/{templateName}")
+    public Map<String, Object> getTemplate(@PathVariable(value="templateName") String templateName){
+        return templateService.getTemplate(templateName);
+    }
+
 }

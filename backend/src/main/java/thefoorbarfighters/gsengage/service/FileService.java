@@ -37,8 +37,11 @@ public class FileService {
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
+    @Value("${s3.databucket.name}")
+    private String s3DataBucketName;
+
+    @Value("${s3.templatebucket.name}")
+    private String s3TemplateBucketName;
 
     private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
         final File file = new File(multipartFile.getOriginalFilename());
@@ -50,23 +53,31 @@ public class FileService {
         return file;
     }
 
+    private String getBucketName(String bucketType) {
+        if (bucketType.equals("data")) {
+            return s3DataBucketName;
+        } else {
+            return s3TemplateBucketName;
+        }
+    }
+
     // @Async annotation ensures that the method is executed in a different thread
 
     @Async // download file by name
-    public S3ObjectInputStream downloadFile(String fileName) {
+    public S3ObjectInputStream downloadFile(String bucketType, String fileName) {
         LOG.info("Downloading file with name {}", fileName);
-        return amazonS3.getObject(s3BucketName, fileName).getObjectContent();
+        return amazonS3.getObject(getBucketName(bucketType), fileName).getObjectContent();
     }
 
      @Async // save file without file number
-     public void upload(final MultipartFile multipartFile) {
+     public void upload(String bucketType, final MultipartFile multipartFile) {
          try {
              final File file = convertMultiPartFileToFile(multipartFile);
-             int folderCount = this.findNumberOfFolders();
+             int folderCount = this.findNumberOfFolders(getBucketName(bucketType));
              folderCount++;
              final String fileName = folderCount + "/" + file.getName();
              LOG.info("Uploading file with name {}", fileName);
-             final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
+             final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
              amazonS3.putObject(putObjectRequest);
              Files.delete(file.toPath()); // Remove the file locally created in the project folder
          } catch (AmazonServiceException e) {
@@ -77,12 +88,12 @@ public class FileService {
      }
 
     @Async
-    public void uploadWithFolderNumber(final MultipartFile multipartFile, int folderNumber) {
+    public void uploadWithFolderNumber(String bucketType, final MultipartFile multipartFile, int folderNumber) {
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
             final String fileName = folderNumber + "/" + file.getName();
             LOG.info("Uploading file with name {}", fileName);
-            final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, fileName, file);
+            final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
             amazonS3.putObject(putObjectRequest);
             Files.delete(file.toPath()); // Remove the file locally created in the project folder
         } catch (AmazonServiceException e) {
@@ -93,9 +104,9 @@ public class FileService {
     }
 
     @Async
-    public int findNumberOfFolders() {
+    public int findNumberOfFolders(String bucketType) {
         ListObjectsV2Request req = new ListObjectsV2Request(); 
-        req.setBucketName(s3BucketName);
+        req.setBucketName(getBucketName(bucketType));
         ListObjectsV2Result result;
         int folderCount = 0;
         LOG.info("Counting s3 files");
@@ -114,7 +125,7 @@ public class FileService {
         return folderCount;
     }
 
-    public String getFileURL(String objectKey) {
+    public String getFileURL(String bucketType, String objectKey) {
         // Set the presigned URL to expire after one hour.
         java.util.Date expiration = new java.util.Date();
         long expTimeMillis = Instant.now().toEpochMilli();
@@ -123,7 +134,7 @@ public class FileService {
 
         // Generate the presigned URL.
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(s3BucketName, objectKey)
+                new GeneratePresignedUrlRequest(getBucketName(bucketType), objectKey)
                         .withMethod(HttpMethod.GET)
                         .withExpiration(expiration);
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
