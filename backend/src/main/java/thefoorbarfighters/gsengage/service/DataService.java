@@ -1,28 +1,37 @@
 package thefoorbarfighters.gsengage.service;
 
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
-import thefoorbarfighters.gsengage.controllers.FileController;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DataService{
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Value("${s3.databucket.name}")
+    private String s3DataBucketName;
+
+    @Value("${s3.templatebucket.name}")
+    private String s3TemplateBucketName;
 
     private static String dataAPI = "http://localhost:8000/api/v1";
 
@@ -35,28 +44,6 @@ public class DataService{
         baseResponse.put("success", successCountResponse);
         baseResponse.put("failure", failureCountResponse);
         return baseResponse;
-    }
-
-    public Map<String, Object> getDatatype(Map<String, Object> rawData){
-        final boolean parseFile = false;
-        final String apiUrl = dataAPI + "/process";
-        Map<String, Object> serviceResponse = createBaseResponse();
-
-        for (Map.Entry<String, Object> report : rawData.entrySet()) {
-            String reportName = report.getKey();
-            try {
-                ApiConnectionClient connection = new ApiConnectionClient();
-                connection.sendPost(apiUrl, report, parseFile);
-                Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-                tmpSuccessResponse.put(reportName, connection.getMapResponse().get(reportName));
-                serviceResponse.put("success", tmpSuccessResponse);
-                jobSuccess(serviceResponse);
-            } catch (Exception e) {
-                jobFail(serviceResponse);
-                e.printStackTrace();
-            }
-        }
-        return serviceResponse;
     }
 
     private Map<String, Object> jobSuccess(Map<String, Object> apiResponse) {
@@ -75,6 +62,97 @@ public class DataService{
         return apiResponse;
     }
 
+    private Map<String, Object> getS3Data(Integer projectName, String sourceFilename) {
+        Map<String, Object> dataResponse = null;
+        try {
+            final String path = projectName + "/" + sourceFilename;
+
+            InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("data", path));
+            InputStream s3DataStream = null;
+            s3DataStream = s3Data.getInputStream();
+
+            ObjectMapper objmapper = new ObjectMapper();
+            dataResponse = objmapper.readValue(s3DataStream, Map.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dataResponse;
+    }
+
+    public Map<String, Object> uploadData(Map<String, Object> fullData){
+        Map<String, Object> serviceResponse = createBaseResponse();
+
+        final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
+        final Integer projectName = (Integer) metadata.get("project");
+        serviceResponse.put("metadata", metadata);
+
+        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
+
+        for (Map.Entry<String, Object> report : rawData.entrySet()) {
+            String reportName = report.getKey();
+
+            try {
+                MultipartFile fileToUpload = null;
+                ObjectMapper objmapper = new ObjectMapper();
+                String stringReport = objmapper.writeValueAsString(report);
+                byte[] byteReport = stringReport.getBytes();
+                fileToUpload = new MockMultipartFile(reportName, reportName, ContentType.APPLICATION_JSON.toString(), byteReport);
+                if (fileToUpload != null) {
+                    fileService.uploadWithFolderNumber("data", fileToUpload, projectName);
+                    Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+                    serviceResponse.put("success", tmpSuccessResponse);
+                    jobSuccess(serviceResponse);
+                }
+            } catch (Exception e) {
+                jobFail(serviceResponse);
+                e.printStackTrace();
+            }
+        }
+        return serviceResponse;
+    }
+
+    public Map<String, Object> getDatatype(Map<String, Object> fullData){
+        final boolean parseFile = false;
+        final String apiUrl = dataAPI + "/process";
+        Map<String, Object> serviceResponse = createBaseResponse();
+
+        final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
+        final Integer projectName = (Integer) metadata.get("project");
+        serviceResponse.put("metadata", metadata);
+
+        Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+
+        for (String sourceFilename : (List<String>) metadata.get("files")) {
+            Map<String, Object> report = getS3Data(projectName, sourceFilename);
+            try {
+                ApiConnectionClient connection = new ApiConnectionClient();
+                connection.sendPost(apiUrl, report, parseFile);
+                Map<String, Object> rowData = (Map<String, Object>) connection.getMapResponse().get("rows");
+                for (Map.Entry<String, Object> row : rowData.entrySet()) {
+                    if (tmpSuccessResponse.containsKey(row.getKey())) {
+                        Map<String, Object> existingRow = (Map<String, Object>) tmpSuccessResponse.get(row.getKey());
+                        existingRow.put(sourceFilename, row.getValue());
+                    } else {
+                        Map<String, Object> newRow = new HashMap();
+                        newRow.put(sourceFilename, row.getValue());
+                        tmpSuccessResponse.put(row.getKey(), newRow);
+                    }
+                }
+//                tmpSuccessResponse.put(sourceFilename, connection.getMapResponse().get("rows"));
+
+//                serviceResponse.put("success", tmpSuccessResponse);
+                jobSuccess(serviceResponse);
+            } catch (Exception e) {
+                jobFail(serviceResponse);
+                e.printStackTrace();
+            }
+        }
+
+        serviceResponse.put("success", tmpSuccessResponse);
+
+        return serviceResponse;
+    }
+
     public Map<String, Object> getReport(Map<String, Object> rawData) {
         Map<String, Object> serviceResponse = createBaseResponse();
         final boolean parseFile = true;
@@ -84,23 +162,14 @@ public class DataService{
             // Get required dataset names
             Map<String, Object> metadata = (Map<String, Object>) rawData.get("metadata");
             String fileName = (String) metadata.get("filename");
-            int projectName = (int) metadata.get("project");
-            List<String> filenames = (List<String>) metadata.get("files");
+            int projectName = Integer.parseInt(metadata.get("project").toString());
+            List<String> sourceFilenames = (List<String>) metadata.get("files");
 
-            // Get datasets from S3
+            // Get datasets from S3 and store into datasets
             Map<String, Object> datasets = new HashMap<>();
-            for (String filename : filenames) {
-                final String path = projectName + "/" + filename;
-                InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile(path));
-                InputStream s3DataStream = null;
-                s3DataStream = s3Data.getInputStream();
-
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String, Object> data = mapper.readValue(s3DataStream, Map.class);
-
-                for (Map.Entry<String, Object> pair : data.entrySet()) {
-                    datasets.put(pair.getKey(), pair.getValue());
-                }
+            for (String sourceFilename : sourceFilenames) {
+                Map<String, Object> rows = getS3Data(projectName, sourceFilename);
+                datasets.put(sourceFilename, rows);
             }
 
             // Recompile data for /report
@@ -122,12 +191,12 @@ public class DataService{
 
             // Upload to AWS S3 bucket
             if (outputResponse != null) {
-                fileService.uploadWithFolderNumber(outputResponse, projectName);
+                fileService.uploadWithFolderNumber("data", outputResponse, projectName);
             }
 
             // Return excel report
             final String newReportPath = projectName + "/" + fileName;
-            String reportUrl = fileService.getFileURL(newReportPath);
+            String reportUrl = fileService.getFileURL("data", newReportPath);
             jobSuccess(serviceResponse);
             Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
             tmpSuccessResponse.put("report_url", reportUrl);
@@ -137,6 +206,36 @@ public class DataService{
             e.printStackTrace();
         }
 
+        return serviceResponse;
+    }
+
+    public Map<String, Object> getExistingData() {
+        Map<String, Object> serviceResponse = new HashMap<>();
+        String fileURL;
+        String fullName;
+        String[] arr;
+        String fileName;
+        int folderName;
+        String keyName;
+
+        ListObjectsV2Request req = new ListObjectsV2Request();
+        req.setBucketName(s3DataBucketName);
+        ListObjectsV2Result result;
+        result = amazonS3.listObjectsV2(req);
+
+
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            fullName = objectSummary.getKey();
+            arr = fullName.split("/");
+
+            if (arr.length > 1) {
+                folderName = Integer.parseInt(arr[0]);
+                fileName = arr[1];
+                keyName = folderName + "_" + fileName;
+                fileURL = fileService.getFileURL("data", fullName);
+                serviceResponse.put(keyName, fileURL);
+            }
+        }
         return serviceResponse;
     }
 }

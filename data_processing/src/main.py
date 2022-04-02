@@ -69,14 +69,11 @@ async def homepage():
 @app.post(f"{PREFIX}/process")
 async def get_body(request: Request):
     input_body =  await request.json()
-    
     data_schema = {}
     
     try:
         for report in input_body:
-            headers = {}
-            get_all_rows(input_body[report], headers)
-            data_schema[report] = headers
+            get_all_rows(input_body[report], data_schema)
     except Exception as e:
         traceback.print_exception(type(e), e, e.__traceback__)
         return {"error_msg": repr(e)}
@@ -116,6 +113,7 @@ async def create_table(request: Request):
                 for table in table_row:
                     series_list = []
                     for col, json_dict in table.items():
+                        tmp_series = data[json_dict['data']][col]
                         if json_dict['sum']:
                             name = tmp_series.name
                             s = pd.Series([tmp_series.agg('sum')])
@@ -123,7 +121,6 @@ async def create_table(request: Request):
                             tmp_series.name = name
                             
                         if json_dict['data'] in data and col in data[json_dict['data']]:
-                            tmp_series = data[json_dict['data']][col]
                             if col == 'maturityDate':
                                 tmp_series = pd.to_datetime(tmp_series, format='%d/%m/%Y').dt.date
                                 tmp_series.name = 'Maturity'
@@ -209,6 +206,7 @@ async def create_table(request: Request):
         })
 
     except Exception as e:
+        traceback.print_exc()
         return {"error_msg": repr(e)}
 
 
