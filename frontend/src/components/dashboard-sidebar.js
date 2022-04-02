@@ -13,7 +13,6 @@ import { User as UserIcon } from "../icons/user";
 import { UserAdd as UserAddIcon } from "../icons/user-add";
 import { Users as UsersIcon } from "../icons/users";
 import { XCircle as XCircleIcon } from "../icons/x-circle";
-import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
 
 const items = [
@@ -91,56 +90,62 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
+          <Box 
+            sx={{ 
+              px: 5,
+              py: "11px",
+              display: "flex",
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "space-around",
+              my: 3,
+            }}
+          >
             <NextLink href="/" passHref>
               <a>
-                <Logo
+                <Box
+                  component="img"
                   sx={{
                     height: 42,
                     width: 42,
                   }}
+                  src="/static/bulletin_logo.png"
                 />
               </a>
             </NextLink>
-          </Box>
-          <Box sx={{ px: 2 }}>
-            <Box
-              sx={{
-                alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.04)",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "space-between",
-                px: 3,
-                py: "11px",
-                borderRadius: 1,
-              }}
-            >
-              <div>
+            <div>
                 <Typography color="inherit" variant="subtitle1">
-                  Acme Inc
+                  Bulletin
                 </Typography>
                 <Typography color="neutral.400" variant="body2">
-                  Your tier : Premium
+                  By Goldman Sachs
                 </Typography>
-              </div>
-              <SelectorIcon
-                sx={{
-                  color: "neutral.500",
-                  width: 14,
-                  height: 14,
-                }}
-              />
-            </Box>
+            </div>
           </Box>
         </div>
-        <Divider
+        <div>
+          <Box 
+            sx={{ 
+              px: 5,
+              py: 1,
+              alignItems: "left",
+              display: "flex",
+              justifyContent: 'flex-start'
+            }}
+          >
+            <Typography color="#48B8F0" variant="body2">
+              Main Menu
+            </Typography>
+          </Box>
+        </div>
+        {/* <Divider
           sx={{
             borderColor: "#2D3748",
             my: 3,
           }}
-        />
-        <Box sx={{ flexGrow: 0 }}>
+        /> */}
+        
+        <Box sx={{ flexGrow: 0, mb: 3,}}>
           {items.map((item, index) => {
             if (index < 2) {
               return (
@@ -149,8 +154,23 @@ export const DashboardSidebar = (props) => {
             }
           })}
         </Box>
-        <Divider sx={{ borderColor: "#2D3748", my: 3 }} />
-        <Box sx={{ flexGrow: 0 }}>
+        <div>
+          <Box 
+            sx={{ 
+              px: 5,
+              py: 1,
+              alignItems: "left",
+              display: "flex",
+              justifyContent: 'flex-start'
+            }}
+          >
+            <Typography color="#48B8F0" variant="body2">
+              Workspace
+            </Typography>
+          </Box>
+        </div>
+        
+        <Box sx={{ flexGrow: 0, mb: 3, }}>
           {items.map((item, index) => {
             if (index > 1 && index < 5) {
               return (
@@ -159,7 +179,21 @@ export const DashboardSidebar = (props) => {
             }
           })}
         </Box>
-        <Divider sx={{ borderColor: "#2D3748", my: 3 }} />
+        <div>
+          <Box 
+            sx={{ 
+              px: 5,
+              py: 1,
+              alignItems: "left",
+              display: "flex",
+              justifyContent: 'flex-start'
+            }}
+          >
+            <Typography color="#48B8F0" variant="body2">
+              General
+            </Typography>
+          </Box>
+        </div>
 
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item, index) => {
@@ -170,7 +204,7 @@ export const DashboardSidebar = (props) => {
             }
           })}
         </Box>
-        <Divider sx={{ borderColor: "#2D3748", my: 3 }} />
+        
       </Box>
     </>
   );
@@ -182,7 +216,7 @@ export const DashboardSidebar = (props) => {
         open
         PaperProps={{
           sx: {
-            backgroundColor: "neutral.900",
+            backgroundColor: "#0D4EA6",
             color: "#FFFFFF",
             width: 280,
           },
