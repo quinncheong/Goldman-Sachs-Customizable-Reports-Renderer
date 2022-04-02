@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { Box, Container, Typography, Grid, IconButton, Button } from "@mui/material";
 // import { DashboardLayout } from "../../dashboard-layout";
-import { GenerateRows } from "../dataMapper/generate-rows";
+import { GenerateRows } from "./generate-rows";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-export const Generator = ({ setPageType, jsonData, ...props }) => {
+export const DataMapper = ({ setPageType, jsonData, ...props }) => {
   const router = useRouter();
   const renderData = Object.keys(jsonData).map((name, index) => (
     <Grid item md={6} xs={12} key={index}>
@@ -19,14 +19,12 @@ export const Generator = ({ setPageType, jsonData, ...props }) => {
     setPageType("home");
   };
 
-  const handleNextClick = () => {
-
-   }
+  const handleNextClick = () => {};
 
   return (
     <>
       <Head>
-        <title> Generate Report</title>
+        <title> Select Data Relationship </title>
       </Head>
 
       <Box
