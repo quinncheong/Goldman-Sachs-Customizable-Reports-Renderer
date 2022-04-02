@@ -73,13 +73,10 @@ async def get_body(request: Request):
     
     try:
         for report in input_body:
-            # headers = {}
             get_all_rows(input_body[report], data_schema)
-            # data_schema[report] = headers
     except Exception as e:
         traceback.print_exception(type(e), e, e.__traceback__)
         return {"error_msg": repr(e)}
-    print(data_schema)
 
     return data_schema
 
