@@ -9,7 +9,6 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
@@ -37,10 +36,10 @@ public class DataService{
 
     private Map<String, Object> createBaseResponse() {
         Map<String, Object> baseResponse = new HashMap<>();
-        Map<String, Object> successCountResponse = new HashMap();
-        Map<String, Object> failureCountResponse = new HashMap();
-        successCountResponse.put("count", (Integer) 0);
-        failureCountResponse.put("count", (Integer) 0);
+        Map<String, Object> successCountResponse = new HashMap<>();
+        Map<String, Object> failureCountResponse = new HashMap<>();
+        successCountResponse.put("count", 0);
+        failureCountResponse.put("count", 0);
         baseResponse.put("success", successCountResponse);
         baseResponse.put("failure", failureCountResponse);
         return baseResponse;
@@ -133,14 +132,11 @@ public class DataService{
                         Map<String, Object> existingRow = (Map<String, Object>) tmpSuccessResponse.get(row.getKey());
                         existingRow.put(sourceFilename, row.getValue());
                     } else {
-                        Map<String, Object> newRow = new HashMap();
+                        Map<String, Object> newRow = new HashMap<>();
                         newRow.put(sourceFilename, row.getValue());
                         tmpSuccessResponse.put(row.getKey(), newRow);
                     }
                 }
-//                tmpSuccessResponse.put(sourceFilename, connection.getMapResponse().get("rows"));
-
-//                serviceResponse.put("success", tmpSuccessResponse);
                 jobSuccess(serviceResponse);
             } catch (Exception e) {
                 jobFail(serviceResponse);
@@ -169,7 +165,9 @@ public class DataService{
             Map<String, Object> datasets = new HashMap<>();
             for (String sourceFilename : sourceFilenames) {
                 Map<String, Object> rows = getS3Data(projectName, sourceFilename);
-                datasets.put(sourceFilename, rows.get(sourceFilename));
+                if (rows != null) {
+                    datasets.put(sourceFilename, rows.get(sourceFilename));
+                }
             }
 
             // Recompile data for /report
@@ -178,8 +176,8 @@ public class DataService{
             subMetadata.put("project", projectName);
 
             Map<String, Object> reportData = new HashMap<>();
-            reportData.put("metadata", (Map<String, Object>) subMetadata);
-            reportData.put("compiled", (Map<String, Object>) rawData.get("compiled"));
+            reportData.put("metadata", subMetadata);
+            reportData.put("compiled", rawData.get("compiled"));
             reportData.put("data", datasets);
 
             // Get report from /report
@@ -190,9 +188,7 @@ public class DataService{
             outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 
             // Upload to AWS S3 bucket
-            if (outputResponse != null) {
-                fileService.uploadWithFolderNumber("data", outputResponse, projectName);
-            }
+            fileService.uploadWithFolderNumber("data", outputResponse, projectName);
 
             // Return excel report
             final String newReportPath = projectName + "/" + fileName;
