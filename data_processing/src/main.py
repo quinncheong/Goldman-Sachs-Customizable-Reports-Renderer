@@ -11,7 +11,7 @@ from io import BytesIO
 from fastapi.responses import StreamingResponse
 
 # Helper functions
-def get_all_rows(report, dict_data, headers):
+def get_all_rows(dict_data, headers):
     for key in dict_data:
         if key == 'columns':
             continue
@@ -68,19 +68,18 @@ async def homepage():
 # Process datatype and size endpoint
 @app.post(f"{PREFIX}/process")
 async def get_body(request: Request):
-    print(str(request))
     input_body =  await request.json()
-    
     data_schema = {}
     
     try:
         for report in input_body:
             # headers = {}
-            get_all_rows(report, input_body[report], data_schema)
+            get_all_rows(input_body[report], data_schema)
             # data_schema[report] = headers
     except Exception as e:
         traceback.print_exception(type(e), e, e.__traceback__)
         return {"error_msg": repr(e)}
+    print(data_schema)
 
     return data_schema
 

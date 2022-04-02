@@ -117,24 +117,36 @@ public class DataService{
         final Integer projectName = (Integer) metadata.get("project");
         serviceResponse.put("metadata", metadata);
 
-//        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
+        Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
 
         for (String sourceFilename : (List<String>) metadata.get("files")) {
             Map<String, Object> report = getS3Data(projectName, sourceFilename);
-            System.out.println(report);
             try {
                 ApiConnectionClient connection = new ApiConnectionClient();
                 connection.sendPost(apiUrl, report, parseFile);
-                Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
-                tmpSuccessResponse.put(sourceFilename, connection.getMapResponse().get(sourceFilename));
+                Map<String, Object> rowData = (Map<String, Object>) connection.getMapResponse().get("rows");
+                for (Map.Entry<String, Object> row : rowData.entrySet()) {
+                    if (tmpSuccessResponse.containsKey(row.getKey())) {
+                        Map<String, Object> existingRow = (Map<String, Object>) tmpSuccessResponse.get(row.getKey());
+                        existingRow.put(sourceFilename, row.getValue());
+                    } else {
+                        Map<String, Object> newRow = new HashMap();
+                        newRow.put(sourceFilename, row.getValue());
+                        tmpSuccessResponse.put(row.getKey(), newRow);
+                    }
+                }
+//                tmpSuccessResponse.put(sourceFilename, connection.getMapResponse().get("rows"));
 
-                serviceResponse.put("success", tmpSuccessResponse);
+//                serviceResponse.put("success", tmpSuccessResponse);
                 jobSuccess(serviceResponse);
             } catch (Exception e) {
                 jobFail(serviceResponse);
                 e.printStackTrace();
             }
         }
+
+        serviceResponse.put("success", tmpSuccessResponse);
+
         return serviceResponse;
     }
 
@@ -175,7 +187,6 @@ public class DataService{
             outputResponse = new MockMultipartFile(fileName, fileName, ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 
             // Upload to AWS S3 bucket
-            // TODO: upload compiled as json
             if (outputResponse != null) {
                 fileService.uploadWithFolderNumber(outputResponse, projectName);
             }
@@ -196,7 +207,6 @@ public class DataService{
     }
 
     public Map<String, Object> getExistingData() {
-//        Map<String, Object> serviceResponse = createBaseResponse();
         Map<String, Object> serviceResponse = new HashMap<>();
         String fileURL;
         String fullName;
