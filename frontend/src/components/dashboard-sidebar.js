@@ -7,6 +7,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { ChartBar as ChartBarIcon } from "../icons/chart-bar";
 import { Cog as CogIcon } from "../icons/cog";
 import { Lock as LockIcon } from "../icons/lock";
+import { Search as SearchIcon } from "../icons/search";
 import { Selector as SelectorIcon } from "../icons/selector";
 import { ShoppingBag as ShoppingBagIcon } from "../icons/shopping-bag";
 import { User as UserIcon } from "../icons/user";
@@ -38,13 +39,18 @@ const items = [
   },
   {
     href: "/register",
-    icon: <CogIcon fontSize="small" />,
+    icon: <SearchIcon fontSize="small" />,
     title: "View Report",
   },
   {
     href: "/login",
     icon: <LockIcon fontSize="small" />,
     title: "Data Files",
+  },
+  {
+    href: "/settings",
+    icon: <CogIcon fontSize="small" />,
+    title: "Settings",
   },
   // {
   //   href: '/register',
@@ -87,114 +93,133 @@ export const DashboardSidebar = (props) => {
           display: "flex",
           flexDirection: "column",
           height: "100%",
+          justifyContent: "space-between",
         }}
       >
-        <div>
-          <Box 
-            sx={{ 
-              px: 5,
-              py: "11px",
-              display: "flex",
-              cursor: "pointer",
-              alignItems: "center",
-              justifyContent: "space-around",
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <div>
+            <Box 
+              sx={{ 
+                px: 5,
+                py: "11px",
+                display: "flex",
+                cursor: "pointer",
+                alignItems: "center",
+                justifyContent: "space-around",
+                my: 3,
+              }}
+            >
+              <NextLink href="/" passHref>
+                <a>
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 42,
+                      width: 42,
+                    }}
+                    src="/static/bulletin_logo.png"
+                  />
+                </a>
+              </NextLink>
+              <div>
+                  <Typography color="inherit" variant="subtitle1">
+                    Bulletin
+                  </Typography>
+                  <Typography color="neutral.400" variant="body2">
+                    By Goldman Sachs
+                  </Typography>
+              </div>
+            </Box>
+          </div>
+          <div>
+            <Box 
+              sx={{ 
+                px: 5,
+                py: 1,
+                alignItems: "left",
+                display: "flex",
+                justifyContent: 'flex-start'
+              }}
+            >
+              <Typography color="#48B8F0" variant="body2">
+                Main Menu
+              </Typography>
+            </Box>
+          </div>
+          {/* <Divider
+            sx={{
+              borderColor: "#2D3748",
               my: 3,
             }}
-          >
-            <NextLink href="/" passHref>
-              <a>
-                <Box
-                  component="img"
-                  sx={{
-                    height: 42,
-                    width: 42,
-                  }}
-                  src="/static/bulletin_logo.png"
-                />
-              </a>
-            </NextLink>
-            <div>
-                <Typography color="inherit" variant="subtitle1">
-                  Bulletin
-                </Typography>
-                <Typography color="neutral.400" variant="body2">
-                  By Goldman Sachs
-                </Typography>
-            </div>
+          /> */}
+          
+          <Box sx={{ flexGrow: 0, mb: 3,}}>
+            {items.map((item, index) => {
+              if (index < 2) {
+                return (
+                  <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+                );
+              }
+            })}
           </Box>
-        </div>
-        <div>
-          <Box 
-            sx={{ 
-              px: 5,
-              py: 1,
-              alignItems: "left",
-              display: "flex",
-              justifyContent: 'flex-start'
-            }}
-          >
-            <Typography color="#48B8F0" variant="body2">
-              Main Menu
-            </Typography>
+          <div>
+            <Box 
+              sx={{ 
+                px: 5,
+                py: 1,
+                alignItems: "left",
+                display: "flex",
+                justifyContent: 'flex-start'
+              }}
+            >
+              <Typography color="#48B8F0" variant="body2">
+                Workspace
+              </Typography>
+            </Box>
+          </div>
+          
+          <Box sx={{ flexGrow: 0, mb: 3, }}>
+            {items.map((item, index) => {
+              if (index > 1 && index < 5) {
+                return (
+                  <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+                );
+              }
+            })}
           </Box>
-        </div>
-        {/* <Divider
-          sx={{
-            borderColor: "#2D3748",
-            my: 3,
-          }}
-        /> */}
-        
-        <Box sx={{ flexGrow: 0, mb: 3,}}>
-          {items.map((item, index) => {
-            if (index < 2) {
-              return (
-                <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
-              );
-            }
-          })}
-        </Box>
-        <div>
-          <Box 
-            sx={{ 
-              px: 5,
-              py: 1,
-              alignItems: "left",
-              display: "flex",
-              justifyContent: 'flex-start'
-            }}
-          >
-            <Typography color="#48B8F0" variant="body2">
-              Workspace
-            </Typography>
-          </Box>
-        </div>
-        
-        <Box sx={{ flexGrow: 0, mb: 3, }}>
-          {items.map((item, index) => {
-            if (index > 1 && index < 5) {
-              return (
-                <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
-              );
-            }
-          })}
-        </Box>
-        <div>
-          <Box 
-            sx={{ 
-              px: 5,
-              py: 1,
-              alignItems: "left",
-              display: "flex",
-              justifyContent: 'flex-start'
-            }}
-          >
-            <Typography color="#48B8F0" variant="body2">
-              General
-            </Typography>
-          </Box>
-        </div>
+          <div>
+            <Box 
+              sx={{ 
+                px: 5,
+                py: 1,
+                alignItems: "left",
+                display: "flex",
+                justifyContent: 'flex-start'
+              }}
+            >
+              <Typography color="#48B8F0" variant="body2">
+                General
+              </Typography>
+            </Box>
+          </div>
 
+          <Box sx={{ flexGrow: 1 }}>
+            {items.map((item, index) => {
+              if (index == items.length - 2) {
+                return (
+                  <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
+                );
+              }
+            })}
+          </Box>
+
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item, index) => {
             if (index == items.length - 1) {
@@ -204,7 +229,6 @@ export const DashboardSidebar = (props) => {
             }
           })}
         </Box>
-        
       </Box>
     </>
   );
