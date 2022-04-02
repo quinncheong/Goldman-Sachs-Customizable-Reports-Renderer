@@ -40,7 +40,7 @@ export const Upload = ({
   };
 
   const pushToGenerator = (e) => {
-    setPageType("generate");
+    setPageType("sheets");
   };
 
   const handleSelectTemplate = (templateName) => (e) => {
@@ -102,7 +102,7 @@ export const Upload = ({
       return (
         <Typography sx={{ ml: "auto", alignSelf: "center" }} variant="body1">
           Please Select a Report Template
-        </Typography> 
+        </Typography>
       );
     }
 

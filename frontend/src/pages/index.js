@@ -11,6 +11,7 @@ import axios from "axios";
 
 // Report generation
 import { Generator } from "../components/dashboard/generator/generator";
+import { Sheets } from "../components/dashboard/sheets/sheets";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
@@ -389,9 +390,9 @@ const Dashboard = () => {
 
       {/* {pageType === "generate" && <Generator setPageType={setPageType} jsonData={jsonData} />} */}
 
-      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
+      {pageType === "sheets" && <Sheets setPageType={setPageType} jsonData={jsonData}></Sheets>}
 
-      {pageType === "sheets" && <div>This is a sheets page test</div>}
+      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
     </>
   );
 };
