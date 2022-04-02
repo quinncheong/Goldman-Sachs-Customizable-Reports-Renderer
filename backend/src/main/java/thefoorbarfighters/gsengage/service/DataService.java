@@ -33,6 +33,36 @@ public class DataService{
         return baseResponse;
     }
 
+    public Map<String, Object> uploadData(Map<String, Object> fullData){
+        Map<String, Object> serviceResponse = createBaseResponse();
+
+        final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
+        final Integer projectName = (Integer) metadata.get("project");
+        serviceResponse.put("metadata", metadata);
+
+        final Map<String, Object> rawData = (Map<String, Object>) fullData.get("data");
+
+        for (Map.Entry<String, Object> report : rawData.entrySet()) {
+            String reportName = report.getKey();
+
+            try {
+                MultipartFile fileToUpload = null;
+                byte[] byteReport = report.toString().getBytes();
+                fileToUpload = new MockMultipartFile(reportName + ".json", reportName, ContentType.APPLICATION_JSON.toString(), byteReport);
+                if (fileToUpload != null) {
+                    fileService.uploadWithFolderNumber(fileToUpload, projectName);
+                    Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+                    serviceResponse.put("success", tmpSuccessResponse);
+                    jobSuccess(serviceResponse);
+                }
+            } catch (Exception e) {
+                jobFail(serviceResponse);
+                e.printStackTrace();
+            }
+        }
+        return serviceResponse;
+    }
+
     public Map<String, Object> getDatatype(Map<String, Object> fullData){
         final boolean parseFile = false;
         final String apiUrl = dataAPI + "/process";
@@ -47,17 +77,6 @@ public class DataService{
         for (Map.Entry<String, Object> report : rawData.entrySet()) {
             String reportName = report.getKey();
             try {
-                // upload to S3
-                MultipartFile fileToUpload = null;
-                System.out.println(report);
-                Map<String, Object> reportRows = (Map<String, Object>) report.getValue();
-                System.out.println(reportRows);
-                byte[] byteReport = reportRows.toString().getBytes();
-                fileToUpload = new MockMultipartFile(reportName + ".json", reportName, ContentType.APPLICATION_JSON.toString(), byteReport);
-                if (fileToUpload != null) {
-                    fileService.uploadWithFolderNumber(fileToUpload, projectName);
-                }
-
                 ApiConnectionClient connection = new ApiConnectionClient();
                 connection.sendPost(apiUrl, report, parseFile);
                 Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");

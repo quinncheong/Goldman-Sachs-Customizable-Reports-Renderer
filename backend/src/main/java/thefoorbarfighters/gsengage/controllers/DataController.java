@@ -24,6 +24,11 @@ public class DataController {
         return "Report Generation Backend";
     }
 
+    @PostMapping(value="/upload", headers = "Accept=application/json")
+    public Map<String, Object> uploadDatatype(@RequestBody Map<String, Object> rawData){
+        return dataService.uploadData(rawData);
+    }
+
     @PostMapping(value = "/analyze", headers = "Accept=application/json")
     public Map<String, Object> analyzeDatatype(@RequestBody Map<String, Object> rawData){
         return dataService.getDatatype(rawData);
