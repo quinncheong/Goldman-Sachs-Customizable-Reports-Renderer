@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { formatDistanceToNow, subHours, format } from "date-fns";
 import {
+  Avatar,
   Box,
   Button,
+  Chip,
   Card,
+  CardMedia,
   CardContent,
   CardHeader,
+  CardActions,
   Divider,
   useTheme,
   Typography,
@@ -22,18 +27,24 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 export const Upload = ({
   setPageType,
-  reportTemplate,
-  setReportTemplate,
+  reportTemplateType,
+  setReportTemplateType,
   sendRawJson,
+  reportTemplates,
+  selectedTemplateType,
+  setSelectedTemplateType,
   ...props
 }) => {
-  console.log(reportTemplate);
   const changeTemplateType = (event) => {
-    setReportTemplate(event.target.value);
+    setReportTemplateType(event.target.value);
   };
 
   const pushToGenerator = (e) => {
     setPageType("generate");
+  };
+
+  const handleSelectTemplate = (templateName) => (e) => {
+    setSelectedTemplateType(templateName);
   };
 
   const renderUploadButtons = () => (
@@ -41,12 +52,18 @@ export const Upload = ({
       <Box
         sx={{
           height: 50,
+          width: "100%",
           display: "flex",
-          justifyContent: "center",
-          gap: 3,
+          marginTop: 2,
         }}
       >
-        <Button endIcon={<UploadIcon fontSize="large" />} variant="contained" component="label">
+        <Button
+          sx={{ mr: 2 }}
+          endIcon={<UploadIcon fontSize="large" />}
+          variant="contained"
+          component="label"
+          disabled={!selectedTemplateType}
+        >
           <Typography color="" variant="body2">
             Upload JSON
           </Typography>
@@ -54,12 +71,69 @@ export const Upload = ({
             type="file"
             onChange={sendRawJson}
             hidden
-            multiple={reportTemplate === "Simple" ? false : true}
+            multiple={reportTemplateType === "Simple" ? false : true}
           />
         </Button>
+
+        <Button
+          sx={{ mr: 6 }}
+          endIcon={<UploadIcon fontSize="large" />}
+          variant="contained"
+          component="label"
+          disabled={!selectedTemplateType}
+        >
+          <Typography color="" variant="body2">
+            Load File
+          </Typography>
+          <input
+            type="file"
+            onChange={sendRawJson}
+            hidden
+            multiple={reportTemplateType === "Simple" ? false : true}
+          />
+        </Button>
+        {renderTemplateSelection()}
       </Box>
     </>
   );
+
+  const renderTemplateSelection = () => {
+    if (!selectedTemplateType) {
+      return (
+        <Typography sx={{ ml: "auto", alignSelf: "center" }} variant="body1">
+          Please Select a Report Template
+        </Typography> 
+      );
+    }
+
+    return (
+      <>
+        <Typography sx={{ ml: "auto", alignSelf: "center" }} variant="body1">
+          Selected template:
+        </Typography>
+        <Box
+          sx={{
+            padding: 1,
+            display: "flex",
+            width: "20%",
+            textAlign: "center",
+            borderRadius: 1,
+            border: 1,
+            borderColor: "secondary.dark",
+            ml: 2,
+          }}
+        >
+          {/* <Typography variant="body5">Selected template:</Typography> */}
+          <Chip
+            sx={{ width: "100%" }}
+            color="success"
+            label={selectedTemplateType}
+            variant="filled"
+          />
+        </Box>
+      </>
+    );
+  };
 
   const renderTemplateTypes = () => (
     <>
@@ -100,14 +174,84 @@ export const Upload = ({
     </>
   );
 
+  const renderReportTemplateWrapper = () => {
+    const renderReportTemplates = reportTemplates.map((report) => {
+      return (
+        <Card
+          variant="outlined"
+          sx={{
+            flexShrink: 0,
+            width: "150px",
+            height: "180px",
+            borderRadius: 1,
+            boxShadow: 3,
+          }}
+        >
+          <CardMedia
+            style={{ height: "80px", paddingTop: "2%" }}
+            component="img"
+            // height="140"
+            image="/static/images/excel.jpg"
+            alt="Excel Template"
+          />
+          <CardContent sx={{ paddingBottom: 0, paddingTop: 2 }}>
+            <Typography sx={{ fontSize: 13 }} variant="h6">
+              {report.name}
+            </Typography>
+            <Box sx={{ display: "flex" }}>
+              {/* <CalendarTodayIcon size="small" sx={{ mr: 1 }} /> */}
+              <Typography sx={{ fontSize: 10 }} color="text.secondary">
+                {format(report.dateModified, "dd/MM/yyyy")}
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Button onClick={handleSelectTemplate(report.name)} size="small">
+              Select
+            </Button>
+          </CardActions>
+        </Card>
+      );
+    });
+
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          overflowX: "scroll",
+          width: "100%",
+          paddingBottom: 2,
+          "&::-webkit-scrollbar": {
+            width: "0.2em",
+            height: "14px",
+          },
+          "&::-webkit-scrollbar-track": {
+            boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+            webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            "border-radius": "8px",
+            border: "4px solid rgba(0, 0, 0, 0)",
+            "background-color": "rgba(94, 94, 94, 0.51)",
+            "background-clip": "padding-box",
+          },
+        }}
+      >
+        {renderReportTemplates}
+      </Box>
+    );
+  };
+
   return (
     <Card variant="outlined" {...props}>
       <CardHeader sx={{}} title="Create New Report " />
+
       <Divider />
-      <CardContent>
+      <CardContent sx={{ paddingY: 0 }}>
         <Box
           sx={{
-            height: 280,
+            height: 340,
             position: "relative",
             display: "flex",
             flexDirection: "column",
@@ -116,13 +260,8 @@ export const Upload = ({
             gap: 2,
           }}
         >
-          {renderTemplateTypes()}
+          {renderReportTemplateWrapper()}
           {renderUploadButtons()}
-          {reportTemplate === "Simple" && (
-            <Typography color="error" variant="body2">
-              *Only 1 JSON file can be uploaded for Simple Templates
-            </Typography>
-          )}
         </Box>
       </CardContent>
       <Divider />
