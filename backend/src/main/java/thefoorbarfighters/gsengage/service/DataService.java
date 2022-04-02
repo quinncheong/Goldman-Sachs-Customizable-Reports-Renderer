@@ -1,11 +1,15 @@
 package thefoorbarfighters.gsengage.service;
 
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.util.IOUtils;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
@@ -19,6 +23,12 @@ public class DataService{
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Value("${s3.bucket.name}")
+    private String s3BucketName;
 
     private static String dataAPI = "http://localhost:8000/api/v1";
 
@@ -182,6 +192,37 @@ public class DataService{
             e.printStackTrace();
         }
 
+        return serviceResponse;
+    }
+
+    public Map<String, Object> getExistingData() {
+//        Map<String, Object> serviceResponse = createBaseResponse();
+        Map<String, Object> serviceResponse = new HashMap<>();
+        String fileURL;
+        String fullName;
+        String[] arr;
+        String fileName;
+        int folderName;
+        String keyName;
+
+        ListObjectsV2Request req = new ListObjectsV2Request();
+        req.setBucketName(s3BucketName);
+        ListObjectsV2Result result;
+        result = amazonS3.listObjectsV2(req);
+
+
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            fullName = objectSummary.getKey();
+            arr = fullName.split("/");
+
+            if (arr.length > 1) {
+                folderName = Integer.parseInt(arr[0]);
+                fileName = arr[1];
+                keyName = folderName + "_" + fileName;
+                fileURL = fileService.getFileURL(fullName);
+                serviceResponse.put(keyName, fileURL);
+            }
+        }
         return serviceResponse;
     }
 }

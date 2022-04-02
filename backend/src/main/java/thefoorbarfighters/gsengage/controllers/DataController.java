@@ -39,4 +39,9 @@ public class DataController {
         return dataService.getReport(rawData);
     }
 
+    @GetMapping(value = "/existing")
+    public Map<String, Object> getExistingData(){
+        return dataService.getExistingData();
+    }
+
 }
