@@ -1,9 +1,11 @@
 package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +72,28 @@ public class TemplateService {
 //            if (outputResponse != null) {
 //                fileService.uploadWithFolderNumber(outputResponse, projectName);
 //            }
+        } catch (Exception e) {
+            jobFail(serviceResponse);
+            e.printStackTrace();
+        }
+        return serviceResponse;
+    }
+
+    public Map<String, Object> getAllTemplates() {
+        return new HashMap<>();
+    }
+
+    public Map<String, Object> getTemplate(String templateName) {
+        Map<String, Object> serviceResponse = createBaseResponse();
+        try {
+            InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", templateName));
+            InputStream s3DataStream = null;
+            s3DataStream = s3Data.getInputStream();
+
+            ObjectMapper objmapper = new ObjectMapper();
+            Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
+            serviceResponse.put("success", objmapper.readValue(s3DataStream, Map.class));
+            jobSuccess(serviceResponse);
         } catch (Exception e) {
             jobFail(serviceResponse);
             e.printStackTrace();
