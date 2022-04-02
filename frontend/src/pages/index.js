@@ -108,6 +108,10 @@ const Dashboard = () => {
   ]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
 
+  const [sheets, setSheets] = useState(0);
+  const [sheetsDetails, setSheetsDetails] = useState({});
+  const [sheetHasSaved, setSheetHasSaved] = useState(false);
+
   const [jsonData, setJsonData] = useState({
     Simple: {
       rawData: require("../../../data/simple.json"),
@@ -390,7 +394,18 @@ const Dashboard = () => {
 
       {/* {pageType === "generate" && <Generator setPageType={setPageType} jsonData={jsonData} />} */}
 
-      {pageType === "sheets" && <Sheets setPageType={setPageType} jsonData={jsonData}></Sheets>}
+      {pageType === "sheets" && (
+        <Sheets
+          sheets={sheets}
+          setSheets={setSheets}
+          hasSaved={sheetHasSaved}
+          setHasSaved={setSheetHasSaved}
+          sheetsDetails={sheetsDetails}
+          setSheetsDetails={setSheetsDetails}
+          setPageType={setPageType}
+          jsonData={jsonData}
+        ></Sheets>
+      )}
 
       {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
     </>

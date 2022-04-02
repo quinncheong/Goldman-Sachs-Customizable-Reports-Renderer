@@ -19,10 +19,20 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SaveIcon from "@mui/icons-material/Save";
 
-export const Sheets = ({ setPageType, jsonData, ...props }) => {
-  const [sheets, setSheets] = useState(0);
-  const [sheetsDetails, setSheetsDetails] = useState({});
-  const [hasSaved, setHasSaved] = useState(false);
+export const Sheets = ({
+  setPageType,
+  jsonData,
+  sheets,
+  setSheets,
+  hasSaved,
+  setHasSaved,
+  sheetsDetails,
+  setSheetsDetails,
+  ...props
+}) => {
+  // const [sheets, setSheets] = useState(0);
+  // const [sheetsDetails, setSheetsDetails] = useState({});
+  // const [hasSaved, setHasSaved] = useState(false);
 
   const handleBackClick = () => {
     setPageType("home");
@@ -151,7 +161,6 @@ export const Sheets = ({ setPageType, jsonData, ...props }) => {
   };
 
   const renderSheetNames = () => {
-    console.log(sheetsDetails);
     return Object.keys(sheetsDetails).map((sheetIndex, index) => {
       return (
         <Box sx={{ display: "flex", mt: 2 }}>
@@ -163,6 +172,7 @@ export const Sheets = ({ setPageType, jsonData, ...props }) => {
             key={index}
             id="sheet-name"
             label="Sheet Name"
+            value={sheetsDetails[sheetIndex] ?? ""}
             variant="outlined"
             size="small"
             onChange={handleSheetNameSetting(sheetIndex)}
