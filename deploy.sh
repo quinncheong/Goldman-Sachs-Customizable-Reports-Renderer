@@ -13,13 +13,17 @@ pkill java
 pkill python
 
 # install dependencies
-sudo apt-get update -y
+sudo apt update && sudo apt upgrade -y
+sudo apt install software-properties-common apt-transport-https -y
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
 sudo apt install default-jdk -y
 export PATH=$PATH:/usr/lib/jvm/java-11-openjdk-amd64/bin
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export TANGO_HOST=code-server-instance-901-5ccffd655-jljwd:10000
 # sudo dpkg --configure -a
-sudo apt install maven nodejs npm python3.8
+sudo apt-get install maven
+sudo apt-get install nodejs npm python3.8
 sudo apt-get install python3-pip 
 sudo apt-get install python3-venv
 
@@ -62,5 +66,6 @@ if test -f "nohup.out" ; then
     rm nohup.out
 fi
 
-npm run-script build
-npm run start
+# npm run-script build
+# npm run start
+npm run dev
