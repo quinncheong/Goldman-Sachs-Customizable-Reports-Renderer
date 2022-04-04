@@ -157,9 +157,9 @@ export const theme = createTheme({
     },
     divider: '#E6E8F0',
     primary: {
-      main: '#5048E5',
-      light: '#828DF8',
-      dark: '#3832A0',
+      main: '#186ADE',
+      light: '#48B8F0',
+      dark: '#0D4EA6',
       contrastText: '#FFFFFF'
     },
     secondary: {
