@@ -33,8 +33,8 @@ public class FileController {
     @GetMapping("/getFileURL")
     public ResponseEntity<Object> getFileURL(@RequestParam("bucketType") String bucketType, @RequestBody(required = false) @RequestParam String name, @RequestParam int folderNumber) {
         String fullname = folderNumber + "/" + name;
-        String URL = fileService.getFileURL(bucketType, fullname);
-        return new ResponseEntity<>(URL, HttpStatus.OK);
+        String fileUrl = fileService.getFileURL(bucketType, fullname);
+        return new ResponseEntity<>(fileUrl, HttpStatus.OK);
     }
 
     @GetMapping("/findNumberOfFolders")

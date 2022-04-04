@@ -1,20 +1,14 @@
 package thefoorbarfighters.gsengage.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import thefoorbarfighters.gsengage.service.DataService;
 
-import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/")
 public class DataController {
-    // Send POST request to python APIs
-    // Return API response
 
     @Autowired
     DataService dataService;

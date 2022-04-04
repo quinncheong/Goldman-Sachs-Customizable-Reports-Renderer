@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONObject;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import thefoorbarfighters.gsengage.controllers.ApiConnectionClient;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -38,7 +36,7 @@ public class TemplateService {
     @Value("${s3.templatebucket.name}")
     private String s3TemplateBucketName;
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TemplateService.class);
 
     private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
         final File file = new File(multipartFile.getOriginalFilename());
@@ -52,10 +50,10 @@ public class TemplateService {
 
     private Map<String, Object> createBaseResponse() {
         Map<String, Object> baseResponse = new HashMap<>();
-        Map<String, Object> successCountResponse = new HashMap();
-        Map<String, Object> failureCountResponse = new HashMap();
-        successCountResponse.put("count", (Integer) 0);
-        failureCountResponse.put("count", (Integer) 0);
+        Map<String, Object> successCountResponse = new HashMap<>();
+        Map<String, Object> failureCountResponse = new HashMap<>();
+        successCountResponse.put("count", 0);
+        failureCountResponse.put("count", 0);
         baseResponse.put("success", successCountResponse);
         baseResponse.put("failure", failureCountResponse);
         return baseResponse;
@@ -79,7 +77,6 @@ public class TemplateService {
 
     public Map<String, Object> uploadTemplate(Map<String, Object> rawData) {
         Map<String, Object> serviceResponse = createBaseResponse();
-        Map<String, Object> outputResponse = new HashMap<>();
         Map<String, Object> correctValue = new HashMap<>();
         correctValue.put("data", "");
         correctValue.put("sum", false);

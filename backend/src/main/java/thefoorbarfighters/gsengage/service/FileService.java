@@ -2,12 +2,7 @@ package thefoorbarfighters.gsengage.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +12,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-// import software.amazon.awssdk.core.sync.RequestBody;
-// import software.amazon.awssdk.services.s3.S3Client;
-// import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Service
 public class FileService {
@@ -121,7 +111,7 @@ public class FileService {
             }
             req.setContinuationToken(result.getNextContinuationToken());
 
-        } while (result.isTruncated() == true);
+        } while (result.isTruncated());
         return folderCount;
     }
 
