@@ -377,7 +377,7 @@ const Dashboard = () => {
                 <EditExistingReport reports={reports} sx={{ height: 500 }} />
               </Grid>
               <Grid item xs={12}>
-                <RecentReports reports={reports} sx={{ height: "100%" }} />
+                <RecentReports limit={5} sx={{ height: "100%" }} />
               </Grid>
               <Grid item xs={12}>
                 <ReportStatus reports={reports} sx={{ height: "100%" }} />

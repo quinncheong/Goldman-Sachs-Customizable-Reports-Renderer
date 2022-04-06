@@ -8,7 +8,9 @@ import { CustomerListToolbar } from "../components/customer/customer-list-toolba
 import { DashboardLayout } from "../components/dashboard-layout";
 import { customers } from "../__mocks__/customers";
 import { ReportStatus } from "../components/dashboard/report-status";
-import { ShowReports } from "../data/reports";
+import { AllDataProvider } from "../data/AllReports";
+import { RecentReports } from "../components/dashboard/recent-reports";
+
 
 const Reports = () => {
     const router = useRouter();
@@ -27,7 +29,7 @@ const Reports = () => {
                 }}
             >
                 <Container maxWidth={false}>
-                    <ShowReports />
+                    <RecentReports sx={{ height: "100%" }} />
                 </Container>
             </Box>
         </>

@@ -205,14 +205,8 @@ public class DataService{
         return serviceResponse;
     }
 
-    public Map<String, Object> getExistingData() {
-        Map<String, Object> serviceResponse = new HashMap<>();
-        String fileURL;
-        String fullName;
-        String[] arr;
-        String fileName;
-        int folderName;
-        String keyName;
+    public List<Map<String,Object>> getAllExisting(String fileExtension) {
+        List<Map<String,Object>> serviceResponse = new ArrayList<>();
 
         ListObjectsV2Request req = new ListObjectsV2Request();
         req.setBucketName(s3DataBucketName);
@@ -221,17 +215,36 @@ public class DataService{
 
 
         for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
-            fullName = objectSummary.getKey();
-            arr = fullName.split("/");
+            String fullName = objectSummary.getKey();
+            String[] arr = fullName.split("/");
 
             if (arr.length > 1) {
-                folderName = Integer.parseInt(arr[0]);
-                fileName = arr[1];
-                keyName = folderName + "_" + fileName;
-                fileURL = fileService.getFileURL("data", fullName);
-                serviceResponse.put(keyName, fileURL);
+                String arrFileExtension = arr[1].substring(arr[1].lastIndexOf(".") + 1);
+                if (arrFileExtension.equals(fileExtension)) {
+                    Map<String, Object> objData = new HashMap<>();
+
+                    int folderName = Integer.parseInt(arr[0]);
+                    String fileName = arr[1];
+                    String fileURL = fileService.getFileURL("data", fullName);
+                    Date lastModified = objectSummary.getLastModified();
+                    objData.put("projectName", folderName);
+                    objData.put("fileName", fileName);
+                    objData.put("fileURL", fileURL);
+                    objData.put("lastModified", lastModified);
+                    serviceResponse.add(objData);
+                }
             }
         }
+        Collections.sort(serviceResponse, new SortByLastModified());
+        Collections.reverse(serviceResponse);
         return serviceResponse;
+    }
+}
+
+class SortByLastModified implements Comparator<Map<String, Object>> {
+    public int compare(Map a, Map b) {
+        Date lastModifiedA = (Date) a.get("lastModified");
+        Date lastModifiedB = (Date) b.get("lastModified");
+        return lastModifiedA.compareTo(lastModifiedB);
     }
 }
