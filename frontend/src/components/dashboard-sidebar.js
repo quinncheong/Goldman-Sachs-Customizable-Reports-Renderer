@@ -28,7 +28,7 @@ const items = [
     title: "Inbox",
   },
   {
-    href: "/products",
+    href: "/reports",
     icon: <ShoppingBagIcon fontSize="small" />,
     title: "Report Status",
   },
