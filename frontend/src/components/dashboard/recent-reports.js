@@ -20,7 +20,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
-import { AllDataProvider } from "../../data/AllReports";
+import { AllDataProvider } from "../../data/AllDataProvider";
 
 
 export const RecentReports = ({ limit=null, ...props }) => {
@@ -39,13 +39,6 @@ export const RecentReports = ({ limit=null, ...props }) => {
           boxShadow: 3,
         }}
       >
-        <CardMedia
-          style={{ height: "180px", paddingTop: "2%" }}
-          component="img"
-          // height="140"
-          image="/static/images/excel.jpg"
-          alt="Excel Template"
-        />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
             {report.fileName}
@@ -53,7 +46,7 @@ export const RecentReports = ({ limit=null, ...props }) => {
           <Box sx={{ display: "flex" }}>
             <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              {new Date(report.lastModified).toLocaleDateString('en-US')}
+              { report.lastModified }
             </Typography>
           </Box>
         </CardContent>

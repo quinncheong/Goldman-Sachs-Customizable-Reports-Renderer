@@ -17,94 +17,94 @@ import { javaTemplateEndpoint } from "../config/endpoints";
 const Dashboard = () => {
   const [pageType, setPageType] = useState("home");
 
-  const [reports, setReports] = useState([
-    {
-      reportID: 1,
-      name: "SaaSFinancialPlan.xlsx",
-      date: "2 Feb 2022",
-      status: "Pending",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 2,
-      name: "SaaSFinancialPlan2.xlsx",
-      date: "2 Feb 2022",
-      status: "Completed",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 3,
-      name: "SaaSFinancialPlan3.xlsx",
-      date: "2 Feb 2022",
-      status: "Cancelled",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 4,
-      name: "SaaSFinancialPlan3.xlsx",
-      date: "2 Feb 2022",
-      status: "Cancelled",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 5,
-      name: "SaaSFinancialPlan3.xlsx",
-      date: "2 Feb 2022",
-      status: "Completed",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-  ]);
+//   const [reports, setReports] = useState([
+//     {
+//       reportID: 1,
+//       name: "SaaSFinancialPlan.xlsx",
+//       date: "2 Feb 2022",
+//       status: "Pending",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 2,
+//       name: "SaaSFinancialPlan2.xlsx",
+//       date: "2 Feb 2022",
+//       status: "Completed",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 3,
+//       name: "SaaSFinancialPlan3.xlsx",
+//       date: "2 Feb 2022",
+//       status: "Cancelled",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 4,
+//       name: "SaaSFinancialPlan3.xlsx",
+//       date: "2 Feb 2022",
+//       status: "Cancelled",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 5,
+//       name: "SaaSFinancialPlan3.xlsx",
+//       date: "2 Feb 2022",
+//       status: "Completed",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//   ]);
 
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
-  const [reportTemplates, setReportTemplates] = useState([
-    {
-      reportTemplateID: 1,
-      name: "Bulk Create",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 2,
-      name: "Many to Many",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 3,
-      name: "Complex",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 4,
-      name: "Another test",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 5,
-      name: "Another test",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-    {
-      reportID: 6,
-      name: "Another test",
-      date: "2 Feb 2022",
-      dateCreated: Date.now(),
-      dateModified: Date.now(),
-    },
-  ]);
+//   const [reportTemplates, setReportTemplates] = useState([
+//     {
+//       reportTemplateID: 1,
+//       name: "Bulk Create",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 2,
+//       name: "Many to Many",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 3,
+//       name: "Complex",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 4,
+//       name: "Another test",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 5,
+//       name: "Another test",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//     {
+//       reportID: 6,
+//       name: "Another test",
+//       date: "2 Feb 2022",
+//       dateCreated: Date.now(),
+//       dateModified: Date.now(),
+//     },
+//   ]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
 
   const [jsonData, setJsonData] = useState({
@@ -367,20 +367,19 @@ const Dashboard = () => {
                   setReportTemplateType={setReportTemplateType}
                   sendRawJson={sendRawJson}
                   setPageType={setPageType}
-                  reportTemplates={reportTemplates}
                   selectedTemplateType={selectedTemplateType}
                   setSelectedTemplateType={setSelectedTemplateType}
                   sx={{ height: 500 }}
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <EditExistingReport reports={reports} sx={{ height: 500 }} />
+                <EditExistingReport sx={{ height: 500 }} />
               </Grid>
               <Grid item xs={12}>
                 <RecentReports limit={5} sx={{ height: "100%" }} />
               </Grid>
               <Grid item xs={12}>
-                <ReportStatus reports={reports} sx={{ height: "100%" }} />
+                {/* <ReportStatus reports={reports} sx={{ height: "100%" }} /> */}
               </Grid>
             </Grid>
           </Container>

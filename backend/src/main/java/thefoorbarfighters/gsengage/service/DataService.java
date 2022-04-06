@@ -213,7 +213,6 @@ public class DataService{
         ListObjectsV2Result result;
         result = amazonS3.listObjectsV2(req);
 
-
         for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
             String fullName = objectSummary.getKey();
             String[] arr = fullName.split("/");

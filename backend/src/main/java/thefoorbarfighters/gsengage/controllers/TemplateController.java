@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import thefoorbarfighters.gsengage.service.TemplateService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,7 +21,7 @@ public class TemplateController {
     }
 
     @GetMapping()
-    public Map<String, Object> getAllTemplates(){
+    public List<Map<String,Object>> getAllTemplates(){
         return templateService.getAllTemplates();
     }
 
