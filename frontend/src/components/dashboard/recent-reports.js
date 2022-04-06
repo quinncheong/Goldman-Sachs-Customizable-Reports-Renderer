@@ -20,8 +20,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
+import { AllDataProvider } from "../../data/AllDataProvider";
 
-export const RecentReports = ({ reports = [], ...props }) => {
+
+export const RecentReports = ({ limit=null, ...props }) => {
+  var reports = AllDataProvider('xlsx');
+  if (limit != null) { 
+    reports = reports.slice(0, limit);
+  }
   const renderReports = reports.map((report) => {
     return (
       <Card
@@ -33,27 +39,26 @@ export const RecentReports = ({ reports = [], ...props }) => {
           boxShadow: 3,
         }}
       >
-        <CardMedia
-          style={{ height: "180px", paddingTop: "2%" }}
-          component="img"
-          // height="140"
-          image="/static/images/excel.jpg"
-          alt="Excel Template"
-        />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {report.name}
+          <Typography gutterBottom variant="h6" component="div">
+            {report.fileName}
           </Typography>
           <Box sx={{ display: "flex" }}>
             <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              {format(report.dateModified, "dd/MM/yyyy")}
+              { report.lastModified }
             </Typography>
           </Box>
         </CardContent>
         <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
+          <Button 
+            variant="contained"
+            size="small" 
+            onClick={() =>{
+                window.location.href = report.fileURL
+            }}
+            >
+            Download</Button>
         </CardActions>
       </Card>
     );
@@ -68,8 +73,10 @@ export const RecentReports = ({ reports = [], ...props }) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <Typography sx={{ mr: 1 }} color="primary.main">
+          <IconButton aria-label="settings" >
+            <Typography sx={{ mr: 1 }} color="primary.main" onClick={() =>{
+                window.location.href = "/reports"
+            }}>
               View all
             </Typography>
             <ArrowForwardIosIcon color="primary.main" />

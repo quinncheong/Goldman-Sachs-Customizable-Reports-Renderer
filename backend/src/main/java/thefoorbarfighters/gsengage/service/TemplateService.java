@@ -124,8 +124,8 @@ public class TemplateService {
         return serviceResponse;
     }
 
-    public Map<String, Object> getAllTemplates() {
-        Map<String, Object> serviceResponse = createBaseResponse();
+    public List<Map<String,Object>> getAllTemplates() {
+        List<Map<String,Object>> serviceResponse = new ArrayList<>();
 
         ListObjectsV2Request req = new ListObjectsV2Request();
         req.setBucketName(fileService.getBucketName("template"));
@@ -134,17 +134,20 @@ public class TemplateService {
 
         for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
             String fullName = objectSummary.getKey();
+            Map<String, Object> objData = new HashMap<>();
 
-            Map<String, Object> tmpSuccessResponse = (Map<String, Object>) serviceResponse.get("success");
             try {
+                String fileName = fullName.substring(0, fullName.lastIndexOf("."));
                 InputStreamResource s3Data = new InputStreamResource(fileService.downloadFile("template", fullName));
                 InputStream s3DataStream = s3Data.getInputStream();
                 ObjectMapper objmapper = new ObjectMapper();
                 Map<String, Object> templateData = objmapper.readValue(s3DataStream, Map.class);
-                tmpSuccessResponse.put(fullName, templateData);
-                jobSuccess(serviceResponse);
+                Date lastModified = objectSummary.getLastModified();
+                objData.put("fileName", fileName);
+                objData.put("templateData", templateData);
+                objData.put("lastModified", lastModified);
+                serviceResponse.add(objData);
             } catch (Exception e) {
-                jobFail(serviceResponse);
                 e.printStackTrace();
             }
         }

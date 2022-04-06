@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import thefoorbarfighters.gsengage.service.DataService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,9 +34,9 @@ public class DataController {
         return dataService.getReport(rawData);
     }
 
-    @GetMapping(value = "/existing")
-    public Map<String, Object> getExistingData(){
-        return dataService.getExistingData();
+    @GetMapping(value = "/existing", headers = "Accept=application/json")
+    public List<Map<String,Object>> getExistingData(@RequestHeader String fileExtension){
+        return dataService.getAllExisting(fileExtension);
     }
 
 }

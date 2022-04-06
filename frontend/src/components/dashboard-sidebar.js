@@ -22,13 +22,13 @@ const items = [
     icon: <ChartBarIcon fontSize="small" />,
     title: "Home",
   },
+//   {
+//     href: "/customers",
+//     icon: <UsersIcon fontSize="small" />,
+//     title: "Inbox",
+//   },
   {
-    href: "/customers",
-    icon: <UsersIcon fontSize="small" />,
-    title: "Inbox",
-  },
-  {
-    href: "/products",
+    href: "/reports",
     icon: <ShoppingBagIcon fontSize="small" />,
     title: "Report Status",
   },
@@ -161,7 +161,7 @@ export const DashboardSidebar = (props) => {
           
           <Box sx={{ flexGrow: 0, mb: 3,}}>
             {items.map((item, index) => {
-              if (index < 2) {
+              if (index == 0) {
                 return (
                   <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
                 );
@@ -186,7 +186,7 @@ export const DashboardSidebar = (props) => {
           
           <Box sx={{ flexGrow: 0, mb: 3, }}>
             {items.map((item, index) => {
-              if (index > 1 && index < 5) {
+              if (index >= 1 && index < 4) {
                 return (
                   <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
                 );
