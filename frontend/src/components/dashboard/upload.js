@@ -40,7 +40,7 @@ export const Upload = ({
   };
 
   const pushToGenerator = (e) => {
-    setPageType("generate");
+    setPageType("sheets");
   };
 
   const handleSelectTemplate = (templateName) => (e) => {

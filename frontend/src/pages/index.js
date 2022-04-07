@@ -11,6 +11,7 @@ import axios from "axios";
 
 // Report generation
 import { Generator } from "../components/dashboard/generator/generator";
+import { Sheets } from "../components/dashboard/sheets/sheets";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
@@ -24,6 +25,10 @@ const Dashboard = () => {
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
+
+  const [sheets, setSheets] = useState(0);
+  const [sheetsDetails, setSheetsDetails] = useState({});
+  const [sheetHasSaved, setSheetHasSaved] = useState(false);
 
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -340,9 +345,20 @@ const Dashboard = () => {
 
       {/* {pageType === "generate" && <Generator setPageType={setPageType} jsonData={jsonData} />} */}
 
-      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
+      {pageType === "sheets" && (
+        <Sheets
+          sheets={sheets}
+          setSheets={setSheets}
+          hasSaved={sheetHasSaved}
+          setHasSaved={setSheetHasSaved}
+          sheetsDetails={sheetsDetails}
+          setSheetsDetails={setSheetsDetails}
+          setPageType={setPageType}
+          jsonData={jsonData}
+        ></Sheets>
+      )}
 
-      {pageType === "sheets" && <div>This is a sheets page test</div>}
+      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
     </>
   );
 };
