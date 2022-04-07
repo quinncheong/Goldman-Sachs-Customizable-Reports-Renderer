@@ -44,14 +44,18 @@ public class FileController {
     }
 
     @PostMapping("/uploadWithFolderNumber")
-    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("bucketType") String bucketType, @RequestParam("file") MultipartFile multipartFile, @RequestParam int folderNumber) {
-        fileService.uploadWithFolderNumber(bucketType, multipartFile, folderNumber);
+    public ResponseEntity<Object> uploadWithFileNumber(@RequestParam("bucketType") String bucketType, @RequestBody MultipartFile[] multipartFiles, @RequestParam int folderNumber) {
+        for (MultipartFile multipartFile : multipartFiles) {
+            fileService.uploadWithFolderNumber(bucketType, multipartFile, folderNumber);
+        }
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<Object> upload(@RequestParam("bucketType") String bucketType, @RequestParam("file") MultipartFile multipartFile) {
-        fileService.upload(bucketType, multipartFile);
+    @PostMapping(value = "/upload")
+    public ResponseEntity<Object> upload(@RequestParam("bucketType") String bucketType, @RequestBody MultipartFile[] multipartFiles) {
+        for (MultipartFile multipartFile : multipartFiles) {
+            fileService.upload(bucketType, multipartFile);
+        }
         return new ResponseEntity<>(MESSAGE_1, HttpStatus.OK);
     }
 

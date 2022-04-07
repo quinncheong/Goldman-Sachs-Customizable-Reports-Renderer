@@ -25,6 +25,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { AllTemplateProvider } from "../../data/AllTemplateProvider";
+// import { UploadData } from "../../data/UploadData";
 
 export const Upload = ({
   setPageType,
@@ -35,6 +36,54 @@ export const Upload = ({
   setSelectedTemplateType,
   ...props
 }) => {
+  const [selectedFiles, setSelectedFiles] = useState();
+
+  const uploadJSON = async (jsonData) => {
+    const API_URL = "http://localhost:7000/api/v1/upload/";
+    let jsonString = JSON.stringify(jsonData)
+    console.log(jsonData);
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: { jsonData },
+    });
+    const data = await response.json();
+    console.log(data);
+    console.log("files uploaded");
+  }
+
+  const uploadJSONs = async (e) => {
+    e.preventDefault();
+    // console.log(e.target.files);
+    // var formData = new FormData();
+    const x = e.target.files;
+    if (x < 1) {
+      return;
+    }
+    // setSelectedFiles(() => {
+    //   for (let i = 0; i < x.length; i++) {
+    //     formData.append("files", x[i]);
+    //   }
+    //   return x;
+    // });
+
+    for (let i = 0; i < x.length; i++) { 
+      // uploadJSON(x[i]);
+      let filereader = new FileReader()
+      await filereader.readAsText(x[i]);
+      filereader.onload = function(e) {
+        var content = e.target.result;
+        var intern = JSON.parse(content); // parse json 
+        // console.log(intern); // You can index every object
+        uploadJSON(intern);
+      };
+      // filereader.readAsText(file_to_read);
+      
+      // console.log(filereader.result);
+      // uploadJSON(jsonData);
+    }
+  };
+
   const changeTemplateType = (event) => {
     setReportTemplateType(event.target.value);
   };
@@ -69,9 +118,10 @@ export const Upload = ({
           </Typography>
           <input
             type="file"
-            onChange={sendRawJson}
+            onChange={uploadJSONs}
             hidden
-            multiple={reportTemplateType === "Simple" ? false : true}
+            multiple
+            // multiple={reportTemplateType === "Simple" ? false : true}
           />
         </Button>
 
@@ -89,7 +139,8 @@ export const Upload = ({
             type="file"
             onChange={sendRawJson}
             hidden
-            multiple={reportTemplateType === "Simple" ? false : true}
+            multiple
+            // multiple={reportTemplateType === "Simple" ? false : true}
           />
         </Button>
         {renderTemplateSelection()}
@@ -102,7 +153,7 @@ export const Upload = ({
       return (
         <Typography sx={{ ml: "auto", alignSelf: "center" }} variant="body1">
           Please Select a Report Template
-        </Typography> 
+        </Typography>
       );
     }
 
@@ -195,7 +246,7 @@ export const Upload = ({
             <Box sx={{ display: "flex" }}>
               {/* <CalendarTodayIcon size="small" sx={{ mr: 1 }} /> */}
               <Typography sx={{ fontSize: 10 }} color="text.secondary">
-                { template.lastModified }
+                {template.lastModified}
               </Typography>
             </Box>
           </CardContent>

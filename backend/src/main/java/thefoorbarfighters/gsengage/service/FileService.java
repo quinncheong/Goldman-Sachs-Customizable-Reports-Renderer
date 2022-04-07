@@ -62,14 +62,14 @@ public class FileService {
      @Async // save file without file number
      public void upload(String bucketType, final MultipartFile multipartFile) {
          try {
-             final File file = convertMultiPartFileToFile(multipartFile);
-             int folderCount = this.findNumberOfFolders(getBucketName(bucketType));
-             folderCount++;
-             final String fileName = folderCount + "/" + file.getName();
-             LOG.info("Uploading file with name {}", fileName);
-             final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
-             amazonS3.putObject(putObjectRequest);
-             Files.delete(file.toPath()); // Remove the file locally created in the project folder
+                 final File file = convertMultiPartFileToFile(multipartFile);
+                 int folderCount = this.findNumberOfFolders(bucketType);
+                 folderCount++;
+                 final String fileName = folderCount + "/" + file.getName();
+                 LOG.info("Uploading file with name {}", fileName);
+                 final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
+                 amazonS3.putObject(putObjectRequest);
+                 Files.delete(file.toPath()); // Remove the file locally created in the project folder
          } catch (AmazonServiceException e) {
              LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
          } catch (IOException ex) {
@@ -80,12 +80,12 @@ public class FileService {
     @Async
     public void uploadWithFolderNumber(String bucketType, final MultipartFile multipartFile, int folderNumber) {
         try {
-            final File file = convertMultiPartFileToFile(multipartFile);
-            final String fileName = folderNumber + "/" + file.getName();
-            LOG.info("Uploading file with name {}", fileName);
-            final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
-            amazonS3.putObject(putObjectRequest);
-            Files.delete(file.toPath()); // Remove the file locally created in the project folder
+                final File file = convertMultiPartFileToFile(multipartFile);
+                final String fileName = folderNumber + "/" + file.getName();
+                LOG.info("Uploading file with name {}", fileName);
+                final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
+                amazonS3.putObject(putObjectRequest);
+                Files.delete(file.toPath()); // Remove the file locally created in the project folder
         } catch (AmazonServiceException e) {
             LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
         } catch (IOException ex) {
