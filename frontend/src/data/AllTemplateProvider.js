@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from "react";
 
 function AllTemplateProvider() {
     const API_URL = 'http://localhost:7000/api/v1/templates'
-    const [templateData, setTemplateData] = useState([]); 
+    const [templateData, setTemplateData] = useState([]);
 
     useEffect(() => {
         async function searchAllTemplates() {
@@ -31,5 +31,5 @@ function AllTemplateProvider() {
 
     return templateData;
 }
-  
+
 export { AllTemplateProvider };

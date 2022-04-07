@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from "react";
 
 function AllDataProvider(fileExtension) {
     const API_URL = 'http://localhost:7000/api/v1/existing'
-    const [reportData, setReportData] = useState([]); 
+    const [reportData, setReportData] = useState([]);
 
     useEffect(() => {
         async function searchAllReports() {
@@ -33,5 +33,5 @@ function AllDataProvider(fileExtension) {
 
     return reportData;
 }
-  
+
 export { AllDataProvider };

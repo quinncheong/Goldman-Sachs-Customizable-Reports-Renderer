@@ -59,33 +59,33 @@ public class FileService {
         return amazonS3.getObject(getBucketName(bucketType), fileName).getObjectContent();
     }
 
-     @Async // save file without file number
-     public void upload(String bucketType, final MultipartFile multipartFile) {
-         try {
-                 final File file = convertMultiPartFileToFile(multipartFile);
-                 int folderCount = this.findNumberOfFolders(bucketType);
-                 folderCount++;
-                 final String fileName = folderCount + "/" + file.getName();
-                 LOG.info("Uploading file with name {}", fileName);
-                 final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
-                 amazonS3.putObject(putObjectRequest);
-                 Files.delete(file.toPath()); // Remove the file locally created in the project folder
-         } catch (AmazonServiceException e) {
-             LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
-         } catch (IOException ex) {
-             LOG.error("Error {} occurred while deleting temporary file", ex.getLocalizedMessage());
-         }
-     }
+    @Async // save file without file number
+    public void upload(String bucketType, final MultipartFile multipartFile) {
+        try {
+            final File file = convertMultiPartFileToFile(multipartFile);
+            int folderCount = this.findNumberOfFolders(bucketType);
+            folderCount++;
+            final String fileName = folderCount + "/" + file.getName();
+            LOG.info("Uploading file with name {}", fileName);
+            final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
+            amazonS3.putObject(putObjectRequest);
+            Files.delete(file.toPath()); // Remove the file locally created in the project folder
+        } catch (AmazonServiceException e) {
+            LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
+        } catch (IOException ex) {
+            LOG.error("Error {} occurred while deleting temporary file", ex.getLocalizedMessage());
+        }
+    }
 
     @Async
     public void uploadWithFolderNumber(String bucketType, final MultipartFile multipartFile, int folderNumber) {
         try {
-                final File file = convertMultiPartFileToFile(multipartFile);
-                final String fileName = folderNumber + "/" + file.getName();
-                LOG.info("Uploading file with name {}", fileName);
-                final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
-                amazonS3.putObject(putObjectRequest);
-                Files.delete(file.toPath()); // Remove the file locally created in the project folder
+            final File file = convertMultiPartFileToFile(multipartFile);
+            final String fileName = folderNumber + "/" + file.getName();
+            LOG.info("Uploading file with name {}", fileName);
+            final PutObjectRequest putObjectRequest = new PutObjectRequest(getBucketName(bucketType), fileName, file);
+            amazonS3.putObject(putObjectRequest);
+            Files.delete(file.toPath()); // Remove the file locally created in the project folder
         } catch (AmazonServiceException e) {
             LOG.error("Error {} occurred while uploading file", e.getLocalizedMessage());
         } catch (IOException ex) {
