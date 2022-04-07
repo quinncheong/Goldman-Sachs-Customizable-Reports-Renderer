@@ -9,7 +9,7 @@
 # execute this script using 'Yes "Yes" | bash deploy.sh'
 
 # kill existing services on shared ports
-pkill java
+pkill /usr/lib/jvm/java-11-openjdk-amd64/bin/java
 pkill python
 
 # install dependencies
@@ -68,6 +68,7 @@ nohup mvn spring-boot:run &
 
 # run frontend
 cd ~/project/the-foobar-fighters/GSEngage2022-TheFoobarFighters/frontend
+rm -rf node_modules
 npm install
 
 if test -f "nohup.out" ; then
