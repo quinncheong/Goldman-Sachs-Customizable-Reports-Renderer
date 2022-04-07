@@ -24,9 +24,9 @@ import UploadIcon from "@mui/icons-material/Upload";
 import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { AllTemplateProvider } from "../../data/AllTemplateProvider";
 
 export const Upload = ({
+  reportTemplates,
   setPageType,
   reportTemplateType,
   setReportTemplateType,
@@ -174,7 +174,6 @@ export const Upload = ({
     </>
   );
 
-  var reportTemplates = AllTemplateProvider();
   const renderReportTemplateWrapper = () => {
     const renderReportTemplates = reportTemplates.map((template) => {
       return (
@@ -195,7 +194,7 @@ export const Upload = ({
             <Box sx={{ display: "flex" }}>
               {/* <CalendarTodayIcon size="small" sx={{ mr: 1 }} /> */}
               <Typography sx={{ fontSize: 10 }} color="text.secondary">
-                { template.lastModified }
+                {template.lastModified}
               </Typography>
             </Box>
           </CardContent>
