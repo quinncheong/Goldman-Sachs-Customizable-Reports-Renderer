@@ -26,6 +26,7 @@ import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { AllTemplateProvider } from "../../data/AllTemplateProvider";
 // import { UploadData } from "../../data/UploadData";
+import { MetadataBase, objectToMap } from "./generator/generate-metadata";
 
 export const Upload = ({
   setPageType,
@@ -39,17 +40,20 @@ export const Upload = ({
   const [selectedFiles, setSelectedFiles] = useState();
 
   const uploadJSON = async (jsonData) => {
-    const API_URL = "http://localhost:7000/api/v1/upload/";
-    let jsonString = JSON.stringify(jsonData)
+    const API_URL = "http://localhost:7000/api/v1/upload";
+    // let jsonString = JSON.stringify(jsonData)
     console.log(jsonData);
+    const body = JSON.stringify(jsonData);
+    // , function replacer(key, value) {return value});
+    console.log(body);
     const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: { jsonData },
+      body: body,
     });
     const data = await response.json();
     console.log(data);
-    console.log("files uploaded");
+    // console.log("files uploaded");
   }
 
   const uploadJSONs = async (e) => {
@@ -66,22 +70,24 @@ export const Upload = ({
     //   }
     //   return x;
     // });
-
+    let request = new MetadataBase();
     for (let i = 0; i < x.length; i++) { 
       // uploadJSON(x[i]);
       let filereader = new FileReader()
       await filereader.readAsText(x[i]);
       filereader.onload = function(e) {
         var content = e.target.result;
-        var intern = JSON.parse(content); // parse json 
-        // console.log(intern); // You can index every object
-        uploadJSON(intern);
-      };
-      // filereader.readAsText(file_to_read);
-      
-      // console.log(filereader.result);
-      // uploadJSON(jsonData);
+        var interim = JSON.parse(content); // parse json 
+        const fileName = x[i].name;
+        request.addData(fileName, interim);
+        // request.get('data').set(fileName, interim);
+        // request.get('metadata').get('files').push(fileName);
+        };
     }
+    // const mapRequest = objectToMap(request);
+    // console.log(mapRequest);
+    // request.get('metadata').set('project', 0); // to be replaced with fetch project state
+    uploadJSON(request);
   };
 
   const changeTemplateType = (event) => {

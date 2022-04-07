@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +79,18 @@ public class DataService{
         return dataResponse;
     }
 
-    public Map<String, Object> uploadData(Map<String, Object> fullData){
+    public Map<String, Object> uploadData(String inputData) {
+        System.out.println(inputData);
         Map<String, Object> serviceResponse = createBaseResponse();
+//        Map<String, Object> fullData = inputData.get(0);
+        Map fullData = new HashMap<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            fullData = mapper.readValue(inputData, Map.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(fullData);
 
         final Map<String, Object> metadata = (Map<String, Object>) fullData.get("metadata");
         final Integer projectName = (Integer) metadata.get("project");

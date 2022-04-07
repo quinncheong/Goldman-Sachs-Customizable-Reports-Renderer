@@ -20,7 +20,7 @@ public class DataController {
     }
 
     @PostMapping(value="/upload", headers = "Accept=application/json")
-    public Map<String, Object> uploadDatatype(@RequestBody Map<String, Object> rawData){
+    public Map<String, Object> uploadDatatype(@RequestBody String rawData){
         return dataService.uploadData(rawData);
     }
 
