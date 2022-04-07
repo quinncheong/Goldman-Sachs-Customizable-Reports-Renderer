@@ -20,14 +20,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
-import { AllDataProvider } from "../../data/AllDataProvider";
 
-
-export const RecentReports = ({ limit=null, ...props }) => {
-  var reports = AllDataProvider('xlsx');
-  if (limit != null) { 
-    reports = reports.slice(0, limit);
-  }
+export const RecentReports = ({ reports, ...props }) => {
   const renderReports = reports.map((report) => {
     return (
       <Card
@@ -46,19 +40,20 @@ export const RecentReports = ({ limit=null, ...props }) => {
           <Box sx={{ display: "flex" }}>
             <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              { report.lastModified }
+              {report.lastModified}
             </Typography>
           </Box>
         </CardContent>
         <CardActions>
-          <Button 
+          <Button
             variant="contained"
-            size="small" 
-            onClick={() =>{
-                window.location.href = report.fileURL
+            size="small"
+            onClick={() => {
+              window.location.href = report.fileURL;
             }}
-            >
-            Download</Button>
+          >
+            Download
+          </Button>
         </CardActions>
       </Card>
     );
@@ -73,10 +68,14 @@ export const RecentReports = ({ limit=null, ...props }) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings" >
-            <Typography sx={{ mr: 1 }} color="primary.main" onClick={() =>{
-                window.location.href = "/reports"
-            }}>
+          <IconButton aria-label="settings">
+            <Typography
+              sx={{ mr: 1 }}
+              color="primary.main"
+              onClick={() => {
+                window.location.href = "/reports";
+              }}
+            >
               View all
             </Typography>
             <ArrowForwardIosIcon color="primary.main" />

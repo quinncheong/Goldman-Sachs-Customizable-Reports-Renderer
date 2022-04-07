@@ -14,97 +14,15 @@ import { Generator } from "../components/dashboard/generator/generator";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
+// Backend Connector Functions
+import { getAllReports, getAllTemplates } from "../utils/backend-calls";
+
 const Dashboard = () => {
   const [pageType, setPageType] = useState("home");
-
-//   const [reports, setReports] = useState([
-//     {
-//       reportID: 1,
-//       name: "SaaSFinancialPlan.xlsx",
-//       date: "2 Feb 2022",
-//       status: "Pending",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 2,
-//       name: "SaaSFinancialPlan2.xlsx",
-//       date: "2 Feb 2022",
-//       status: "Completed",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 3,
-//       name: "SaaSFinancialPlan3.xlsx",
-//       date: "2 Feb 2022",
-//       status: "Cancelled",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 4,
-//       name: "SaaSFinancialPlan3.xlsx",
-//       date: "2 Feb 2022",
-//       status: "Cancelled",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 5,
-//       name: "SaaSFinancialPlan3.xlsx",
-//       date: "2 Feb 2022",
-//       status: "Completed",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//   ]);
+  const [reports, setReports] = useState([]);
 
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
-//   const [reportTemplates, setReportTemplates] = useState([
-//     {
-//       reportTemplateID: 1,
-//       name: "Bulk Create",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 2,
-//       name: "Many to Many",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 3,
-//       name: "Complex",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 4,
-//       name: "Another test",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 5,
-//       name: "Another test",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//     {
-//       reportID: 6,
-//       name: "Another test",
-//       date: "2 Feb 2022",
-//       dateCreated: Date.now(),
-//       dateModified: Date.now(),
-//     },
-//   ]);
+  const [reportTemplates, setReportTemplates] = useState([]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
 
   const [jsonData, setJsonData] = useState({
@@ -288,16 +206,49 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    // Function to get report stuff
-    // getReports();
-    // async function getReports() {
-    //   // let url = "http://something/" + productId;
-    //   let config = {};
-    //   const response = await myFetch(url);
-    //   if (!didCancel) {
-    //     // Ignore if we started fetching something else
-    //   }
-    // }
+    const retrieveReports = async () => {
+      try {
+        const fileType = "xlsx";
+        let reports = await getAllReports(fileType);
+        setReports(reports);
+      } catch {
+        // Mock reports data on failure
+        setReports([
+          {
+            reportID: 1,
+            fileName: "SaaSFinancialPlan.xlsx",
+            date: "2 Feb 2022",
+            status: "Pending",
+            dateCreated: Date.now(),
+            lastModified: Date.now(),
+          },
+        ]);
+      }
+    };
+
+    retrieveReports();
+  }, []);
+
+  useEffect(() => {
+    const retrieveTemplates = async () => {
+      try {
+        let templates = await getAllTemplates();
+        setReportTemplates(templates);
+      } catch {
+        // Mock reports data on failure
+        setReportTemplates([
+          {
+            reportTemplateID: 1,
+            fileName: "Bulk Create",
+            date: "2 Feb 2022",
+            dateCreated: Date.now(),
+            lastModified: Date.now(),
+          },
+        ]);
+      }
+    };
+
+    retrieveTemplates();
   }, []);
 
   const sendRawJson = async (e) => {
@@ -363,6 +314,7 @@ const Dashboard = () => {
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
                 <Upload
+                  reportTemplates={reportTemplates}
                   reportTemplateType={reportTemplateType}
                   setReportTemplateType={setReportTemplateType}
                   sendRawJson={sendRawJson}
@@ -373,10 +325,10 @@ const Dashboard = () => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <EditExistingReport sx={{ height: 500 }} />
+                <EditExistingReport reports={reports.slice(0, 5)} sx={{ height: 500 }} />
               </Grid>
               <Grid item xs={12}>
-                <RecentReports limit={5} sx={{ height: "100%" }} />
+                <RecentReports reports={reports.slice(0, 5)} sx={{ height: "100%" }} />
               </Grid>
               <Grid item xs={12}>
                 {/* <ReportStatus reports={reports} sx={{ height: "100%" }} /> */}

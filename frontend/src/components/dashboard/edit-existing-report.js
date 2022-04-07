@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -13,15 +14,9 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import React, { useState } from "react";
-import { AllDataProvider } from "../../data/AllDataProvider";
 
-export const EditExistingReport = ({ limit=null, ...props }) => {
-    var reports = AllDataProvider('xlsx');
-    if (limit != null) { 
-        reports = reports.slice(0, limit);
-    }
-    const displayReports = () => {
+export const EditExistingReport = ({ reports, ...props }) => {
+  const displayReports = () => {
     return (
       <React.Fragment>
         {reports.map((report) => {
@@ -34,7 +29,7 @@ export const EditExistingReport = ({ limit=null, ...props }) => {
               </Grid>
               <Grid item xs={2}>
                 <Typography color="neutral.400" variant="body2">
-                    { report.lastModified }
+                  {report.lastModified}
                 </Typography>
               </Grid>
               <Grid item xs={2}>
@@ -81,9 +76,15 @@ export const EditExistingReport = ({ limit=null, ...props }) => {
           p: 2,
         }}
       >
-        <Button sx={{ ml: "auto" }} color="primary" endIcon={<ArrowRightIcon fontSize="small" />} size="small" onClick={() =>{
-                window.location.href = "/reports"
-            }}>
+        <Button
+          sx={{ ml: "auto" }}
+          color="primary"
+          endIcon={<ArrowRightIcon fontSize="small" />}
+          size="small"
+          onClick={() => {
+            window.location.href = "/reports";
+          }}
+        >
           View More Reports
         </Button>
       </Box>
