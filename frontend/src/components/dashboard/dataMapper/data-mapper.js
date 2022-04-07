@@ -16,7 +16,7 @@ export const DataMapper = ({ setPageType, jsonData, ...props }) => {
   ));
 
   const handleBackClick = () => {
-    setPageType("home");
+    setPageType("sheets");
   };
 
   const handleNextClick = () => {};
@@ -39,7 +39,7 @@ export const DataMapper = ({ setPageType, jsonData, ...props }) => {
             <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
               <ArrowLeftIcon size="lg" />
             </IconButton>
-            Generate Report
+            Select Data Relationship
           </Typography>
 
           {/* <Box sx={{ pt: 3 }}>

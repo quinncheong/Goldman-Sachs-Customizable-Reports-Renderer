@@ -16,7 +16,8 @@ export const Generator = ({ setPageType, jsonData, ...props }) => {
   ));
 
   const handleBackClick = () => {
-    setPageType("home");
+    console.log('yoo goo')
+    setPageType("sheets");
   };
 
   const handleNextClick = () => {
