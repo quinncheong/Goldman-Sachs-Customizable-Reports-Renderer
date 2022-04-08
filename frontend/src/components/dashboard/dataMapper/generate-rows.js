@@ -1,4 +1,9 @@
-import { DataGrid } from "@mui/x-data-grid";
+// import { DataGrid } from "@mui/x-data-grid";
+// import DataGrid from "react-data-grid";
+
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 
 export const GenerateRows = ({
   datapoints,
@@ -7,6 +12,7 @@ export const GenerateRows = ({
   tableId,
   ...props
 }) => {
+  console.log(tableId);
   const rows = datapoints.map((datapoint, index) => {
     const { filename, fieldName, dataType, rowCount, sum } = datapoint;
     return {
@@ -25,40 +31,68 @@ export const GenerateRows = ({
     { field: "col4", headerName: "Sum", width: 80 },
   ];
 
-  const handleStateChange = (gridState, e, details) => {
-    let selectionArray = gridState.selection;
+  const handleStateChange = (selectedInputs) => {
     let compiledTablesClone = { ...compiledTables };
 
-    let correspondingData = [];
-    for (const selection of selectionArray) {
-      let dataSelection = datapoints[selection];
-      correspondingData.push({
-        colName: dataSelection.fieldName,
-        colData: { data: dataSelection.filename, sum: dataSelection.sum },
+    let tableFinalData = [];
+
+    for (const selection of selectedInputs) {
+      tableFinalData.push({
+        colName: selection.fieldName,
+        colData: { data: selection.filename, sum: selection.sum },
       });
     }
 
-    compiledTablesClone[tableId] = correspondingData;
-    console.log(compiledTablesClone)
-    // setCompiledTables(compiledTablesClone);
-
-    console.log(gridState.selection);
-    console.log(e);
-    console.log(details);
+    compiledTablesClone[tableId] = tableFinalData;
+    setCompiledTables(compiledTablesClone);
   };
 
   return (
-    <DataGrid
-      sx={{ ml: 1, outline: "none" }}
-      hideFooter
-      labelRowsPerPage=""
-      rowsPerPageOptions={[]}
-      checkboxSelection
-      rows={rows}
-      columns={columns}
-      onStateChange={handleStateChange}
-    />
+    <Stack spacing={3} sx={{ width: 500 }}>
+      <Autocomplete
+        multiple
+        id="tags-standard"
+        options={datapoints}
+        getOptionLabel={(option) => `${option.filename} - ${option.fieldName}`}
+        onChange={(event, newValue) => {
+          handleStateChange(newValue);
+        }}
+        // defaultValue={}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="standard"
+            label="Multiple values"
+            placeholder="Select Inputs"
+          />
+        )}
+      />
+    </Stack>
   );
+
+  // return (
+  //   <Box>
+  //     <DataGrid
+  //       // sx={{ ml: 1, outline: "none" }}
+  //       // hideFooter
+  //       labelRowsPerPage=""
+  //       rowsPerPageOptions={[]}
+  //       checkboxSelection
+  //       rows={rows}
+  //       columns={columns}
+  //       // onStateChange={handleStateChange}
+  //     />
+  //     <Button
+  //       endIcon={<ArrowForwardIosIcon />}
+  //       sx={{ display: "flex", ml: "auto", mt: 1 }}
+  //       color="primary"
+  //       variant="contained"
+  //       onClick={handleNextClick}
+  //     >
+  //       Next
+  //     </Button>
+  //   </Box>
+  // );
 };
 
 // Old useless stuff

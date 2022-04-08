@@ -101,8 +101,8 @@ export const DataMapper = ({
               {/* Rows of the data */}
               <GenerateRows
                 tableId={tableAndRowDetails.table}
-                compiledTables={mapperCompiledTables}
-                setCompiledTables={setMapperCompiledTables}
+                compiledTables={compiledTables}
+                setCompiledTables={setCompiledTables}
                 datapoints={consolidatedDataTypes}
               />
             </CardContent>
