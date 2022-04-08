@@ -1,12 +1,19 @@
+import React, { useState, useEffect } from "react";
+
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
+  Grid,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { AllDataProvider } from "../../data/AllDataProvider";
+import { getAllReports, getAllTemplates, uploadData } from "../../utils/backend-calls";
 
-export const ExistingDataList = ( props ) => {
+export const ExistingDataList = ({
+  setPageType
+}) => {
   const renderFileDownloadButton = (params) => {
     return (
       <strong>
@@ -23,47 +30,96 @@ export const ExistingDataList = ( props ) => {
       </strong>
     )
   }
+  const [rows, setRows] = useState({});
+  const [columns, setColumns] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const reports = AllDataProvider('json');
-  const rows = reports.map((report, index) => {
-    return {
-    id : index,
-    project: report.projectName,
-    col1: report.fileName,
-    col2: report.lastModified,
-    col3: report.fileURL,
-    };
-  });
+  useEffect(() => {
+    const buildRows = (rawData) => {
+      setRows(rawData.map((data, index) => {
+        return {
+        id : index,
+        project: data.projectName,
+        col1: data.fileName,
+        col2: data.lastModified,
+        // col3: data.fileURL,
+        };
+      })
+      );
+    }
 
-  const columns = [
-    { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
-    { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
-    { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
-    { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
-  ];
+    const buildColumns = () => {
+      setColumns(
+        [
+            { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
+            { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
+            { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
+            // { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
+          ]
+      );
+    }
 
+    const fetchExistingData = async() => {
+      let rawData = await getAllReports('json');
+      // console.log(rawData);
+      // setExistingData(rawData);
+      await buildRows(rawData);
+      buildColumns();
+    }
+
+    fetchExistingData();
+  }, [])
+  
   const handleStateChange = (gridState, e, details) => {
-    console.log(gridState);
-    console.log(e);
-    console.log(details);
+    // console.log(gridState);
+    // console.log(e);
+    // console.log(details);
+    console.log(selectedRows);
+  };
+
+  const handleSubmit = (event) => {
+    console.log("Submit");
+    console.log(selectedRows);
+    setPageType("sheets");
+    event.preventDefault();
   };
 
   return (
-    <form {...props}>
-    <Card sx={{ width: "100%" }}>
-      <CardContent sx={{ height: 800, width: "100%" }}>
-      <DataGrid
-          sx={{ outline: "none" }}
-          hideFooter
-          labelRowsPerPage=""
-          rowsPerPageOptions={[]}
-          checkboxSelection
-          rows={rows}
-          columns={columns}
-          onStateChange={handleStateChange}
-      />
-      </CardContent>
-    </Card>
+    <form onSubmit={handleSubmit} >
+      <Card sx={{ width: "100%" }}>
+        <CardContent sx={{ height: 800, width: "100%" }}>
+        <DataGrid
+            sx={{ outline: "none" }}
+            hideFooter
+            labelRowsPerPage=""
+            rowsPerPageOptions={[]}
+            checkboxSelection
+            rows={rows}
+            columns={columns}
+            // onStateChange={handleStateChange}
+            onSelectionModelChange={(ids) => {
+              const selectedIDs = new Set(ids);
+              const selectedRows = rows.filter((row) =>
+                selectedIDs.has(row.id),
+              );
+    
+              setSelectedRows(selectedRows);
+            }}
+        />
+        </CardContent>
+        <CardActions>
+          <Grid container justify="flex-end">
+            <Button 
+              // type="submit"           
+              variant="contained"
+              component="label"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </CardActions>
+      </Card>
     </form>
   );
 };

@@ -38,12 +38,11 @@ export const Upload = ({
   setReportTemplateType,
   sendRawJson,
   selectedData,
-  existingData,
   selectedTemplateType,
   setSelectedTemplateType,
   ...props
 }) => {
-  const [displayExisting, setDisplayExisting] = useState(false);
+  // const [displayExisting, setDisplayExisting] = useState(false);
   
   // const existingData = existingData;
 
@@ -89,7 +88,7 @@ export const Upload = ({
           variant="contained"
           component="label"
           disabled={!selectedTemplateType}
-          onClick={(event) => setDisplayExisting(true)}
+          onClick={(event) => {setPageType("load")}}
         >
           <Typography color="" variant="body2">
             Load Existing Data
@@ -240,143 +239,46 @@ export const Upload = ({
     );
   };
 
-  const renderDataSelection = () => {
-    // if (!selectedData) {
-    //   return (
-    //     <Typography sx={{ ml: "auto", alignSelf: "center" }} variant="body1">
-    //       Please Select a Data File
-    //     </Typography>
-    //   );
-    // }
-    console.log('hello');
+  return (
+    <Card variant="outlined" {...props}>
+      <CardHeader sx={{}} title="Create New Report" />
 
-    // console.log(existingData);
-    const rows = existingData.map((dataFile, index) => {
-      return {
-        id : index,
-        project: dataFile.projectName,
-        col1: dataFile.fileName,
-        col2: dataFile.lastModified,
-        col3: dataFile.fileURL,
-      };
-    });
-  
-    const columns = [
-      { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
-      { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
-      { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
-      { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
-    ];
-    
-    const handleStateChange = (gridState, e, details) => {
-      console.log(gridState);
-      console.log(e);
-      console.log(details);
-    };
-
-    return (
-      <form {...props}>
-        <Card sx={{ width: "100%" }}>
-          {/* <CardHeader
-            sx={{ p: 3 }}
-            title={`Past Reports`}
-          />
-          <Divider /> */}
-          <CardContent sx={{ height: 800, width: "100%" }}>
-            <DataGrid
-              sx={{ outline: "none" }}
-              hideFooter
-              labelRowsPerPage=""
-              rowsPerPageOptions={[]}
-              checkboxSelection
-              rows={rows}
-              columns={columns}
-              onStateChange={handleStateChange}
-            />
-          </CardContent>
-        </Card>
-      </form>
-    )
-  }
-
-  const displayExistingData = (props) => {
-    return (
-      <>
-      <CardHeader sc={{}} title="Load Existing Data" />
-        <Divider />
-        <Box
-          // sx={{
-          //   display: "flex",
-          //   justifyContent: "flex-end",
-          //   p: 2
-          // }}
-          >
-          {renderDataSelection()}
-        </Box>
-        <Divider />
+      <Divider />
+      <CardContent sx={{ paddingY: 0 }}>
         <Box
           sx={{
-            display: "flex", 
-            justifyContent: "flex-end", 
-            p:2}}
-            >
-          <Button onClick={(event) => setDisplayExisting(false)} size="small">
-            Back
-          </Button>
-        </Box>
-      </>
-    )
-  
-  };
-
-  if (displayExisting) {
-    return(
-      <Card variant="outlined" {...props}>
-        {displayExistingData()}
-      </Card>
-    )
-  } else {
-    return (
-      <Card variant="outlined" {...props}>
-        <CardHeader sx={{}} title="Create New Report" />
-
-        <Divider />
-        <CardContent sx={{ paddingY: 0 }}>
-          <Box
-            sx={{
-              height: 340,
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            {renderReportTemplateWrapper()}
-            {renderUploadButtons()}
-          </Box>
-        </CardContent>
-        <Divider />
-        <Box
-          sx={{
+            height: 340,
+            position: "relative",
             display: "flex",
-            justifyContent: "flex-end",
-            p: 2,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
           }}
         >
-          <Button
-            onClick={pushToGenerator}
-            color="primary"
-            endIcon={<ArrowRightIcon fontSize="small" />}
-            size="small"
-          >
-            Overview
-          </Button>
+          {renderReportTemplateWrapper()}
+          {renderUploadButtons()}
         </Box>
-      </Card>
-    );
-  }
+      </CardContent>
+      <Divider />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          p: 2,
+        }}
+      >
+        <Button
+          onClick={pushToGenerator}
+          color="primary"
+          endIcon={<ArrowRightIcon fontSize="small" />}
+          size="small"
+        >
+          Overview
+        </Button>
+      </Box>
+    </Card>
+  );
 };
 
 // old Components
