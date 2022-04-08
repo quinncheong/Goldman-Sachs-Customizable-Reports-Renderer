@@ -49,47 +49,80 @@ const Dashboard = () => {
   // This section contains the design schemes for final report generation
   // Finalised schema
   const [compiledSheets, setCompiledSheets] = useState([
-    { sheetName: "sheet1", sheetData: ["r1", "r2"] },
-    { sheetName: "sheet2", sheetData: ["r3", "r4"] },
+    { sheetName: "sheet1", sheetData: ["row1", "row2"] },
+    { sheetName: "sheet2", sheetData: ["row3", "row4"] },
   ]);
 
-  const [compiledRows, setCompiledRows] = useState([
-    { rowName: "row1", rowData: ["t1", "t2"] },
-    { rowName: "row2", rowData: [] },
-  ]);
+  const [compiledRows, setCompiledRows] = useState({
+    "row1": ["t1", "t2"],
+    "row2": ["t2", "t3"],
+    "row3": ["t2", "t3"],
+    "row4": ["t2", "t3"]
+  });
 
-  const [compiledTables, setCompiledTables] = useState([
-    {
-      tableName: "t1",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
+  const [compiledTables, setCompiledTables] = useState({
+    "t1": {
+      "assetCode1" : { data: "json1.json", sum: false },
+      "assetCode2" : { data: "json1.json", sum: false },
+      "assetCode3" : { data: "json1.json", sum: false } 
     },
-    {
-      tableName: "t2",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
+    "t2": {
+      "buyer1" : { data: "json1.json", sum: false },
+      "buyer2" : { data: "json1.json", sum: false },
+      "buyer3" : { data: "json1.json", sum: false } 
     },
-    {
-      tableName: "t3",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
+    "t3": {
+      "seller1" : { data: "json1.json", sum: false },
+      "seller2" : { data: "json1.json", sum: false },
+      "seller3" : { data: "json1.json", sum: false } 
     },
-  ]);
+  });
 
   const [compiledJson, setCompiledJson] = useState({});
 
+  const createCompliedJson = () => {
+    let metadataObject = {
+      filename: "filename.xlsx",
+      project: project,
+      reportTemplateType,
+      files: [],
+    };
+
+    let sheetDefinition = {};
+    compiledSheets.map(function (obj) {
+      sheetDefinition[obj.sheetName] = obj.sheetData;
+    });
+    console.log("sheetDefinition");
+    console.log(sheetDefinition);
+    
+    let rowDefinition = {};
+    Object.entries(compiledRows).map(([row, tables]) => {
+      console.log(tables);
+      rowDefinition[row] = {}
+      tables.map(function (table) {
+        rowDefinition[row][table] = compiledTables[table];
+      })
+    });
+    
+    let compiledObject = {};
+    Object.entries(sheetDefinition).map(([sheet, rows]) => {
+      compiledObject[sheet] = []
+      rows.map(function (row) {
+        compiledObject[sheet].push([rowDefinition[row]])
+      })
+    })
+
+    let reqBean = {
+      metadata: metadataObject,
+      compiled: compiledObject,
+    };
+    console.log(reqBean);
+  }
+
+  // useEffect(() => {
+  //   createCompliedJson();
+  // }, [])
+  
   // const [compiledJson, setCompiledJson] = useState({
   //   sheets: {
   //     sheet1: ["r1", "r2"],
