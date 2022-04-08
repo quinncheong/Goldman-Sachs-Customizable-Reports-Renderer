@@ -44,49 +44,131 @@ const Dashboard = () => {
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
 
   // Data retrieved from the upload API
-  const [jsonDataTypes, setJsonDataTypes] = useState({});
+  const [jsonDataTypes, setJsonDataTypes] = useState({
+    JSON0: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+        assetCode: {
+          datatype: "str",
+          row_count: 18,
+        },
+        budget: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON1: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON2: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+  });
 
   // This section contains the design schemes for final report generation
   // Finalised schema
   const [compiledSheets, setCompiledSheets] = useState([
-    { sheetName: "sheet1", sheetData: ["r1", "r2"] },
-    { sheetName: "sheet2", sheetData: ["r3", "r4"] },
+    { sheetName: "sheet1", sheetData: ["r1"] },
+    // { sheetName: "sheet2", sheetData: ["r3", "r4"] },
   ]);
 
-  const [compiledRows, setCompiledRows] = useState([
-    { rowName: "row1", rowData: ["t1", "t2"] },
-    { rowName: "row2", rowData: [] },
-  ]);
+  const [compiledRows, setCompiledRows] = useState({
+    r1: ["t1",],
+    // r2: ["t4", "t5"],
+    // r3: ["t6"],
+    // r4: ["t7"],
+    // r5: ["t8", "t9"],
+  });
 
-  const [compiledTables, setCompiledTables] = useState([
-    {
-      tableName: "t1",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-    {
-      tableName: "t2",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-    {
-      tableName: "t3",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-  ]);
+  const [compiledTables, setCompiledTables] = useState({
+    // t1: [
+    //   { assetCode: { data: "json1.json", sum: false } },
+    //   { assetCode: { data: "json1.json", sum: false } },
+    //   { assetCode: { data: "json1.json", sum: false } },
+    // ],
+    t1: [
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+    ],
+    t2: [
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+    ],
+    t3: [
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+    ],
+    t4: [
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+      // {
+      //   colName: "assetCode",
+      //   colData: { data: "json1.json", sum: false },
+      // },
+    ],
+  });
 
   const [compiledJson, setCompiledJson] = useState({});
 
@@ -96,11 +178,11 @@ const Dashboard = () => {
   //     sheet2: ["r3", "r4", "r5"],
   //   },
   //   rows: {
-  //     r1: [1, 2, 3],
-  //     r2: [4, 5],
-  //     r3: [6, 7],
-  //     r4: [8],
-  //     r5: [9, 10, 11],
+  // r1: [1, 2, 3],
+  // r2: [4, 5],
+  // r3: [6, 7],
+  // r4: [8],
+  // r5: [9, 10, 11],
   //   },
   //   tables: {
   //     1: {
@@ -501,7 +583,17 @@ const Dashboard = () => {
       {/* {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />} */}
 
       {pageType === "generate" && (
-        <DataMapper setPageType={setPageType} jsonData={jsonData} jsonDataTypes={jsonDataTypes} />
+        <DataMapper
+          setPageType={setPageType}
+          compiledSheets={compiledSheets}
+          compiledRows={compiledRows}
+          compiledTables={compiledTables}
+          setCompiledSheets={setCompiledSheets}
+          setCompiledRows={setCompiledRows}
+          setCompiledTables={setCompiledTables}
+          jsonData={jsonData}
+          jsonDataTypes={jsonDataTypes}
+        />
       )}
 
       {pageType === "load" && <Load setPageType={setPageType} />}
