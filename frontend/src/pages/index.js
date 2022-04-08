@@ -22,7 +22,7 @@ import { javaTemplateEndpoint } from "../config/endpoints";
 
 // Backend Connector Functions
 import {
-  analyseJsonData,
+  analyzeJsonData,
   createReport,
   getAllProjects,
   getAllReports,
@@ -45,6 +45,8 @@ const Dashboard = () => {
   const [sheets, setSheets] = useState(0);
   const [sheetsDetails, setSheetsDetails] = useState({});
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
+
+  const [reportUrl, setReportUrl] = useState(null);
 
   // Data retrieved from the upload API
   const [jsonDataTypes, setJsonDataTypes] = useState({
@@ -110,6 +112,10 @@ const Dashboard = () => {
       reportTemplateType,
       files: [],
     };
+    
+    console.log(compiledSheets);
+    console.log(compiledRows);
+    console.log(compiledTables);
 
     let sheetDefinition = {};
     compiledSheets.map(function (obj) {
@@ -329,15 +335,19 @@ const Dashboard = () => {
     },
   });
 
-  useEffect(() => {
-    let reqBean = createCompiledJson();
-    createReport(reqBean).then((res) => {
-      console.log(res);
-      if (res.code >= 400) {
-        return res.error;
-      }
-    });
-  }, []);
+  const createReport = () => {
+    Promise.all(promises).then(() => {
+      let reqBean = createCompiledJson();
+      createReport(reqBean).then((res) => {
+        console.log('res')
+        console.log(res);
+        if (res.code >= 400) {
+          return res.error;
+        }
+        setReportUrl(res.success.report_url);
+      })
+    })
+  }
 
   const retrieveProjects = async () => {
     try {
@@ -357,7 +367,6 @@ const Dashboard = () => {
     try {
       const fileType = "json";
       let newStoredData = await getAllReports(fileType);
-      console.log(newStoredData);
       setStoredData(newStoredData);
     } catch {
       setStoredData({});
@@ -456,20 +465,39 @@ const Dashboard = () => {
           return res.error;
         }
 
-        analyseJsonData(metadataObject).then((analyseRes) => {
-          if (analyseRes.code >= 400) {
-            return analyseRes.error;
-          }
-
-          delete analyseRes.data.success["count"];
-
-          setJsonDataTypes(analyseRes.data.success);
-          setPageType("sheets");
-        });
         retrieveStoredData();
       });
     });
   };
+
+  const getDatatypes = (req) => {
+    const promises = [];
+    let jsonObject = {};
+    let metadataObject = {
+      project: project,
+      reportTemplateType,
+      files: [],
+    };
+    selectedData.map(function (obj) {
+      metadataObject['files'].push(obj.col1);
+    })
+
+    Promise.all(promises).then(() => {
+      let reqBean = {
+        metadata: metadataObject,
+      };
+      analyzeJsonData(reqBean).then((analyzeRes) => {
+        if (analyzeRes.code >= 400) {
+          return analyzeRes.error;
+        }
+      
+        delete analyzeRes.data.success["count"];
+      
+        setJsonDataTypes(analyzeRes.data.success);
+        setPageType("sheets");
+      });
+    })
+  }
 
   return (
     <>
@@ -571,6 +599,7 @@ const Dashboard = () => {
           setCompiledTables={setCompiledTables}
           jsonData={jsonData}
           jsonDataTypes={jsonDataTypes}
+          createReport={createReport}
         />
       )}
 
@@ -580,10 +609,12 @@ const Dashboard = () => {
           setPageType={setPageType}
           sendRawJson={sendRawJson}
           project={project}
+          setSelectedData={setSelectedData}
+          getDatatypes={getDatatypes}
         />
       )}
 
-      {pageType === "download" && <Download setPageType={setPageType} />}
+      {pageType === "download" && <Download setPageType={setPageType} reportUrl={reportUrl}/>}
     </>
   );
 };

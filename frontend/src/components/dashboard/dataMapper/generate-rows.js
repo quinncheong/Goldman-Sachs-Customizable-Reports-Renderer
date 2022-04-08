@@ -14,10 +14,10 @@ export const GenerateRows = ({
 }) => {
   console.log(tableId);
   const rows = datapoints.map((datapoint, index) => {
-    const { filename, fieldName, dataType, rowCount, sum } = datapoint;
+    const { fileName, fieldName, dataType, rowCount, sum } = datapoint;
     return {
       id: index,
-      col1: `${filename} - ${fieldName}`,
+      col1: `${fileName} - ${fieldName}`,
       col2: dataType,
       col3: rowCount,
       col4: sum,

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import {
+  ANALYZE_API,
   FOLDER_API_URL,
   EXISTING_API_URL,
   REPORT_API,
@@ -88,10 +89,10 @@ Metadata takes in a json object and returns a list of objects with the following
 @param {Array} files - The list of files
 
 **/
-export const analyseJsonData = async (metadata) => {
+export const analyzeJsonData = async (metadata) => {
   try {
     let analyzeRes = await axios.post(ANALYZE_API, metadata);
-    return analyseRes;
+    return analyzeRes;
   } catch (error) {
     return {
       code: 400,

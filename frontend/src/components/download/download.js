@@ -6,7 +6,7 @@ import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DownloadIcon from '@mui/icons-material/Download';
 
-export const Download = ({setPageType, ...props}) => {
+export const Download = ({setPageType, reportUrl, ...props}) => {
     const router = useRouter();
 
     const handleBackClick = () => {
@@ -44,7 +44,7 @@ export const Download = ({setPageType, ...props}) => {
                 View your report here
             </Typography>
             <NextLink
-                href="/"
+                href={reportUrl}
                 passHref
             >
                 <Button

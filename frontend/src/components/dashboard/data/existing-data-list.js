@@ -15,6 +15,8 @@ export const ExistingDataList = ({
   storedData,
   setPageType,
   project,
+  setSelectedData,
+  getDatatypes
 }) => {
   const renderFileDownloadButton = (params) => {
     return (
@@ -78,6 +80,8 @@ export const ExistingDataList = ({
   const handleSubmit = (event) => {
     console.log("Submit");
     console.log(selectedRows);
+    setSelectedData(selectedRows);
+    getDatatypes();
     setPageType("sheets");
     event.preventDefault();
   };
@@ -97,11 +101,10 @@ export const ExistingDataList = ({
             // onStateChange={handleStateChange}
             onSelectionModelChange={(ids) => {
               const selectedIDs = new Set(ids);
-              const selectedRows = rows.filter((row) =>
+              const selectedItems = rows.filter((row) =>
                 selectedIDs.has(row.id),
               );
-    
-              setSelectedRows(selectedRows);
+              setSelectedRows(selectedItems);
             }}
         />
         </CardContent>
