@@ -1,35 +1,83 @@
+import React, { useState, useEffect } from "react";
+
 import {
   Card,
   CardContent,
-  DataGrid,
 } from "@mui/material";
-import { AllDataProvider } from "../../data/AllDataProvider";
+import { DataGrid } from "@mui/x-data-grid";
 import { renderFileDownloadButton } from "../../utils/common-components";
+import { getAllReports } from "../../utils/backend-calls";
 
-export const ReportsList = ( props ) => {
+export const ReportsList = ({ 
+  reports,
+  ...props
+}) => {
+  // const [reports, setReports] = useState(null)
+  const [rows, setRows] = useState({});
+  const [columns, setColumns] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const reports = AllDataProvider('xlsx');
-  const rows = reports.map((report, index) => {
-    return {
-      id : index,
-      project: report.projectName,
-      col1: report.fileName,
-      col2: report.lastModified,
-      col3: report.fileURL,
-    };
-  });
+  // // Load initial data
+  // useEffect(() => {
+  //   const getReports = async () => {
+  //     let allReports = await getAllReports('xlsx');
+  //     setReports(allReports);
+  //   }
+  // }, [])
 
-  const columns = [
-    { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
-    { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
-    { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
-    { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
-  ];
+  useEffect(() => {
+    const buildRows = (rawData) => {
+      setRows(rawData.map((report, index) => {
+        return {
+          id : index,
+          project: report.projectName,
+          col1: report.fileName,
+          col2: report.lastModified,
+          col3: report.fileURL,
+        };
+      })
+      );
+    }
+
+    const buildColumns = () => {
+      setColumns(
+        [
+          { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
+          { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
+          { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
+          { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }      
+        ]
+      );
+    }
+
+    console.log(reports);
+    buildRows(reports);
+    buildColumns();
+
+  }, [reports])
+
+  // const reports = getAllReports('xlsx');
+  // const rows = reports.map((report, index) => {
+  //   return {
+  //     id : index,
+  //     project: report.projectName,
+  //     col1: report.fileName,
+  //     col2: report.lastModified,
+  //     col3: report.fileURL,
+  //   };
+  // });
+
+  // const columns = [
+  //   { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
+  //   { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
+  //   { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
+  //   { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
+  // ];
   
   const handleStateChange = (gridState, e, details) => {
-    console.log(gridState);
-    console.log(e);
-    console.log(details);
+    // console.log(gridState);
+    // console.log(e);
+    // console.log(details);
   };
 
   return (

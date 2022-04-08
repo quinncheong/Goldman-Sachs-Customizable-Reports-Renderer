@@ -8,12 +8,13 @@ import {
   Grid,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { AllDataProvider } from "../../data/AllDataProvider";
-import { getAllReports, getAllTemplates, uploadData } from "../../utils/backend-calls";
+import { AllDataProvider } from "../../../data/AllDataProvider";
+import { getAllReports, getAllTemplates, uploadData } from "../../../utils/backend-calls";
 
 export const ExistingDataList = ({
   storedData,
   setPageType,
+  project,
 }) => {
   const renderFileDownloadButton = (params) => {
     return (
@@ -38,14 +39,16 @@ export const ExistingDataList = ({
   useEffect(() => {
     const buildRows = (rawData) => {
       setRows(rawData.map((data, index) => {
-        return {
-        id : index,
-        project: data.projectName,
-        col1: data.fileName,
-        col2: data.lastModified,
-        // col3: data.fileURL,
-        };
-      })
+        if (data.projectName === project) {
+          return {
+          id : index,
+          project: data.projectName,
+          col1: data.fileName,
+          col2: data.lastModified,
+          // col3: data.fileURL,
+          };
+        }
+      }).filter(item => item !== undefined)
       );
     }
 
@@ -60,12 +63,6 @@ export const ExistingDataList = ({
       );
     }
 
-    // const fetchExistingData = () => {
-      // let rawData = await getAllReports('json');
-      // console.log(rawData);
-      // setExistingData(rawData);
-    // }
-    // fetchExistingData();
     buildRows(storedData);
     buildColumns();
 

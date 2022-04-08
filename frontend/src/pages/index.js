@@ -409,7 +409,7 @@ const Dashboard = () => {
       
       {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
 
-      {pageType === "load" && <Load storedData={storedData} setPageType={setPageType} sendRawJson={sendRawJson} />}
+      {pageType === "load" && <Load storedData={storedData} setPageType={setPageType} sendRawJson={sendRawJson} project={project}/>}
     </>
   );
 };

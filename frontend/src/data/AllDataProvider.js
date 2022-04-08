@@ -23,7 +23,6 @@ function AllDataProvider(fileExtension) {
                     fileName: obj.fileName,
                     fileURL: obj.fileURL,
                     lastModified: new Date(obj.lastModified).toLocaleDateString('en-US') + ' ' + new Date(obj.lastModified).toLocaleTimeString(),
-
                 }
             })
             setReportData(preparedData);
