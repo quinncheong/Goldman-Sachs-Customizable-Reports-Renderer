@@ -15,6 +15,7 @@ export const uploadData = async (data) => {
 };
 
 export const getAllReports = async (fileExtension) => {
+// fileExtension = 'xlsx' for reports, 'json' for raw data
   const response = await fetch(EXISTING_API_URL, {
     headers: {
       Accept: "application/json",

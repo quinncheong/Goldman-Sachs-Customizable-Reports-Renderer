@@ -3,26 +3,10 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { AllDataProvider } from "../../data/AllDataProvider";
+import { renderFileDownloadButton } from "../../utils/common-components";
 
 export const ReportsList = ( props ) => {
-  const renderFileDownloadButton = (params) => {
-      return (
-          <strong>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => {
-                    window.location.href = params.row.col3
-                  }}
-              >
-                  Download
-              </Button>
-          </strong>
-      )
-  }
 
   const reports = AllDataProvider('xlsx');
   const rows = reports.map((report, index) => {

@@ -13,6 +13,7 @@ import axios from "axios";
 import { Generator } from "../components/dashboard/generator/generator";
 import { Sheets } from "../components/dashboard/sheets/sheets";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
+import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
 // Backend Connector Functions
@@ -25,6 +26,8 @@ const Dashboard = () => {
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
+  const [selectedData, setSelectedData] = useState(null);
+  const [existingData, setExistingData] = useState(null);
 
   const [sheets, setSheets] = useState(0);
   const [sheetsDetails, setSheetsDetails] = useState({});
@@ -300,6 +303,15 @@ const Dashboard = () => {
     });
   };
 
+  useEffect(() => {
+    const fetchExistingData = async() => {
+      let rawData = await getAllReports('json');
+      setExistingData(rawData);
+    }
+
+    fetchExistingData();
+  }, [])
+
   return (
     <>
       <Head>
@@ -322,6 +334,8 @@ const Dashboard = () => {
                   reportTemplateType={reportTemplateType}
                   setReportTemplateType={setReportTemplateType}
                   sendRawJson={sendRawJson}
+                  selectedData={selectedData}
+                  existingData={existingData}
                   setPageType={setPageType}
                   selectedTemplateType={selectedTemplateType}
                   setSelectedTemplateType={setSelectedTemplateType}
