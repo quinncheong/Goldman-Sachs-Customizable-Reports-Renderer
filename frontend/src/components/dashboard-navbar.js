@@ -33,6 +33,8 @@ export const DashboardNavbar = (props) => {
     let path = router.asPath;
     if (path === "/") {
       return "Home";
+    } else if (path === "/data") { 
+      return "Data Files";
     }
 
     // Path cannot be nested

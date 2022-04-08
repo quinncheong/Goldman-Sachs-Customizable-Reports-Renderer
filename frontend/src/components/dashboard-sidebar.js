@@ -43,7 +43,7 @@ const items = [
     title: "View Report",
   },
   {
-    href: "/login",
+    href: "/data",
     icon: <LockIcon fontSize="small" />,
     title: "Data Files",
   },

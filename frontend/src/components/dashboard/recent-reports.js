@@ -21,42 +21,45 @@ import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
 
-export const RecentReports = ({ reports, ...props }) => {
+export const RecentReports = ({ reports, selectedProject, ...props }) => {
   const renderReports = reports.map((report) => {
-    return (
-      <Card
-        variant="outlined"
-        sx={{
-          flexShrink: 0,
-          maxWidth: 345,
-          borderRadius: 1,
-          boxShadow: 3,
-        }}
-      >
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            {report.fileName}
-          </Typography>
-          <Box sx={{ display: "flex" }}>
-            <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
-            <Typography variant="body2" color="text.secondary">
-              {report.lastModified}
+    if (selectedProject === report.projectName) {
+
+      return (
+        <Card
+          variant="outlined"
+          sx={{
+            flexShrink: 0,
+            maxWidth: 345,
+            borderRadius: 1,
+            boxShadow: 3,
+          }}
+        >
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              {report.fileName}
             </Typography>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              window.location.href = report.fileURL;
-            }}
-          >
-            Download
-          </Button>
-        </CardActions>
-      </Card>
-    );
+            <Box sx={{ display: "flex" }}>
+              <CalendarTodayIcon size="small" sx={{ mr: 1 }} />
+              <Typography variant="body2" color="text.secondary">
+                {report.lastModified}
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => {
+                window.location.href = report.fileURL;
+              }}
+            >
+              Download
+            </Button>
+          </CardActions>
+        </Card>
+      );
+    }
   });
 
   return (

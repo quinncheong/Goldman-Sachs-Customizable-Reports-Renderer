@@ -14,36 +14,55 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ErrorIcon from '@mui/icons-material/Error';
 
-export const EditExistingReport = ({ reports, ...props }) => {
+export const EditExistingReport = ({ reports, selectedProject, ...props }) => {
+  const [displayCount, setDisplayCount] = useState(0);
+
+  const displayNone = () => {
+    if (displayCount === 0) {
+      return (
+        <>
+          <ErrorIcon/>
+          <Typography variant="h6">
+            No Reports Available
+          </Typography>
+        </>
+      )
+    }
+  }
+
   const displayReports = () => {
     return (
       <React.Fragment>
         {reports.map((report) => {
-          return (
-            <Grid container direction="row" justifyContent="space-around" alignItems="center">
-              <Grid item xs={6}>
-                <Typography color="neutral.700" variant="h6">
-                  {report.fileName}
-                </Typography>
+          if (selectedProject === report.projectName) {
+            // setDisplayCount(1);
+            return (
+              <Grid container direction="row" justifyContent="space-around" alignItems="center">
+                <Grid item xs={6}>
+                  <Typography color="neutral.700" variant="h6">
+                    {report.fileName}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography color="neutral.400" variant="body2">
+                    {report.lastModified}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Tooltip title="Edit" arrow placement="right-start">
+                    <IconButton sx={{ ml: 1 }}>
+                      <EditIcon fontSize="small" />
+                      <Typography sx={{ ml: 1 }} color="neutral.400" variant="body2">
+                        Edit
+                      </Typography>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item xs={2}>
-                <Typography color="neutral.400" variant="body2">
-                  {report.lastModified}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Tooltip title="Edit" arrow placement="right-start">
-                  <IconButton sx={{ ml: 1 }}>
-                    <EditIcon fontSize="small" />
-                    <Typography sx={{ ml: 1 }} color="neutral.400" variant="body2">
-                      Edit
-                    </Typography>
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          );
+            );
+          }
         })}
       </React.Fragment>
     );
@@ -51,7 +70,7 @@ export const EditExistingReport = ({ reports, ...props }) => {
 
   return (
     <Card {...props}>
-      <CardHeader title="Edit Existing Report" />
+      <CardHeader title="Edit Existing Template" />
       <Divider />
       <CardContent>
         <Box
@@ -66,6 +85,7 @@ export const EditExistingReport = ({ reports, ...props }) => {
           }}
         >
           {displayReports()}
+          {displayNone()}
         </Box>
       </CardContent>
       <Divider />

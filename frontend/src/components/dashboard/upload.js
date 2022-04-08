@@ -20,10 +20,16 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import CloudIcon from '@mui/icons-material/Cloud';
 import UploadIcon from "@mui/icons-material/Upload";
 import FolderIcon from "@mui/icons-material/Folder";
 import TextFormatIcon from "@mui/icons-material/TextFormat";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import DisplayExistingData from "./display-existing-data";
+import getAllReports from "../../utils/backend-calls";
+import { renderFileDownloadButton } from "../../utils/common-components";
+
 
 export const Upload = ({
   reportTemplates,
@@ -31,10 +37,15 @@ export const Upload = ({
   reportTemplateType,
   setReportTemplateType,
   sendRawJson,
+  selectedData,
   selectedTemplateType,
   setSelectedTemplateType,
   ...props
 }) => {
+  // const [displayExisting, setDisplayExisting] = useState(false);
+  
+  // const existingData = existingData;
+
   const changeTemplateType = (event) => {
     setReportTemplateType(event.target.value);
   };
@@ -46,6 +57,7 @@ export const Upload = ({
   const handleSelectTemplate = (templateName) => (e) => {
     setSelectedTemplateType(templateName);
   };
+
 
   const renderUploadButtons = () => (
     <>
@@ -72,15 +84,16 @@ export const Upload = ({
 
         <Button
           sx={{ mr: 6 }}
-          endIcon={<UploadIcon fontSize="large" />}
+          endIcon={<CloudIcon fontSize="large" />}
           variant="contained"
           component="label"
           disabled={!selectedTemplateType}
+          onClick={(event) => {setPageType("load")}}
         >
           <Typography color="" variant="body2">
-            Load File
+            Load Existing Data
           </Typography>
-          <input type="file" onChange={sendRawJson} hidden multiple />
+          {/* <input type="file" onChange={sendRawJson} hidden multiple /> */}
         </Button>
         {renderTemplateSelection()}
       </Box>
@@ -227,8 +240,8 @@ export const Upload = ({
   };
 
   return (
-    <Card variant="outlined" {...props}>
-      <CardHeader sx={{}} title="Create New Report " />
+    <Card {...props}>
+      <CardHeader sx={{}} title="Create New Report" />
 
       <Divider />
       <CardContent sx={{ paddingY: 0 }}>
