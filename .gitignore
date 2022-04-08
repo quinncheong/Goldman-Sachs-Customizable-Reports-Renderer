@@ -1,0 +1,6 @@
+.DS_Store
+HELP.md
+*/.env
+.idea
+**/__pycache__/
+*/.idea
