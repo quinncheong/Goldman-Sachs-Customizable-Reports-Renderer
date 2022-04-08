@@ -40,6 +40,7 @@ export const Upload = ({
   selectedData,
   selectedTemplateType,
   setSelectedTemplateType,
+  pageType,
   ...props
 }) => {
   // const [displayExisting, setDisplayExisting] = useState(false);
@@ -50,6 +51,9 @@ export const Upload = ({
     setReportTemplateType(event.target.value);
   };
 
+  const pushToSimple = (e) => {
+    setPageType("simple");
+  }
   const pushToGenerator = (e) => {
     setPageType("sheets");
   };
@@ -79,7 +83,8 @@ export const Upload = ({
           <Typography color="" variant="body2">
             Upload JSON
           </Typography>
-          <input type="file" onChange={sendRawJson} hidden multiple />
+          <input type="file" onChange={sendRawJson} hidden multiple /> 
+          {/* sendRawJson */}
         </Button>
 
         <Button
@@ -177,6 +182,38 @@ export const Upload = ({
     </>
   );
 
+  const simpleTemplate = () => {
+    return (
+      <Card
+        variant="outlined"
+        sx={{
+          flexShrink: 0,
+          width: "150px",
+          height: "180px",
+          borderRadius: 1,
+          boxShadow: 3,
+        }}
+      >
+        <CardContent sx={{ paddingBottom: 0, paddingTop: 2 }}>
+          <Typography sx={{ fontSize: 13 }} variant="h6">
+            Simple
+          </Typography>
+          <Box sx={{ display: "flex" }}>
+            {/* <CalendarTodayIcon size="small" sx={{ mr: 1 }} /> */}
+            <Typography sx={{ fontSize: 10 }} color="text.secondary">
+              Persistent
+            </Typography>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <Button onClick={handleSelectTemplate("simple")} size="small">
+            Select
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }
+
   const renderReportTemplateWrapper = () => {
     const renderReportTemplates = reportTemplates.map((template) => {
       return (
@@ -234,6 +271,7 @@ export const Upload = ({
           },
         }}
       >
+        {simpleTemplate()}
         {renderReportTemplates}
       </Box>
     );
@@ -268,14 +306,32 @@ export const Upload = ({
           p: 2,
         }}
       >
-        <Button
+        {
+          selectedTemplateType == "simple" ? 
+          <Button
+          onClick={pushToSimple}
+          color="primary"
+          endIcon={<ArrowRightIcon fontSize="small" />}
+          size="small">
+            Generate Report(s)
+          </Button> : 
+          <Button
+          onClick={pushToGenerator}
+          color="primary"
+          endIcon={<ArrowRightIcon fontSize="small" />}
+          size="small">
+            Overview
+          </Button>
+        }
+
+        {/* <Button
           onClick={pushToGenerator}
           color="primary"
           endIcon={<ArrowRightIcon fontSize="small" />}
           size="small"
         >
           Overview
-        </Button>
+        </Button> */}
       </Box>
     </Card>
   );

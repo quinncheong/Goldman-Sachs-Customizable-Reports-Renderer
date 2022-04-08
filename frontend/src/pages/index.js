@@ -6,7 +6,6 @@ import { Upload } from "../components/dashboard/upload";
 import { EditExistingReport } from "../components/dashboard/edit-existing-report";
 import { RecentReports } from "../components/dashboard/recent-reports";
 import { DashboardLayout } from "../components/dashboard-layout";
-
 import axios from "axios";
 
 // Report generation
@@ -18,6 +17,7 @@ import { Load } from "../components/dashboard/load";
 import { SelectProjects } from "../components/dashboard/select-project";
 import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../config/endpoints";
+import { SimpleFlow } from "./simpleFlow";
 
 // Backend Connector Functions
 import { getAllProjects, getAllReports, getAllTemplates, uploadData } from "../utils/backend-calls";
@@ -226,10 +226,10 @@ const Dashboard = () => {
       } catch {
         setAllProjects([]);
       }
-    }
+    };
 
     retrieveProjects();
-  }, [setProject])
+  }, [setProject]);
 
   // retrieve data
 
@@ -342,7 +342,7 @@ const Dashboard = () => {
           <Container maxWidth={false}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <SelectProjects 
+                <SelectProjects
                   project={project}
                   allProjects={allProjects}
                   setProject={setProject}
@@ -362,10 +362,18 @@ const Dashboard = () => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <EditExistingReport reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: 500 }} />
+                <EditExistingReport
+                  reports={reports.slice(0, 5)}
+                  selectedProject={project}
+                  sx={{ height: 500 }}
+                />
               </Grid>
               <Grid item xs={12}>
-                <RecentReports reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: "100%" }} />
+                <RecentReports
+                  reports={reports.slice(0, 5)}
+                  selectedProject={project}
+                  sx={{ height: "100%" }}
+                />
               </Grid>
               <Grid item xs={12}>
                 {/* <ReportStatus reports={reports} sx={{ height: "100%" }} /> */}
@@ -387,14 +395,17 @@ const Dashboard = () => {
           setSheetsDetails={setSheetsDetails}
           setPageType={setPageType}
           jsonData={jsonData}
+          pageType={pageType}
         ></Sheets>
       )}
 
       {pageType === "format" && <ReportFormat setPageType={setPageType} jsonData={jsonData} />}
-      
+
       {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
 
-      {pageType === "load" && (<Load setPageType={setPageType} />)}
+      {pageType === "load" && <Load setPageType={setPageType} />}
+
+      {pageType === "simple" && <SimpleFlow setPageType={setPageType} jsonData={jsonData}/>}
     </>
   );
 };
