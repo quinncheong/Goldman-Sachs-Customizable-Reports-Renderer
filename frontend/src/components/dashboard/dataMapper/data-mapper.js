@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import {
   Box,
@@ -22,9 +21,21 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-export const DataMapper = ({ setPageType, jsonDataTypes, ...props }) => {
+export const DataMapper = ({
+  setPageType,
+  jsonDataTypes,
+  compiledSheets,
+  compiledRows,
+  compiledTables,
+  setCompiledSheets,
+  setCompiledRows,
+  setCompiledTables,
+  ...props
+}) => {
   const [value, setValue] = useState("1");
   const [consolidatedDataTypes, setConsolidatedDataTypes] = useState([]);
+  const [mapperCompiledTables, setMapperCompiledTables] = useState([]);
+  const [flatTable, setFlatTable] = useState([]);
 
   useEffect(() => {
     let newConsolidatedClone = [];
@@ -43,6 +54,10 @@ export const DataMapper = ({ setPageType, jsonDataTypes, ...props }) => {
     setConsolidatedDataTypes(newConsolidatedClone);
   }, [jsonDataTypes]);
 
+  useEffect(() => {
+    setMapperCompiledTables(compiledTables);
+  }, [compiledTables]);
+
   const handleBackClick = (e) => {
     setPageType("format");
   };
@@ -55,28 +70,55 @@ export const DataMapper = ({ setPageType, jsonDataTypes, ...props }) => {
     setValue(newValue);
   };
 
-  const renderData = [1, 2, 3, 4, 5].map((sheet, index) => (
-    <Grid item md={6} xs={12} key={index}>
-      <form {...props}>
-        <Card sx={{ width: "100%" }}>
-          <CardHeader
-            sx={{ p: 3 }}
-            subheader={`${Object.keys(consolidatedDataTypes).length} data categories found`}
-            title={sheet}
-          />
-          <Divider />
-          <CardContent sx={{ p: 0, height: 500, width: "100%" }}>
-            {/* Rows of the data */}
-            <GenerateRows datapoints={consolidatedDataTypes} />
-          </CardContent>
-        </Card>
-      </form>
-    </Grid>
-  ));
+  const renderTabs = compiledSheets.map((sheet, index) => {
+    return <Tab label={sheet.sheetName} value={index} />;
+  });
 
-  const renderTabPanels = () => {
-    return <TabPanel value="2">Item Two</TabPanel>;
-  };
+  const renderTabPanels = compiledSheets.map((sheet, sheetIndex) => {
+    let tables = [];
+    for (const row of sheet.sheetData) {
+      for (const table of compiledRows[row]) {
+        let tableObj = {
+          row,
+          table,
+        };
+        tables.push(tableObj);
+      }
+    }
+
+    const renderTables = tables.map((tableAndRowDetails, tableIndex) => (
+      <Grid item md={6} xs={12} key={tableIndex}>
+        <form {...props}>
+          <Card sx={{ width: "100%" }}>
+            <CardHeader
+              sx={{ p: 3 }}
+              subheader={`${Object.keys(consolidatedDataTypes).length} data categories found`}
+              // title={`row ${tableAndRowDetails.row}`}
+              title={`table ${tableAndRowDetails.table}`}
+            />
+            <Divider />
+            <CardContent sx={{ p: 0, height: 500, width: "100%" }}>
+              {/* Rows of the data */}
+              <GenerateRows
+                tableId={tableAndRowDetails.table}
+                compiledTables={mapperCompiledTables}
+                setCompiledTables={setMapperCompiledTables}
+                datapoints={consolidatedDataTypes}
+              />
+            </CardContent>
+          </Card>
+        </form>
+      </Grid>
+    ));
+
+    return (
+      <TabPanel value={sheetIndex}>
+        <Grid container spacing={6}>
+          {renderTables}
+        </Grid>
+      </TabPanel>
+    );
+  });
 
   return (
     <>
@@ -110,14 +152,10 @@ export const DataMapper = ({ setPageType, jsonDataTypes, ...props }) => {
             <TabContext value={value}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <TabList onChange={handleChange} aria-label="lab API tabs example">
-                  <Tab label="Item One" value="1" />
-                  <Tab label="Item Two" value="2" />
-                  <Tab label="Item Three" value="3" />
+                  {renderTabs}
                 </TabList>
               </Box>
-              <TabPanel value="1">Item One</TabPanel>
-              <TabPanel value="2">Item Two</TabPanel>
-              <TabPanel value="3">Item Three</TabPanel>
+              {renderTabPanels}
             </TabContext>
           </Box>
 

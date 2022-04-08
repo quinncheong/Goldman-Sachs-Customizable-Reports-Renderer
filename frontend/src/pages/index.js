@@ -45,7 +45,52 @@ const Dashboard = () => {
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
 
   // Data retrieved from the upload API
-  const [jsonDataTypes, setJsonDataTypes] = useState({});
+  const [jsonDataTypes, setJsonDataTypes] = useState({
+    JSON0: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+        assetCode: {
+          datatype: "str",
+          row_count: 18,
+        },
+        budget: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON1: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON2: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+  });
 
   // This section contains the design schemes for final report generation
   // Finalised schema
@@ -443,7 +488,17 @@ const Dashboard = () => {
       {/* {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />} */}
 
       {pageType === "generate" && (
-        <DataMapper setPageType={setPageType} jsonData={jsonData} jsonDataTypes={jsonDataTypes} />
+        <DataMapper
+          setPageType={setPageType}
+          compiledSheets={compiledSheets}
+          compiledRows={compiledRows}
+          compiledTables={compiledTables}
+          setCompiledSheets={setCompiledSheets}
+          setCompiledRows={setCompiledRows}
+          setCompiledTables={setCompiledTables}
+          jsonData={jsonData}
+          jsonDataTypes={jsonDataTypes}
+        />
       )}
 
       {pageType === "load" && <Load setPageType={setPageType} />}

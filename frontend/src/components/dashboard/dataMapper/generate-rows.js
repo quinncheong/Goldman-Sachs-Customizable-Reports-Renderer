@@ -1,6 +1,12 @@
 import { DataGrid } from "@mui/x-data-grid";
 
-export const GenerateRows = ({ datapoints, ...props }) => {
+export const GenerateRows = ({
+  datapoints,
+  compiledTables,
+  setCompiledTables,
+  tableId,
+  ...props
+}) => {
   const rows = datapoints.map((datapoint, index) => {
     const { filename, fieldName, dataType, rowCount, sum } = datapoint;
     return {
@@ -20,7 +26,23 @@ export const GenerateRows = ({ datapoints, ...props }) => {
   ];
 
   const handleStateChange = (gridState, e, details) => {
-    console.log(gridState);
+    let selectionArray = gridState.selection;
+    let compiledTablesClone = { ...compiledTables };
+
+    let correspondingData = [];
+    for (const selection of selectionArray) {
+      let dataSelection = datapoints[selection];
+      correspondingData.push({
+        colName: dataSelection.fieldName,
+        colData: { data: dataSelection.filename, sum: dataSelection.sum },
+      });
+    }
+
+    compiledTablesClone[tableId] = correspondingData;
+    console.log(compiledTablesClone)
+    // setCompiledTables(compiledTablesClone);
+
+    console.log(gridState.selection);
     console.log(e);
     console.log(details);
   };
