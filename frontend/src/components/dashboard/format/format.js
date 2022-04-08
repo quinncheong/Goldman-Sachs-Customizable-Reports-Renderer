@@ -6,72 +6,68 @@ import { Box, Button, Container, Divider, Grid, Typography, IconButton } from "@
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { FormatElementTile } from "./format-element-tile";
 
-export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...props}) => {
-    const router = useRouter();
+export const ReportFormat = ({ setPageType, sheets, sheetsDetails, jsonData, ...props }) => {
+  const [currentSheet, setCurrentSheet] = useState(0);
 
-    const [currentSheet, setCurrentSheet] = useState(0);
+  const handleBackClick = () => {
+    setPageType("sheets");
+  };
 
-    const handleBackClick = () => {
-        setPageType("sheets");
-    };
+  console.log("render report format");
 
-    console.log(sheetsDetails);
-
-    return <>
-        <Head>
-            <title>
-            Report Formatting
-            </title>
-        </Head>
-        <Box
-            component="main"
-            sx={{
-              alignItems: "start",
-              display: "flex",
-              flexGrow: 1,
-              minHeight: "100%",
-              backgroundColor: "neutral.200",
-              borderRadius: 2,
-              p: 2,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Box
-                  sx={{
-                    px: 2,
-                    alignItems: "left",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Box 
-                                sx={{ 
-                                    px: 2,
-                                    alignItems: "left",
-                                    display: "flex",
-                                    justifyContent: 'flex-start'
-                                }}
-                            >
-                                <Typography variant="h1">
-                                    Filename
-                                </Typography>
-                            </Box> 
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormatElementTile sheets={sheets} sheetsDetails={sheetsDetails} currentSheet={currentSheet} setCurrentSheet={setCurrentSheet} setPageType={setPageType} />
-                        </Grid>
-                    </Grid>
-                </Box>
+  return (
+    <>
+      <Head>
+        <title>Report Formatting</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          alignItems: "start",
+          display: "flex",
+          flexGrow: 1,
+          minHeight: "100%",
+          backgroundColor: "neutral.200",
+          borderRadius: 2,
+          p: 2,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                px: 2,
+                alignItems: "left",
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Box
+                    sx={{
+                      px: 2,
+                      alignItems: "left",
+                      display: "flex",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <Typography variant="h1">Filename</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormatElementTile
+                    sheets={sheets}
+                    sheetsDetails={sheetsDetails}
+                    currentSheet={currentSheet}
+                    setCurrentSheet={setCurrentSheet}
+                    setPageType={setPageType}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <FormatElementTile setPageType={setPageType} />
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

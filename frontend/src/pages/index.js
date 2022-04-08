@@ -116,7 +116,6 @@ const Dashboard = () => {
   //   },
   // });
 
-
   const [jsonData, setJsonData] = useState({
     Simple: {
       rawData: require("../../../data/simple.json"),
@@ -490,10 +489,16 @@ const Dashboard = () => {
         ></Sheets>
       )}
 
+      {pageType === "format" && (
+        <ReportFormat
+          setPageType={setPageType}
+          sheets={sheets}
+          sheetsDetails={sheetsDetails}
+          jsonData={jsonData}
+        />
+      )}
 
-      {pageType === "format" && <ReportFormat setPageType={setPageType} sheets={sheets} sheetsDetails={sheetsDetails} jsonData={jsonData} />}
-      
-      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
+      {/* {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />} */}
 
       {pageType === "generate" && (
         <DataMapper setPageType={setPageType} jsonData={jsonData} jsonDataTypes={jsonDataTypes} />
