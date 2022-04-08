@@ -8,11 +8,13 @@ import {
   Grid,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { AllDataProvider } from "../../data/AllDataProvider";
-import { getAllReports, getAllTemplates, uploadData } from "../../utils/backend-calls";
+import { AllDataProvider } from "../../../data/AllDataProvider";
+import { getAllReports, getAllTemplates, uploadData } from "../../../utils/backend-calls";
 
 export const ExistingDataList = ({
-  setPageType
+  storedData,
+  setPageType,
+  project,
 }) => {
   const renderFileDownloadButton = (params) => {
     return (
@@ -37,14 +39,16 @@ export const ExistingDataList = ({
   useEffect(() => {
     const buildRows = (rawData) => {
       setRows(rawData.map((data, index) => {
-        return {
-        id : index,
-        project: data.projectName,
-        col1: data.fileName,
-        col2: data.lastModified,
-        // col3: data.fileURL,
-        };
-      })
+        if (data.projectName === project) {
+          return {
+          id : index,
+          project: data.projectName,
+          col1: data.fileName,
+          col2: data.lastModified,
+          // col3: data.fileURL,
+          };
+        }
+      }).filter(item => item !== undefined)
       );
     }
 
@@ -59,16 +63,10 @@ export const ExistingDataList = ({
       );
     }
 
-    const fetchExistingData = async() => {
-      let rawData = await getAllReports('json');
-      // console.log(rawData);
-      // setExistingData(rawData);
-      await buildRows(rawData);
-      buildColumns();
-    }
+    buildRows(storedData);
+    buildColumns();
 
-    fetchExistingData();
-  }, [])
+  }, [storedData])
   
   const handleStateChange = (gridState, e, details) => {
     // console.log(gridState);

@@ -17,27 +17,14 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ErrorIcon from '@mui/icons-material/Error';
 
 export const EditExistingReport = ({ reports, selectedProject, ...props }) => {
-  const [displayCount, setDisplayCount] = useState(0);
-
-  const displayNone = () => {
-    if (displayCount === 0) {
-      return (
-        <>
-          <ErrorIcon/>
-          <Typography variant="h6">
-            No Reports Available
-          </Typography>
-        </>
-      )
-    }
-  }
+  let isReportDisplayed = false;
 
   const displayReports = () => {
     return (
       <React.Fragment>
         {reports.map((report) => {
           if (selectedProject === report.projectName) {
-            // setDisplayCount(1);
+            isReportDisplayed = true;
             return (
               <Grid container direction="row" justifyContent="space-around" alignItems="center">
                 <Grid item xs={6}>
@@ -68,6 +55,19 @@ export const EditExistingReport = ({ reports, selectedProject, ...props }) => {
     );
   };
 
+  const generateDisplay = (isReportDisplayed) => {
+    if (!isReportDisplayed) {
+      return (
+        <>
+          <ErrorIcon/>
+          <Typography variant="h6">
+            No Templates Available
+          </Typography>
+        </>
+      )
+    }
+  }
+
   return (
     <Card {...props}>
       <CardHeader title="Edit Existing Template" />
@@ -85,7 +85,7 @@ export const EditExistingReport = ({ reports, selectedProject, ...props }) => {
           }}
         >
           {displayReports()}
-          {displayNone()}
+          {generateDisplay(isReportDisplayed)}
         </Box>
       </CardContent>
       <Divider />
