@@ -22,6 +22,7 @@ import { javaTemplateEndpoint } from "../config/endpoints";
 // Backend Connector Functions
 import {
   analyseJsonData,
+  createReport,
   getAllProjects,
   getAllReports,
   getAllTemplates,
@@ -119,11 +120,19 @@ const Dashboard = () => {
       metadata: metadataObject,
       compiled: compiledObject,
     };
+
+    setCompiledJson(reqBean);
   }
 
-  // useEffect(() => {
-  //   createCompliedJson();
-  // }, [])
+  useEffect(() => {
+    createCompliedJson();
+    createReport(compiledJson).then((res) => {
+      console.log(res);
+      if (res.code >= 400) {
+        return res.error;
+      }
+    });
+  }, [])
 
   // const [compiledJson, setCompiledJson] = useState({
   //   sheets: {
@@ -447,6 +456,7 @@ const Dashboard = () => {
         if (res.code >= 400) {
           return res.error;
         }
+        
 
         analyseJsonData(metadataObject).then((analyseRes) => {
           if (analyseRes.code >= 400) {

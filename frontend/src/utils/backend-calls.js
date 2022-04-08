@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   FOLDER_API_URL,
   EXISTING_API_URL,
+  REPORT_API,
   TEMPLATES_API_URL,
   UPLOAD_API,
 } from "../config/endpoints";
@@ -91,6 +92,18 @@ export const analyseJsonData = async (metadata) => {
   try {
     let analyzeRes = await axios.post(ANALYZE_API, metadata);
     return analyseRes;
+  } catch (error) {
+    return {
+      code: 400,
+      error: error,
+    };
+  }
+};
+
+export const createReport = async (compiledData) => {
+  try {
+    let reportRes = await axios.post(REPORT_API, compiledData);
+    return reportRes;
   } catch (error) {
     return {
       code: 400,
