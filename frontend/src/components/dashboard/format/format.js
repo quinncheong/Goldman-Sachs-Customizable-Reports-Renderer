@@ -24,8 +24,6 @@ export const ReportFormat = ({
     setPageType("sheets");
   };
 
-  console.log(sheetsDetails);
-
   return (
     <>
       <Head>

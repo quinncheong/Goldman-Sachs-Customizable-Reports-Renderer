@@ -22,18 +22,6 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 
 export const GenerateRows = ({ jsonName, data, ...props }) => {
-  // const renderFields = Object.keys(data).map((fieldName, index) => {
-  //   console.log(data[fieldName]);
-  //   return (
-  //     <TableRow hover key={index}>
-  //       <TableCell>
-  //         <FormControlLabel control={<Checkbox color="primary" />} label={fieldName} />
-  //       </TableCell>
-  //       <TableCell>{data[fieldName].datatype.toUpperCase()}</TableCell>
-  //       <TableCell>{data[fieldName].row_count} rows</TableCell>
-  //     </TableRow>
-  //   );
-  // });
 
   const rows = Object.keys(data).map((fieldName, index) => {
     return {

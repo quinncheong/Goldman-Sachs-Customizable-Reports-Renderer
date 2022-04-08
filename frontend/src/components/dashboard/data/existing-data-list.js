@@ -18,22 +18,6 @@ export const ExistingDataList = ({
   setSelectedData,
   getDatatypes
 }) => {
-  const renderFileDownloadButton = (params) => {
-    return (
-      <strong>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => {
-              window.location.href = params.row.col3
-          }}
-        >
-          Download
-        </Button>
-      </strong>
-    )
-  }
   const [rows, setRows] = useState({});
   const [columns, setColumns] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -47,7 +31,6 @@ export const ExistingDataList = ({
           project: data.projectName,
           col1: data.fileName,
           col2: data.lastModified,
-          // col3: data.fileURL,
           };
         }
       }).filter(item => item !== undefined)
@@ -60,7 +43,6 @@ export const ExistingDataList = ({
             { field: "project", headerName: "Project Name", minWidth: 100, flex: 2},
             { field: "col1", headerName: "File Name", minWidth: 300, flex: 2},
             { field: "col2", headerName: "Last Modified", minWidth: 200, flex:2 },
-            // { field: "col3", headerName: "Download", minWidth: 200, flex: 2, renderCell: renderFileDownloadButton }
           ]
       );
     }
@@ -69,17 +51,8 @@ export const ExistingDataList = ({
     buildColumns();
 
   }, [storedData])
-  
-  const handleStateChange = (gridState, e, details) => {
-    // console.log(gridState);
-    // console.log(e);
-    // console.log(details);
-    console.log(selectedRows);
-  };
 
   const handleSubmit = (event) => {
-    console.log("Submit");
-    console.log(selectedRows);
     setSelectedData(selectedRows);
     getDatatypes();
     setPageType("sheets");
@@ -104,7 +77,7 @@ export const ExistingDataList = ({
               const selectedItems = rows.filter((row) =>
                 selectedIDs.has(row.id),
               );
-              setSelectedRows(selectedItems);
+              setSelectedData(selectedItems);
             }}
         />
         </CardContent>

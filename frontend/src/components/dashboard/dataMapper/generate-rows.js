@@ -12,7 +12,6 @@ export const GenerateRows = ({
   tableId,
   ...props
 }) => {
-  console.log(tableId);
   const rows = datapoints.map((datapoint, index) => {
     const { fileName, fieldName, dataType, rowCount, sum } = datapoint;
     return {
@@ -39,7 +38,7 @@ export const GenerateRows = ({
     for (const selection of selectedInputs) {
       tableFinalData.push({
         colName: selection.fieldName,
-        colData: { data: selection.filename, sum: selection.sum },
+        colData: { data: selection.fileName, sum: selection.sum },
       });
     }
 
@@ -53,7 +52,7 @@ export const GenerateRows = ({
         multiple
         id="tags-standard"
         options={datapoints}
-        getOptionLabel={(option) => `${option.filename} - ${option.fieldName}`}
+        getOptionLabel={(option) => `${option.fileName} - ${option.fieldName}`}
         onChange={(event, newValue) => {
           handleStateChange(newValue);
         }}
@@ -69,64 +68,5 @@ export const GenerateRows = ({
       />
     </Stack>
   );
-
-  // return (
-  //   <Box>
-  //     <DataGrid
-  //       // sx={{ ml: 1, outline: "none" }}
-  //       // hideFooter
-  //       labelRowsPerPage=""
-  //       rowsPerPageOptions={[]}
-  //       checkboxSelection
-  //       rows={rows}
-  //       columns={columns}
-  //       // onStateChange={handleStateChange}
-  //     />
-  //     <Button
-  //       endIcon={<ArrowForwardIosIcon />}
-  //       sx={{ display: "flex", ml: "auto", mt: 1 }}
-  //       color="primary"
-  //       variant="contained"
-  //       onClick={handleNextClick}
-  //     >
-  //       Next
-  //     </Button>
-  //   </Box>
-  // );
 };
 
-// Old useless stuff
-
-// const renderFields = Object.keys(data).map((fieldName, index) => {
-//   console.log(data[fieldName]);
-//   return (
-//     <TableRow hover key={index}>
-//       <TableCell>
-//         <FormControlLabel control={<Checkbox color="primary" />} label={fieldName} />
-//       </TableCell>
-//       <TableCell>{data[fieldName].datatype.toUpperCase()}</TableCell>
-//       <TableCell>{data[fieldName].row_count} rows</TableCell>
-//     </TableRow>
-//   );
-// });
-
-{
-  /* <TableContainer component={Paper} sx={{ maxHeight: 600, minWidth: 300 }}>
-          <Table size="small" stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>Category Name</TableCell>
-                <TableCell>Datatype</TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip enterDelay={300} title="Sort">
-                    <TableSortLabel active direction="desc">
-                      Data Size
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ overflowY: "scroll", height: 400 }}>{renderFields}</TableBody>
-          </Table>
-        </TableContainer> */
-}

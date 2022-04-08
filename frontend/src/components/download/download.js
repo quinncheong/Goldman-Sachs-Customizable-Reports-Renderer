@@ -7,11 +7,18 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DownloadIcon from '@mui/icons-material/Download';
 
 export const Download = ({setPageType, reportUrl, ...props}) => {
+    const [downloadReady, setDownloadReady] = useState(false)
     const router = useRouter();
 
     const handleBackClick = () => {
         setPageType("generate");
     };
+
+    useEffect(() => {
+        if (reportUrl) {
+            setDownloadReady(true);
+        } else { setDownloadReady(false); }
+    }, [reportUrl])
 
     return <>
         <Head>
@@ -43,19 +50,21 @@ export const Download = ({setPageType, reportUrl, ...props}) => {
             >
                 View your report here
             </Typography>
-            <NextLink
+            {/* <NextLink
                 href={reportUrl}
                 passHref
-            >
+            > */}
                 <Button
                 component="a"
                 endIcon={(<DownloadIcon fontSize="small" />)}
                 sx={{ mt: 3 }}
                 variant="contained"
+                disabled={!downloadReady}
+                onClick={() => {window.location.href = reportUrl}}
                 >
                 Download
                 </Button>
-            </NextLink>
+            {/* </NextLink> */}
             <Box sx={{ textAlign: 'center' }}>
                 <img
                 alt="Under development"

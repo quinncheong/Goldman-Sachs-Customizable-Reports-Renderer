@@ -101,7 +101,7 @@ export const analyzeJsonData = async (metadata) => {
   }
 };
 
-export const createReport = async (compiledData) => {
+export const getReport = async (compiledData) => {
   try {
     let reportRes = await axios.post(REPORT_API, compiledData);
     return reportRes;

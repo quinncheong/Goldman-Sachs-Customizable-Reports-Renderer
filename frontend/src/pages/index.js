@@ -23,7 +23,7 @@ import { javaTemplateEndpoint } from "../config/endpoints";
 // Backend Connector Functions
 import {
   analyzeJsonData,
-  createReport,
+  getReport,
   getAllProjects,
   getAllReports,
   getAllTemplates,
@@ -40,7 +40,7 @@ const Dashboard = () => {
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedData, setSelectedData] = useState([]);
 
   const [sheets, setSheets] = useState(0);
   const [sheetsDetails, setSheetsDetails] = useState({});
@@ -108,20 +108,16 @@ const Dashboard = () => {
     let metadataObject = {
       filename: "complex.xlsx",
       // project: project,
-      project: 14,
+      project: project,
       reportTemplateType,
       files: [],
     };
-    
-    console.log(compiledSheets);
-    console.log(compiledRows);
-    console.log(compiledTables);
 
     let sheetDefinition = {};
     compiledSheets.map(function (obj) {
       sheetDefinition[obj.sheetName] = obj.sheetData;
     });
-
+    
     let rowDefinition = {};
     Object.entries(compiledRows).map(([row, tables]) => {
       rowDefinition[row] = {};
@@ -136,7 +132,7 @@ const Dashboard = () => {
         });
       });
     });
-
+    
     let compiledObject = {};
     Object.entries(sheetDefinition).map(([sheet, rows]) => {
       compiledObject[sheet] = [];
@@ -336,17 +332,15 @@ const Dashboard = () => {
   });
 
   const createReport = () => {
-    Promise.all(promises).then(() => {
-      let reqBean = createCompiledJson();
-      createReport(reqBean).then((res) => {
-        console.log('res')
-        console.log(res);
-        if (res.code >= 400) {
-          return res.error;
-        }
-        setReportUrl(res.success.report_url);
-      })
+    // Promise.all(promises).then(() => {
+    let reqBean = createCompiledJson();
+    getReport(reqBean).then((res) => {
+      if (res.code >= 400) {
+        return res.error;
+      }
+      setReportUrl(res.data.success.report_url);
     })
+    // })
   }
 
   const retrieveProjects = async () => {
@@ -528,7 +522,6 @@ const Dashboard = () => {
                   reportTemplateType={reportTemplateType}
                   setReportTemplateType={setReportTemplateType}
                   sendRawJson={sendRawJson}
-                  selectedData={selectedData}
                   setPageType={setPageType}
                   selectedTemplateType={selectedTemplateType}
                   setSelectedTemplateType={setSelectedTemplateType}

@@ -34,7 +34,6 @@ export const DataList = ({
 
   useEffect(() => {
     const buildRows = (rawData) => {
-      console.log(rawData);
       setRows(rawData.map((data, index) => {
         return {
         id : index,
@@ -63,19 +62,6 @@ export const DataList = ({
 
   }, [storedData])
   
-  const handleStateChange = (gridState, e, details) => {
-    // console.log(gridState);
-    // console.log(e);
-    // console.log(details);
-    console.log(selectedRows);
-  };
-
-  // const handleSubmit = (event) => {
-  //   console.log("Submit");
-  //   console.log(selectedRows);
-  //   setPageType("sheets");
-  //   event.preventDefault();
-  // };
 
   return (
     <form>
@@ -89,7 +75,6 @@ export const DataList = ({
             checkboxSelection
             rows={rows}
             columns={columns}
-            // onStateChange={handleStateChange}
             onSelectionModelChange={(ids) => {
               const selectedIDs = new Set(ids);
               const selectedRows = rows.filter((row) =>
@@ -100,18 +85,6 @@ export const DataList = ({
             }}
         />
         </CardContent>
-        {/* <CardActions>
-          <Grid container justify="flex-end">
-            <Button 
-              // type="submit"           
-              variant="contained"
-              component="label"
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
-          </Grid>
-        </CardActions> */}
       </Card>
     </form>
   );
