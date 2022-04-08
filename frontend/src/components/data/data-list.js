@@ -61,7 +61,7 @@ export const DataList = ({
     buildRows(storedData);
     buildColumns();
 
-  }, [])
+  }, [storedData])
   
   const handleStateChange = (gridState, e, details) => {
     // console.log(gridState);
