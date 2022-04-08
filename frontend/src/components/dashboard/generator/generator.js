@@ -22,7 +22,7 @@ export const Generator = ({ setPageType, jsonData, ...props }) => {
 
   const handleNextClick = () => {
 
-   }
+  }
 
   return (
     <>
