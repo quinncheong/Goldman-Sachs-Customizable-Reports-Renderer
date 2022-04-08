@@ -5,8 +5,12 @@ import { EXISTING_API_URL, TEMPLATES_API_URL, UPLOAD_API } from "../config/endpo
 export const uploadData = async (data) => {
   try {
     let templateRes = await axios.post(UPLOAD_API, data);
+    return templateRes;
   } catch (error) {
-    console.log(error);
+    return {
+      code: 400,
+      error: error,
+    };
   }
 };
 

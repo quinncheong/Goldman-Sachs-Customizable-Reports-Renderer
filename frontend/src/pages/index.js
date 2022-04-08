@@ -290,7 +290,13 @@ const Dashboard = () => {
         metadata: metadataObject,
         data: jsonObject,
       };
-      uploadData(reqBean);
+
+      uploadData(reqBean).then((res) => {
+        if (res.code >= 400) {
+          return res.error;
+        }
+        setPageType("sheets");
+      });
     });
   };
 
