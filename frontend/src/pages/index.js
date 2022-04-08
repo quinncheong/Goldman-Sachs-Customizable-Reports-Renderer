@@ -20,7 +20,13 @@ import { DisplayExistingData } from "src/components/dashboard/display-existing-d
 import { javaTemplateEndpoint } from "../config/endpoints";
 
 // Backend Connector Functions
-import { getAllProjects, getAllReports, getAllTemplates, uploadData } from "../utils/backend-calls";
+import {
+  analyseJsonData,
+  getAllProjects,
+  getAllReports,
+  getAllTemplates,
+  uploadData,
+} from "../utils/backend-calls";
 
 const Dashboard = () => {
   const [pageType, setPageType] = useState("home");
@@ -36,6 +42,79 @@ const Dashboard = () => {
   const [sheets, setSheets] = useState(0);
   const [sheetsDetails, setSheetsDetails] = useState({});
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
+
+  // Data retrieved from the upload API
+  const [jsonDataTypes, setJsonDataTypes] = useState({});
+
+  // This section contains the design schemes for final report generation
+  // Finalised schema
+  const [compiledSheets, setCompiledSheets] = useState([
+    { sheetName: "sheet1", sheetData: ["r1", "r2"] },
+    { sheetName: "sheet2", sheetData: ["r3", "r4"] },
+  ]);
+
+  const [compiledRows, setCompiledRows] = useState([
+    { rowName: "row1", rowData: ["t1", "t2"] },
+    { rowName: "row2", rowData: [] },
+  ]);
+
+  const [compiledTables, setCompiledTables] = useState([
+    {
+      tableName: "t1",
+      tableData: [
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+      ],
+    },
+    {
+      tableName: "t2",
+      tableData: [
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+      ],
+    },
+    {
+      tableName: "t3",
+      tableData: [
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
+      ],
+    },
+  ]);
+
+  const [compiledJson, setCompiledJson] = useState({});
+
+  // const [compiledJson, setCompiledJson] = useState({
+  //   sheets: {
+  //     sheet1: ["r1", "r2"],
+  //     sheet2: ["r3", "r4", "r5"],
+  //   },
+  //   rows: {
+  //     r1: [1, 2, 3],
+  //     r2: [4, 5],
+  //     r3: [6, 7],
+  //     r4: [8],
+  //     r5: [9, 10, 11],
+  //   },
+  //   tables: {
+  //     1: {
+  //       assetCode: { data: "json1.json", sum: false },
+  //       assetCode: { data: "json1.json", sum: false },
+  //       assetCode: { data: "json1.json", sum: false },
+  //     },
+  //     2: {
+  //       assetCode: { data: "json1.json", sum: false },
+  //       assetCode: { data: "json1.json", sum: false },
+  //       assetCode: { data: "json1.json", sum: false },
+  //     },
+  //   },
+  // });
 
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -226,10 +305,10 @@ const Dashboard = () => {
       } catch {
         setAllProjects([]);
       }
-    }
+    };
 
     retrieveProjects();
-  }, [setProject])
+  }, [setProject]);
 
   // retrieve data
 
@@ -286,7 +365,7 @@ const Dashboard = () => {
     const promises = [];
     let jsonObject = {};
     let metadataObject = {
-      project: 0,
+      project: project,
       reportTemplateType,
       files: [],
     };
@@ -320,7 +399,17 @@ const Dashboard = () => {
         if (res.code >= 400) {
           return res.error;
         }
-        setPageType("sheets");
+
+        analyseJsonData(metadataObject).then((analyseRes) => {
+          if (analyseRes.code >= 400) {
+            return analyseRes.error;
+          }
+
+          delete analyseRes.data.success["count"];
+
+          setJsonDataTypes(analyseRes.data.success);
+          setPageType("sheets");
+        });
       });
     });
   };
@@ -342,7 +431,7 @@ const Dashboard = () => {
           <Container maxWidth={false}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <SelectProjects 
+                <SelectProjects
                   project={project}
                   allProjects={allProjects}
                   setProject={setProject}
@@ -362,10 +451,18 @@ const Dashboard = () => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <EditExistingReport reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: 500 }} />
+                <EditExistingReport
+                  reports={reports.slice(0, 5)}
+                  selectedProject={project}
+                  sx={{ height: 500 }}
+                />
               </Grid>
               <Grid item xs={12}>
-                <RecentReports reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: "100%" }} />
+                <RecentReports
+                  reports={reports.slice(0, 5)}
+                  selectedProject={project}
+                  sx={{ height: "100%" }}
+                />
               </Grid>
               <Grid item xs={12}>
                 {/* <ReportStatus reports={reports} sx={{ height: "100%" }} /> */}
@@ -391,10 +488,12 @@ const Dashboard = () => {
       )}
 
       {pageType === "format" && <ReportFormat setPageType={setPageType} jsonData={jsonData} />}
-      
-      {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
 
-      {pageType === "load" && (<Load setPageType={setPageType} />)}
+      {pageType === "generate" && (
+        <DataMapper setPageType={setPageType} jsonData={jsonData} jsonDataTypes={jsonDataTypes} />
+      )}
+
+      {pageType === "load" && <Load setPageType={setPageType} />}
     </>
   );
 };

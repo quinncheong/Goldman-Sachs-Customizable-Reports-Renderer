@@ -1,6 +1,11 @@
 import axios from "axios";
 
-import { FOLDER_API_URL, EXISTING_API_URL, TEMPLATES_API_URL, UPLOAD_API } from "../config/endpoints";
+import {
+  FOLDER_API_URL,
+  EXISTING_API_URL,
+  TEMPLATES_API_URL,
+  UPLOAD_API,
+} from "../config/endpoints";
 
 export const uploadData = async (data) => {
   try {
@@ -23,12 +28,14 @@ export const getAllProjects = async () => {
   });
   const data = await response.json();
   if (data >= 1) {
-    return Array.from(Array(data+1).keys()).slice(1);
-  } else { return [0] }
-}
+    return Array.from(Array(data + 1).keys()).slice(1);
+  } else {
+    return [0];
+  }
+};
 
 export const getAllReports = async (fileExtension) => {
-// fileExtension = 'xlsx' for reports, 'json' for raw data
+  // fileExtension = 'xlsx' for reports, 'json' for raw data
   const response = await fetch(EXISTING_API_URL, {
     headers: {
       Accept: "application/json",
@@ -72,4 +79,22 @@ export const getAllTemplates = async () => {
   });
 
   return preparedData;
+};
+
+/**
+Metadata takes in a json object and returns a list of objects with the following properties:
+@param {string of int} project - Project Name
+@param {Array} files - The list of files
+
+**/
+export const analyseJsonData = async (metadata) => {
+  try {
+    let analyzeRes = await axios.post(ANALYZE_API, metadata);
+    return analyseRes;
+  } catch (error) {
+    return {
+      code: 400,
+      error: error,
+    };
+  }
 };
