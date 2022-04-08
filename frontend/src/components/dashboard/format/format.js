@@ -18,7 +18,7 @@ export const ReportFormat = ({
   setCompiledSheets,
   ...props
 }) => {
-  const router = useRouter();
+  const [currentSheet, setCurrentSheet] = useState(0);
 
   const handleBackClick = () => {
     setPageType("sheets");
