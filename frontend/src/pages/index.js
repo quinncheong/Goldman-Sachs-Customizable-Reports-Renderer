@@ -92,15 +92,17 @@ const Dashboard = () => {
     compiledSheets.map(function (obj) {
       sheetDefinition[obj.sheetName] = obj.sheetData;
     });
-    console.log("sheetDefinition");
-    console.log(sheetDefinition);
     
     let rowDefinition = {};
     Object.entries(compiledRows).map(([row, tables]) => {
-      console.log(tables);
       rowDefinition[row] = {}
       tables.map(function (table) {
         rowDefinition[row][table] = compiledTables[table];
+        Object.entries(compiledTables[table]).map(([colname, value]) => {
+          if (!metadataObject['files'].includes(value['data'])) {
+            metadataObject['files'].push(value['data']);
+          }
+        })
       })
     });
     
@@ -116,13 +118,12 @@ const Dashboard = () => {
       metadata: metadataObject,
       compiled: compiledObject,
     };
-    console.log(reqBean);
   }
 
   // useEffect(() => {
   //   createCompliedJson();
   // }, [])
-  
+
   // const [compiledJson, setCompiledJson] = useState({
   //   sheets: {
   //     sheet1: ["r1", "r2"],
