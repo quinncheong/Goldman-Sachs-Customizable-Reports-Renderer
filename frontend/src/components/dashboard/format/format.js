@@ -6,12 +6,16 @@ import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { FormatElementTile } from './format-element-tile';
 
-export const ReportFormat = ({setPageType, ...props}) => {
+export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...props}) => {
     const router = useRouter();
+
+    const [currentSheet, setCurrentSheet] = useState(0);
 
     const handleBackClick = () => {
         setPageType("sheets");
     };
+
+    console.log(sheetsDetails);
 
     return <>
         <Head>
@@ -63,7 +67,7 @@ export const ReportFormat = ({setPageType, ...props}) => {
                             </Box> 
                         </Grid>
                         <Grid item xs={12}>
-                            <FormatElementTile />
+                            <FormatElementTile sheets={sheets} sheetsDetails={sheetsDetails} currentSheet={currentSheet} setCurrentSheet={setCurrentSheet} setPageType={setPageType} />
                         </Grid>
                     </Grid>
                 </Box>
@@ -71,6 +75,5 @@ export const ReportFormat = ({setPageType, ...props}) => {
         </Box>
         </>
     };
-    
-    // export default ReportFormat;
 
+// export default ReportFormat;

@@ -5,17 +5,22 @@ import { teal, red } from '@mui/material/colors';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 
-export const FormatElementTile = ({ setPageType, ...props}) => {
-
-	const pushToGenerator = (e) => {
-		setPageType("generate");
-	};
+export const FormatElementTile = ({ sheets, currentSheet, setCurrentSheet, sheetsDetails, setPageType, ...props}) => {
 
 	const getItems = (count, offset = 0) =>
 		Array.from({ length: count }, (v, k) => k).map((k) => ({
 			id: `table-${k + offset}-${new Date().getTime()}`,
 			content: `Sample Table`
 		}));
+
+	const pushToGenerator = (e) => {
+		setCurrentSheet(currentSheet+=1);
+		if (currentSheet == sheets ){
+			setPageType("generate");
+		} else {
+			setTableState([getItems(1,1)]);
+		}
+	};
 
 	const reorder = (list, startIndex, endIndex) => {
 		const result = Array.from(list);
@@ -39,7 +44,7 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 		return result;
 	};
 
-	const [ state, setState ] = useState([ getItems(1, 1) ]);
+	const [ tableState, setTableState ] = useState([ getItems(1, 1) ]);
 
 	function handleOnDragEnd(result) {
 		const { source, destination } = result;
@@ -50,17 +55,17 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 		const dInd = +destination.droppableId;
 
 		if (sInd === dInd) {
-			const items = reorder(state[sInd], source.index, destination.index);
-			const newState = [ ...state ];
+			const items = reorder(tableState[sInd], source.index, destination.index);
+			const newState = [ ...tableState ];
 			newState[sInd] = items;
-			setState(newState);
+			setTableState(newState);
 		} else {
-			const result = move(state[sInd], state[dInd], source, destination);
-			const newState = [ ...state ];
+			const result = move(tableState[sInd], tableState[dInd], source, destination);
+			const newState = [ ...tableState ];
 			newState[sInd] = result[sInd];
 			newState[dInd] = result[dInd];
 
-			setState(newState.filter((group) => group.length));
+			setTableState(newState.filter((group) => group.length));
 		}
 	}
 
@@ -89,7 +94,7 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 									minHeight: '40px'
 								}}
 								onClick={() => {
-									setState([ ...state, [] ]);
+									setTableState([ ...tableState, [] ]);
 								}}
 							>
 								Add Row
@@ -106,7 +111,7 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 									minHeight: '40px'
 								}}
 								onClick={() => {
-									setState([ ...state, getItems(1, 2) ]);
+									setTableState([ ...tableState, getItems(1, 2) ]);
 								}}
 							>
 								Add Table
@@ -140,11 +145,11 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 						justifyContent: 'flex-start'
 					}}
 				>
-					<Typography variant="h3">Sheet 1</Typography>
+					<Typography variant="h3">Sheet {currentSheet+1}: {sheetsDetails[currentSheet]}</Typography>
 				</Box>
 				<Box>
 					<DragDropContext onDragEnd={handleOnDragEnd}>
-						{state.map((el, ind) => (
+						{tableState.map((el, ind) => (
 							<Droppable key={ind} droppableId={`${ind}`} direction="horizontal">
 								{(provided) => (
 									<Box
@@ -185,7 +190,7 @@ export const FormatElementTile = ({ setPageType, ...props}) => {
 																		onClick={() => {
 																			const newState = [ ...state ];
 																			newState[ind].splice(index, 1);
-																			setState(
+																			setTableState(
 																				newState.filter((group) => group.length)
 																			);
 																		}}
