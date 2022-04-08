@@ -67,12 +67,7 @@ export const Upload = ({
           <Typography color="" variant="body2">
             Upload JSON
           </Typography>
-          <input
-            type="file"
-            onChange={sendRawJson}
-            hidden
-            multiple={reportTemplateType === "Simple" ? false : true}
-          />
+          <input type="file" onChange={sendRawJson} hidden multiple />
         </Button>
 
         <Button
@@ -85,12 +80,7 @@ export const Upload = ({
           <Typography color="" variant="body2">
             Load File
           </Typography>
-          <input
-            type="file"
-            onChange={sendRawJson}
-            hidden
-            multiple={reportTemplateType === "Simple" ? false : true}
-          />
+          <input type="file" onChange={sendRawJson} hidden multiple />
         </Button>
         {renderTemplateSelection()}
       </Box>

@@ -16,7 +16,7 @@ import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
 // Backend Connector Functions
-import { getAllReports, getAllTemplates } from "../utils/backend-calls";
+import { getAllReports, getAllTemplates, uploadData } from "../utils/backend-calls";
 
 const Dashboard = () => {
   const [pageType, setPageType] = useState("home");
@@ -260,20 +260,24 @@ const Dashboard = () => {
     const files = e.target.files;
     const promises = [];
     let jsonObject = {};
+    let metadataObject = {
+      project: 0,
+      reportTemplateType,
+      files: [],
+    };
 
     if (files.length) {
       for (let i = 0; i < files.length; i++) {
         promises.push(
           new Promise((resolve) => {
             const reader = new FileReader();
-            console.log(files);
             const file = files[i];
             reader.readAsBinaryString(file);
             reader.onloadend = async (loadendEvent) => {
               let parsedJson = JSON.parse(reader.result).body;
-              console.log(parsedJson[Object.keys(parsedJson)[0]]);
               let mainJsonBody = parsedJson[Object.keys(parsedJson)[0]];
               jsonObject[file.name] = mainJsonBody;
+              metadataObject.files.push(file.name);
               resolve();
             };
           })
@@ -282,23 +286,12 @@ const Dashboard = () => {
     }
 
     Promise.all(promises).then(() => {
-      console.log(jsonObject);
       let reqBean = {
+        metadata: metadataObject,
         data: jsonObject,
-        templateType: reportTemplateType,
       };
-      console.log(reqBean);
-      sendJsonObj(reqBean);
+      uploadData(reqBean);
     });
-
-    async function sendJsonObj(data) {
-      try {
-        let templateRes = await axios.post(javaTemplateEndpoint, data);
-        console.log(templateRes);
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   return (
