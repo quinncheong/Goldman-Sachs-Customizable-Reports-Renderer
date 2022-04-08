@@ -1,6 +1,18 @@
-import { EXISTING_API_URL, TEMPLATES_API_URL } from "../config/endpoints";
+import axios from "axios";
 
-export const sendRawJson = (file) => {};
+import { EXISTING_API_URL, TEMPLATES_API_URL, UPLOAD_API } from "../config/endpoints";
+
+export const uploadData = async (data) => {
+  try {
+    let templateRes = await axios.post(UPLOAD_API, data);
+    return templateRes;
+  } catch (error) {
+    return {
+      code: 400,
+      error: error,
+    };
+  }
+};
 
 export const getAllReports = async (fileExtension) => {
   const response = await fetch(EXISTING_API_URL, {
