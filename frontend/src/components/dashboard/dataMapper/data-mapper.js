@@ -48,7 +48,7 @@ export const DataMapper = ({ setPageType, jsonDataTypes, ...props }) => {
   };
 
   const handleNextClick = (e) => {
-    setPageType("sheets");
+    setPageType("download");
   };
 
   const handleChange = (event, newValue) => {

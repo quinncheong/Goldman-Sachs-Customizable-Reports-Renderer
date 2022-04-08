@@ -15,6 +15,7 @@ import { Sheets } from "../components/dashboard/sheets/sheets";
 import { ReportFormat } from "../components/dashboard/format/format";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { Load } from "../components/dashboard/load";
+import { Download } from "src/components/download/download";
 import { SelectProjects } from "../components/dashboard/select-project";
 import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../config/endpoints";
@@ -446,6 +447,8 @@ const Dashboard = () => {
       )}
 
       {pageType === "load" && <Load setPageType={setPageType} />}
+
+      {pageType === "download" && <Download setPageType={setPageType} />}
     </>
   );
 };
