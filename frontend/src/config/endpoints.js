@@ -8,3 +8,4 @@ export const FOLDER_API_URL = `${javaBaseEndpoint}/files/findNumberOfFolders?buc
 export const EXISTING_API_URL = `${javaBaseEndpoint}/existing`;
 export const TEMPLATES_API_URL = `${javaBaseEndpoint}/templates`;
 export const UPLOAD_API = `${javaBaseEndpoint}/upload`;
+export const ANALYZE_API = `${javaBaseEndpoint}/analyze`;

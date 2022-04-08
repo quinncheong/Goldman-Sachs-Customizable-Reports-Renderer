@@ -1,10 +1,10 @@
-import Head from 'next/head';
+import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import NextLink from 'next/link';
-import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@mui/material';
+import NextLink from "next/link";
+import { Box, Button, Container, Divider, Grid, Typography, IconButton } from "@mui/material";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import { FormatElementTile } from './format-element-tile';
+import { FormatElementTile } from "./format-element-tile";
 
 export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...props}) => {
     const router = useRouter();
@@ -26,30 +26,24 @@ export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...p
         <Box
             component="main"
             sx={{
-            alignItems: 'start',
-            display: 'flex',
-            flexGrow: 1,
-            minHeight: '100%',
-            marginTop: '30px'
+              alignItems: "start",
+              display: "flex",
+              flexGrow: 1,
+              minHeight: "100%",
+              backgroundColor: "neutral.200",
+              borderRadius: 2,
+              p: 2,
             }}
-        >
-            <Container maxWidth={false}>
-            <Typography sx={{ mb: 3 }} variant="h4">
-                <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
-                <ArrowLeftIcon size="lg" />
-                </IconButton>
-                Format Report
-            </Typography>
+          >
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
                 <Box
-                    sx={{
-                        alignItems: 'start',
-                        display: 'flex',
-                        flexGrow: 1,
-                        minHeight: '100%',
-                        backgroundColor: 'neutral.200',
-                        borderRadius: 2,
-                        p: 2
-                        }}
+                  sx={{
+                    px: 2,
+                    alignItems: "left",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
                 >
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
@@ -71,10 +65,16 @@ export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...p
                         </Grid>
                     </Grid>
                 </Box>
-            </Container>
-        </Box>
-        </>
-    };
-    
-    // export default ReportFormat;
+              </Grid>
+              <Grid item xs={12}>
+                <FormatElementTile setPageType={setPageType} />
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+      </Box>
+    </>
+  );
+};
 
+// export default ReportFormat;
