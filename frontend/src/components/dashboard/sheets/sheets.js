@@ -20,6 +20,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SaveIcon from "@mui/icons-material/Save";
 
 export const Sheets = ({
+  reportName,
+  setReportName,
   setPageType,
   jsonData,
   sheets,
@@ -44,9 +46,17 @@ export const Sheets = ({
     for (let i = 0; i < sheetNo; i++) {
       tempSheetDetails[i] = "";
     }
-    
+  
     setSheets(sheetNo);
     setSheetsDetails(tempSheetDetails);
+
+  };
+
+  const handleChangeReportName = (e) => {
+    const reportName = e.target.value;
+    setReportName(reportName);
+
+    console.log(reportName)
   };
 
   const handleSave = (e) => {
@@ -58,9 +68,9 @@ export const Sheets = ({
   };
 
   const renderSheetSelector = () => {
-    let dynamicHeight = 200;
+    let dynamicHeight = 280;
     if (hasSaved) {
-      dynamicHeight = 650;
+      dynamicHeight = 750;
     }
     return (
       <Card sx={{ width: 600, height: dynamicHeight, marginTop: "30px" }} {...props}>
@@ -72,8 +82,19 @@ export const Sheets = ({
               flexDirection: "column",
             }}
           >
+            <Typography color="textPrimary" gutterBottom variant="h5" >
+              {"1. Name your report"}
+            </Typography>
+            <TextField
+              sx={{ width: "80%", mb: 3}}
+              id="sheet-name"
+              label="Report Name"
+              variant="outlined"
+              size="small" 
+              onChange={handleChangeReportName}
+            />
             <Typography color="textPrimary" gutterBottom variant="h5">
-              {"Select the number of sheets for your report"}
+              {"2. Select the number of sheets for your report"}
             </Typography>
 
             <Box sx={{ display: "flex" }}>

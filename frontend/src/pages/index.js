@@ -31,6 +31,8 @@ import {
 } from "../utils/backend-calls";
 
 const Dashboard = () => {
+  const [reportName, setReportName] = useState("");
+
   const [pageType, setPageType] = useState("home");
   const [reports, setReports] = useState([]);
   const [project, setProject] = useState(1);
@@ -106,7 +108,7 @@ const Dashboard = () => {
 
   const createCompiledJson = () => {
     let metadataObject = {
-      filename: "complex.xlsx",
+      filename: reportName,
       // project: project,
       project: project,
       reportTemplateType,
@@ -554,6 +556,8 @@ const Dashboard = () => {
 
       {pageType === "sheets" && (
         <Sheets
+          reportName={reportName}
+          setReportName={setReportName}
           sheets={sheets}
           setSheets={setSheets}
           hasSaved={sheetHasSaved}

@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DownloadIcon from '@mui/icons-material/Download';
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import HomeIcon from '@mui/icons-material/Home';
+import { teal } from "@mui/material/colors";
 
 export const Download = ({setPageType, reportUrl, ...props}) => {
     const [downloadReady, setDownloadReady] = useState(false)
@@ -36,6 +38,12 @@ export const Download = ({setPageType, reportUrl, ...props}) => {
         }}
         >
         <Container maxWidth="md">
+            <Typography sx={{ mb: 3 }} variant="h4">
+                <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
+                <ArrowLeftIcon size="lg" />
+                </IconButton>
+                Download Report
+            </Typography>
             <Box
             sx={{
                 alignItems: 'center',
@@ -50,21 +58,47 @@ export const Download = ({setPageType, reportUrl, ...props}) => {
             >
                 View your report here
             </Typography>
+
             {/* <NextLink
                 href={reportUrl}
                 passHref
             > */}
+                
+
+            <Box>
                 <Button
-                component="a"
-                endIcon={(<DownloadIcon fontSize="small" />)}
-                sx={{ mt: 3 }}
-                variant="contained"
-                disabled={!downloadReady}
-                onClick={() => {window.location.href = reportUrl}}
-                >
+                    component="a"
+                    endIcon={(<DownloadIcon fontSize="small" />)}
+                    sx={{ 
+                        mt: 3, 
+                        mx: 1, 
+                        backgroundColor: teal[500],
+                        maxWidth: "150px",
+                        maxHeight: "40px",
+                        minWidth: "150px",
+                        minHeight: "40px",}}
+                        variant="contained"
+                    disabled={!downloadReady}
+                    onClick={() => {window.location.href = reportUrl}}>
                 Download
                 </Button>
-            {/* </NextLink> */}
+
+                <Button
+                variant="outlined"
+                sx={{
+                    mt: 3,
+                    mx: 1,
+                    maxWidth: "150px",
+                    maxHeight: "40px",
+                    minWidth: "150px",
+                    minHeight: "40px",
+                    }}
+                    endIcon={(<HomeIcon fontSize="small" />)}
+                    onClick={(e) => setPageType("home")}
+                >
+                    Home
+                </Button>
+            </Box>
             <Box sx={{ textAlign: 'center' }}>
                 <img
                 alt="Under development"
