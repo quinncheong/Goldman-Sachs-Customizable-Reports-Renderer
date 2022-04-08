@@ -46,46 +46,66 @@ const Dashboard = () => {
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
 
   // Data retrieved from the upload API
-  const [jsonDataTypes, setJsonDataTypes] = useState({});
+  const [jsonDataTypes, setJsonDataTypes] = useState(null);
 
   // This section contains the design schemes for final report generation
   // Finalised schema
   const [compiledSheets, setCompiledSheets] = useState([
-    { sheetName: "sheet1", sheetData: ["row1", "row2"] },
-    { sheetName: "sheet2", sheetData: ["row3", "row4"] },
+    { sheetName: "Pension Investment Status", sheetData: ["row1", "row2", "row3"] },
+    { sheetName: "Stock Balance", sheetData: ["row4"] },
   ]);
 
   const [compiledRows, setCompiledRows] = useState({
-    "row1": ["t1", "t2"],
+    "row1": ["t1"],
     "row2": ["t2", "t3"],
-    "row3": ["t2", "t3"],
-    "row4": ["t2", "t3"]
+    "row3": ["t4"],
+    "row4": ["t5"],
   });
 
   const [compiledTables, setCompiledTables] = useState({
-    "t1": {
-      "assetCode1" : { data: "json1.json", sum: false },
-      "assetCode2" : { data: "json1.json", sum: false },
-      "assetCode3" : { data: "json1.json", sum: false } 
-    },
-    "t2": {
-      "buyer1" : { data: "json1.json", sum: false },
-      "buyer2" : { data: "json1.json", sum: false },
-      "buyer3" : { data: "json1.json", sum: false } 
-    },
-    "t3": {
-      "seller1" : { data: "json1.json", sum: false },
-      "seller2" : { data: "json1.json", sum: false },
-      "seller3" : { data: "json1.json", sum: false } 
-    },
+    "t1": [
+      {colName:"assetCode", colData: { data: "json1.json", sum: false }},
+      {colName:"assetName", colData: { data: "json1.json", sum: false }},
+      {colName:"previousMonthNAV", colData: { data: "json4.json", sum: true }},
+      {colName:"inflow", colData: { data: "json3.json", sum: false }}, 
+      {colName:"daysInflow", colData: { data: "json3.json", sum: false }}, 
+      {colName:"outflow", colData: { data: "json2.json", sum: false }},
+      {colName:"daysOutflow", colData: { data: "json2.json", sum: false }},
+      {colName:"currentMonthNAV", colData: { data: "json4.json", sum: true }},
+      {colName:"exposure", colData: { data: "json4.json", sum: true }},
+      {colName:"compositionRate", colData: { data: "json4.json", sum: true }} 
+    ],
+    "t2": [
+      {colName: "checkInflow", colData: { data: "json5.json", sum: false }},
+      {colName: "checkOutflow", colData: { data: "json6.json", sum: false }},
+      {colName: "totalTransDaysOutflow", colData: { data: "json6.json", sum: false }} 
+    ],
+    "t3": [
+      {colName: "checkInflow", colData: { data: "json5.json", sum: false }},
+      {colName: "checkOutflow", colData: { data: "json6.json", sum: false }},
+      {colName: "totalTransDaysOutflow", colData: { data: "json6.json", sum: false }} 
+    ],
+    "t4": [
+      {colName: " ", colData: { data: "provided.json", sum: false }},
+      {colName: "Previous Month-End Unrealized Gain/Loss(10)", colData: { data: "provided.json", sum: false }},
+      {colName: "Current Month-End Unrealized Gain/Loss(10)", colData: { data: "provided.json", sum: false }}, 
+      {colName: "Current Month Realized Gain/Loss", colData: { data: "provided.json", sum: false }},
+      {colName: "Current Month Unrealized Gain/Loss Increment(10)", colData: { data: "provided.json", sum: false }}, 
+      {colName: "Current Month Unrealized and Realized Gain/Loss", colData: { data: "provided.json", sum: false }} 
+    ],
+    "t5": [
+      {security_cd: " ", colData: { data: "json7.json", sum: false }},
+      {securityDescription: " ", colData: { data: "json7.json", sum: false }},
+      {market_value_bs: " ", colData: { data: "json7.json", sum: false }},
+      {trade_ccy_cd: " ", colData: { data: "json7.json", sum: false }},
+    ]
   });
 
-  const [compiledJson, setCompiledJson] = useState({});
-
-  const createCompliedJson = () => {
+  const createCompiledJson = () => {
     let metadataObject = {
-      filename: "filename.xlsx",
-      project: project,
+      filename: "complex.xlsx",
+      // project: project,
+      project: 14,
       reportTemplateType,
       files: [],
     };
@@ -99,10 +119,12 @@ const Dashboard = () => {
     Object.entries(compiledRows).map(([row, tables]) => {
       rowDefinition[row] = {}
       tables.map(function (table) {
-        rowDefinition[row][table] = compiledTables[table];
-        Object.entries(compiledTables[table]).map(([colname, value]) => {
-          if (!metadataObject['files'].includes(value['data'])) {
-            metadataObject['files'].push(value['data']);
+        let tempObj = {};
+        compiledTables[table].map(function (column) {
+          tempObj[column['colName']] = column['colData'];
+          rowDefinition[row][table] = tempObj;
+          if (!metadataObject['files'].includes(column['colData']['data'])) {
+            metadataObject['files'].push(column['colData']['data']);
           }
         })
       })
@@ -112,53 +134,29 @@ const Dashboard = () => {
     Object.entries(sheetDefinition).map(([sheet, rows]) => {
       compiledObject[sheet] = []
       rows.map(function (row) {
-        compiledObject[sheet].push([rowDefinition[row]])
+        let tempArr = [];
+        Object.entries(rowDefinition[row]).map(([tableName, tableItems]) => {
+          tempArr.push(tableItems);
+        })
+        compiledObject[sheet].push(tempArr);
       })
     })
-
-    let reqBean = {
+    
+    return {
       metadata: metadataObject,
       compiled: compiledObject,
     };
-
-    setCompiledJson(reqBean);
   }
-
+  
   useEffect(() => {
-    createCompliedJson();
-    createReport(compiledJson).then((res) => {
+    let reqBean = createCompiledJson();
+    createReport(reqBean).then((res) => {
       console.log(res);
       if (res.code >= 400) {
         return res.error;
       }
     });
   }, [])
-
-  // const [compiledJson, setCompiledJson] = useState({
-  //   sheets: {
-  //     sheet1: ["r1", "r2"],
-  //     sheet2: ["r3", "r4", "r5"],
-  //   },
-  //   rows: {
-  //     r1: [1, 2, 3],
-  //     r2: [4, 5],
-  //     r3: [6, 7],
-  //     r4: [8],
-  //     r5: [9, 10, 11],
-  //   },
-  //   tables: {
-  //     1: {
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //     },
-  //     2: {
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //     },
-  //   },
-  // });
 
   const [jsonData, setJsonData] = useState({
     Simple: {
