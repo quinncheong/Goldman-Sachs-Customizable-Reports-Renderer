@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [reports, setReports] = useState([]);
   const [project, setProject] = useState(1);
   const [allProjects, setAllProjects] = useState([]);
+  const [storedData, setStoredData] = useState(null);
 
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
@@ -218,20 +219,34 @@ const Dashboard = () => {
   });
 
   // retrieve projects
-  useEffect(() => {
-    const retrieveProjects = async () => {
-      try {
-        let newProjects = await getAllProjects();
-        setAllProjects(newProjects);
-      } catch {
-        setAllProjects([]);
-      }
+  const retrieveProjects = async () => {
+    try {
+      let newProjects = await getAllProjects();
+      setAllProjects(newProjects);
+    } catch {
+      setAllProjects([]);
     }
+  }
 
+  useEffect(() => {
     retrieveProjects();
   }, [setProject])
 
-  // retrieve data
+  // retrieve storedData
+  const retrieveStoredData = async () => {
+    try {
+      const fileType = "json";
+      let newStoredData = await getAllReports(fileType);
+      console.log(newStoredData);
+      setStoredData(newStoredData);
+    } catch {
+      setStoredData({});
+    }
+  }
+
+  useEffect(() => {
+    retrieveStoredData();
+  }, [project])
 
   // retrieve reports
   useEffect(() => {
@@ -286,7 +301,7 @@ const Dashboard = () => {
     const promises = [];
     let jsonObject = {};
     let metadataObject = {
-      project: 0,
+      project: project,
       reportTemplateType,
       files: [],
     };
@@ -320,7 +335,7 @@ const Dashboard = () => {
         if (res.code >= 400) {
           return res.error;
         }
-        setPageType("sheets");
+        retrieveStoredData();
       });
     });
   };
@@ -394,7 +409,7 @@ const Dashboard = () => {
       
       {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
 
-      {pageType === "load" && (<Load setPageType={setPageType} />)}
+      {pageType === "load" && <Load storedData={storedData} setPageType={setPageType} sendRawJson={sendRawJson} />}
     </>
   );
 };

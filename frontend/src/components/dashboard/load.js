@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DashboardLayout } from "../dashboard-layout";
+import UploadIcon from "@mui/icons-material/Upload";
 
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 
@@ -26,9 +27,12 @@ import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../../config/endpoints";
 import { ExistingDataList } from "src/components/data/existing-data-list";
+import { UploadNewData } from "src/components/data/upload-new-data";
 
 export const Load = ({
+  storedData,
   setPageType,
+  sendRawJson,
 }) => {
   const handleBackClick = () => {
     setPageType("home");
@@ -54,9 +58,12 @@ export const Load = ({
             <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
               <ArrowLeftIcon size="lg" />
             </IconButton>
-            Load Existing Data
+            Load Data
           </Typography>
-          <ExistingDataList sx={{ height: "100%" }} setPageType={setPageType}/>
+          <Box sx={{ display: 'flex', mb: 2}}>
+            <UploadNewData sendRawJson={sendRawJson}/>
+          </Box>
+          <ExistingDataList sx={{ height: "100%" }} storedData={storedData} setPageType={setPageType}/>
         </Container>
       </Box>
     </>

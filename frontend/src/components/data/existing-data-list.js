@@ -12,7 +12,8 @@ import { AllDataProvider } from "../../data/AllDataProvider";
 import { getAllReports, getAllTemplates, uploadData } from "../../utils/backend-calls";
 
 export const ExistingDataList = ({
-  setPageType
+  storedData,
+  setPageType,
 }) => {
   const renderFileDownloadButton = (params) => {
     return (
@@ -59,16 +60,16 @@ export const ExistingDataList = ({
       );
     }
 
-    const fetchExistingData = async() => {
-      let rawData = await getAllReports('json');
+    // const fetchExistingData = () => {
+      // let rawData = await getAllReports('json');
       // console.log(rawData);
       // setExistingData(rawData);
-      await buildRows(rawData);
-      buildColumns();
-    }
+    // }
+    // fetchExistingData();
+    buildRows(storedData);
+    buildColumns();
 
-    fetchExistingData();
-  }, [])
+  }, [storedData])
   
   const handleStateChange = (gridState, e, details) => {
     // console.log(gridState);
