@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { EXISTING_API_URL, TEMPLATES_API_URL, UPLOAD_API } from "../config/endpoints";
+import { FOLDER_API_URL, EXISTING_API_URL, TEMPLATES_API_URL, UPLOAD_API } from "../config/endpoints";
 
 export const uploadData = async (data) => {
   try {
@@ -13,6 +13,19 @@ export const uploadData = async (data) => {
     };
   }
 };
+
+export const getAllProjects = async () => {
+  const response = await fetch(FOLDER_API_URL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  if (data >= 1) {
+    return Array.from(Array(data+1).keys()).slice(1);
+  } else { return [0] }
+}
 
 export const getAllReports = async (fileExtension) => {
 // fileExtension = 'xlsx' for reports, 'json' for raw data

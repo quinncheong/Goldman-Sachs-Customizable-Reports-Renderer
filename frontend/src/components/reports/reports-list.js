@@ -1,7 +1,7 @@
 import {
-  Button,
   Card,
   CardContent,
+  DataGrid,
 } from "@mui/material";
 import { AllDataProvider } from "../../data/AllDataProvider";
 import { renderFileDownloadButton } from "../../utils/common-components";
@@ -35,11 +35,6 @@ export const ReportsList = ( props ) => {
   return (
     <form {...props}>
       <Card sx={{ width: "100%" }}>
-        {/* <CardHeader
-          sx={{ p: 3 }}
-          title={`Past Reports`}
-        />
-        <Divider /> */}
         <CardContent sx={{ height: 800, width: "100%" }}>
           <DataGrid
             sx={{ outline: "none" }}

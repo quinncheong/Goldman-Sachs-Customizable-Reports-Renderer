@@ -240,7 +240,7 @@ export const Upload = ({
   };
 
   return (
-    <Card variant="outlined" {...props}>
+    <Card {...props}>
       <CardHeader sx={{}} title="Create New Report" />
 
       <Divider />

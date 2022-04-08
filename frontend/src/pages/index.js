@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Card, Container, Grid } from "@mui/material";
 import { ReportStatus } from "../components/dashboard/report-status";
 import { Upload } from "../components/dashboard/upload";
 import { EditExistingReport } from "../components/dashboard/edit-existing-report";
@@ -14,15 +14,18 @@ import { Generator } from "../components/dashboard/generator/generator";
 import { Sheets } from "../components/dashboard/sheets/sheets";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { Load } from "../components/dashboard/load";
+import { SelectProjects } from "../components/dashboard/select-project";
 import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../config/endpoints";
 
 // Backend Connector Functions
-import { getAllReports, getAllTemplates, uploadData } from "../utils/backend-calls";
+import { getAllProjects, getAllReports, getAllTemplates, uploadData } from "../utils/backend-calls";
 
 const Dashboard = () => {
   const [pageType, setPageType] = useState("home");
   const [reports, setReports] = useState([]);
+  const [project, setProject] = useState(1);
+  const [allProjects, setAllProjects] = useState([]);
 
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
@@ -213,6 +216,23 @@ const Dashboard = () => {
     },
   });
 
+  // retrieve projects
+  useEffect(() => {
+    const retrieveProjects = async () => {
+      try {
+        let newProjects = await getAllProjects();
+        setAllProjects(newProjects);
+      } catch {
+        setAllProjects([]);
+      }
+    }
+
+    retrieveProjects();
+  }, [setProject])
+
+  // retrieve data
+
+  // retrieve reports
   useEffect(() => {
     const retrieveReports = async () => {
       try {
@@ -235,8 +255,9 @@ const Dashboard = () => {
     };
 
     retrieveReports();
-  }, []);
+  }, [setProject]);
 
+  // retrieve templates
   useEffect(() => {
     const retrieveTemplates = async () => {
       try {
@@ -303,8 +324,6 @@ const Dashboard = () => {
     });
   };
 
-
-
   return (
     <>
       <Head>
@@ -321,6 +340,13 @@ const Dashboard = () => {
         >
           <Container maxWidth={false}>
             <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <SelectProjects 
+                  project={project}
+                  allProjects={allProjects}
+                  setProject={setProject}
+                />
+              </Grid>
               <Grid item md={6} xs={12}>
                 <Upload
                   reportTemplates={reportTemplates}
@@ -335,10 +361,10 @@ const Dashboard = () => {
                 />
               </Grid>
               <Grid item md={6} xs={12}>
-                <EditExistingReport reports={reports.slice(0, 5)} sx={{ height: 500 }} />
+                <EditExistingReport reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: 500 }} />
               </Grid>
               <Grid item xs={12}>
-                <RecentReports reports={reports.slice(0, 5)} sx={{ height: "100%" }} />
+                <RecentReports reports={reports.slice(0, 5)} selectedProject={project} sx={{ height: "100%" }} />
               </Grid>
               <Grid item xs={12}>
                 {/* <ReportStatus reports={reports} sx={{ height: "100%" }} /> */}

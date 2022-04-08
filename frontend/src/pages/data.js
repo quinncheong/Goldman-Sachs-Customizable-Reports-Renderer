@@ -11,7 +11,7 @@ import { ReportStatus } from "../components/dashboard/report-status";
 import { RecentReports } from "../components/dashboard/recent-reports";
 import { ExistingDataList } from "../components/data/existing-data-list";
 
-const Reports = () => {
+const Data = () => {
   const router = useRouter();
   console.log(router);
 
@@ -38,6 +38,6 @@ const Reports = () => {
   );
 };
 
-Reports.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Data.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Reports;
+export default Data;
