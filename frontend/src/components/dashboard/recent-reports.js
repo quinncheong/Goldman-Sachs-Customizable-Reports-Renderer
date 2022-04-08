@@ -20,11 +20,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CalendarTodayIcon from "@mui/icons-material/Today";
 import { Clock as ClockIcon } from "src/icons/clock";
 import { Download as DownloadIcon } from "src/icons/download";
+import ErrorIcon from '@mui/icons-material/Error';
 
 export const RecentReports = ({ reports, selectedProject, ...props }) => {
+  let isReportDisplayed = false;
+
   const renderReports = reports.map((report) => {
     if (selectedProject === report.projectName) {
-
+      isReportDisplayed = true;
       return (
         <Card
           variant="outlined"
@@ -61,6 +64,21 @@ export const RecentReports = ({ reports, selectedProject, ...props }) => {
       );
     }
   });
+
+  const generateDisplay = (isReportDisplayed) => {
+    if (!isReportDisplayed) {
+      return (
+        <>
+          <Box display="flex" justifyContent="center">
+            <ErrorIcon/>
+            <Typography variant="h6">
+              No Reports Available
+            </Typography>
+          </Box>
+        </>
+      )
+    }
+  }
 
   return (
     <Card {...props}>
@@ -110,6 +128,7 @@ export const RecentReports = ({ reports, selectedProject, ...props }) => {
         }}
       >
         {renderReports}
+        {generateDisplay(isReportDisplayed)}
       </CardContent>
     </Card>
   );

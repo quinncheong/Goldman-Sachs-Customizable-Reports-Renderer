@@ -3,17 +3,39 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Box, Container } from "@mui/material";
-import { CustomerListResults } from "../components/customer/customer-list-results";
-import { CustomerListToolbar } from "../components/customer/customer-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
-import { customers } from "../__mocks__/customers";
-import { ReportStatus } from "../components/dashboard/report-status";
-import { RecentReports } from "../components/dashboard/recent-reports";
 import { ReportsList } from "../components/reports/reports-list";
+import { getAllReports } from "../utils/backend-calls";
 
 const Reports = () => {
   const router = useRouter();
   console.log(router);
+  
+  const [reports, setReports] = useState([]);
+  // retrieve reports
+  useEffect(() => {
+    const retrieveReports = async () => {
+      try {
+        const fileType = "xlsx";
+        let reports = await getAllReports(fileType);
+        setReports(reports);
+      } catch {
+        // Mock reports data on failure
+        setReports([
+          {
+            reportID: 1,
+            fileName: "SaaSFinancialPlan.xlsx",
+            date: "2 Feb 2022",
+            status: "Pending",
+            dateCreated: Date.now(),
+            lastModified: Date.now(),
+          },
+        ]);
+      }
+    };
+
+    retrieveReports();
+  }, []);
 
   return (
     <>
@@ -27,11 +49,8 @@ const Reports = () => {
           py: 8,
         }}
       >
-        {/* <Container maxWidth={false}>
-                    <RecentReports sx={{ height: "100%" }} />
-                </Container> */}
         <Container maxWidth={false}>
-          <ReportsList sx={{ height: "100%" }} />
+          <ReportsList reports={reports}/>
         </Container>
       </Box>
     </>
