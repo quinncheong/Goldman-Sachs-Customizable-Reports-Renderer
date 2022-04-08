@@ -23,13 +23,15 @@ import TabPanel from "@mui/lab/TabPanel";
 
 export const DataMapper = ({
   setPageType,
-  jsonDataTypes,
   compiledSheets,
   compiledRows,
   compiledTables,
   setCompiledSheets,
   setCompiledRows,
   setCompiledTables,
+  jsonData,
+  jsonDataTypes,
+  createReport,
   ...props
 }) => {
   const [value, setValue] = useState("1");
@@ -39,18 +41,28 @@ export const DataMapper = ({
 
   useEffect(() => {
     let newConsolidatedClone = [];
-    for (const [filename, rowsPlaceholder] of Object.entries(jsonDataTypes)) {
-      for (const [fieldName, rowDetails] of Object.entries(rowsPlaceholder.rows)) {
+    // for (const [filename, rowsPlaceholder] of Object.entries(jsonDataTypes)) {
+    //   for (const [fieldName, rowDetails] of Object.entries(rowsPlaceholder.rows)) {
+    //     newConsolidatedClone.push({
+    //       filename,
+    //       fieldName,
+    //       dataType: rowDetails.datatype,
+    //       rowCount: rowDetails.row_count,
+    //       sum: false,
+    //     });
+    //   }
+    // }
+    for (const [fieldName, sources] of Object.entries(jsonDataTypes)) {
+      for (const [fileName, rowDetails] of Object.entries(sources)) {
         newConsolidatedClone.push({
-          filename,
+          fileName,
           fieldName,
           dataType: rowDetails.datatype,
           rowCount: rowDetails.row_count,
           sum: false,
-        });
+        })
       }
     }
-    console.log(newConsolidatedClone);
     setConsolidatedDataTypes(newConsolidatedClone);
   }, [jsonDataTypes]);
 
@@ -63,6 +75,7 @@ export const DataMapper = ({
   };
 
   const handleNextClick = (e) => {
+    createReport()
     setPageType("download");
   };
 

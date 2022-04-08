@@ -34,6 +34,8 @@ export const Load = ({
   setPageType,
   sendRawJson,
   project,
+  setSelectedData,
+  getDatatypes
 }) => {
   const handleBackClick = () => {
     setPageType("home");
@@ -64,7 +66,13 @@ export const Load = ({
           <Box sx={{ display: 'flex', mb: 2}}>
             <UploadNewData sendRawJson={sendRawJson}/>
           </Box>
-          <ExistingDataList sx={{ height: "100%" }} storedData={storedData} setPageType={setPageType} project={project}/>
+          <ExistingDataList sx={{ height: "100%" }} 
+            storedData={storedData}
+            setPageType={setPageType}
+            project={project}
+            setSelectedData={setSelectedData}
+            getDatatypes={getDatatypes}
+          />
         </Container>
       </Box>
     </>
