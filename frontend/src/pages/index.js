@@ -48,73 +48,11 @@ const Dashboard = () => {
 
   // This section contains the design schemes for final report generation
   // Finalised schema
-  const [compiledSheets, setCompiledSheets] = useState([
-    { sheetName: "sheet1", sheetData: ["r1", "r2"] },
-    { sheetName: "sheet2", sheetData: ["r3", "r4"] },
-  ]);
+  const [compiledSheets, setCompiledSheets] = useState([]);
 
-  const [compiledRows, setCompiledRows] = useState([
-    { rowName: "row1", rowData: ["t1", "t2"] },
-    { rowName: "row2", rowData: [] },
-  ]);
+  const [compiledRows, setCompiledRows] = useState({});
 
-  const [compiledTables, setCompiledTables] = useState([
-    {
-      tableName: "t1",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-    {
-      tableName: "t2",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-    {
-      tableName: "t3",
-      tableData: [
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-        { colName: "assetCode", colData: { data: "json1.json", sum: false } },
-      ],
-    },
-  ]);
-
-  const [compiledJson, setCompiledJson] = useState({});
-
-  // const [compiledJson, setCompiledJson] = useState({
-  //   sheets: {
-  //     sheet1: ["r1", "r2"],
-  //     sheet2: ["r3", "r4", "r5"],
-  //   },
-  //   rows: {
-  //     r1: [1, 2, 3],
-  //     r2: [4, 5],
-  //     r3: [6, 7],
-  //     r4: [8],
-  //     r5: [9, 10, 11],
-  //   },
-  //   tables: {
-  //     1: {
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //     },
-  //     2: {
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //       assetCode: { data: "json1.json", sum: false },
-  //     },
-  //   },
-  // });
+  const [compiledTables, setCompiledTables] = useState({});
 
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -484,8 +422,6 @@ const Dashboard = () => {
           setSheetsDetails={setSheetsDetails}
           setPageType={setPageType}
           jsonData={jsonData}
-          compiledJson={compiledJson}
-          setcompiledJson={setCompiledJson}
         ></Sheets>
       )}
 
@@ -494,7 +430,12 @@ const Dashboard = () => {
           setPageType={setPageType}
           sheets={sheets}
           sheetsDetails={sheetsDetails}
-          jsonData={jsonData}
+          compiledTables={compiledTables}
+          setCompiledTables={setCompiledTables}
+          compiledRows={compiledRows}
+          setCompiledRows={setCompiledRows}
+          compiledSheets={compiledSheets}
+          setCompiledSheets={setCompiledSheets}
         />
       )}
 

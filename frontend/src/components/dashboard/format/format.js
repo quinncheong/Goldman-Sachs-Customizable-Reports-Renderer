@@ -6,7 +6,7 @@ import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { FormatElementTile } from './format-element-tile';
 
-export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...props}) => {
+export const ReportFormat = ({setPageType, sheets, sheetsDetails, compiledTables, setCompiledTables, compiledRows, setCompiledRows, compiledSheets, setCompiledSheets, ...props}) => {
     const router = useRouter();
 
     const [currentSheet, setCurrentSheet] = useState(0);
@@ -67,7 +67,18 @@ export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...p
                             </Box> 
                         </Grid>
                         <Grid item xs={12}>
-                            <FormatElementTile sheets={sheets} sheetsDetails={sheetsDetails} currentSheet={currentSheet} setCurrentSheet={setCurrentSheet} setPageType={setPageType} />
+                            <FormatElementTile 
+                            sheets={sheets} 
+                            sheetsDetails={sheetsDetails} 
+                            currentSheet={currentSheet} 
+                            setCurrentSheet={setCurrentSheet} 
+                            setPageType={setPageType}
+                            compiledTables={compiledTables}
+                            setCompiledTables={setCompiledTables}
+                            compiledRows={compiledRows}
+                            setCompiledRows={setCompiledRows}
+                            compiledSheets={compiledSheets}
+                            setCompiledSheets={setCompiledSheets} />
                         </Grid>
                     </Grid>
                 </Box>

@@ -5,16 +5,34 @@ import { teal, red } from '@mui/material/colors';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 
-export const FormatElementTile = ({ sheets, currentSheet, setCurrentSheet, sheetsDetails, setPageType, ...props}) => {
+export const FormatElementTile = ({ sheets, currentSheet, setCurrentSheet, sheetsDetails, setPageType, compiledTables, setCompiledTables, compiledRows, setCompiledRows, compiledSheets, setCompiledSheets, ...props}) => {
 
 	const getItems = (count, offset = 0) =>
 		Array.from({ length: count }, (v, k) => k).map((k) => ({
-			id: `table-${k + offset}-${new Date().getTime()}`,
+			id: `table-${new Date().getTime()}`,
 			content: `Sample Table`
 		}));
 
 	const pushToGenerator = (e) => {
-		setCurrentSheet(currentSheet+=1);
+    let rowData = [];
+    let sheetData = {};
+    for (let i = 0; i < tableState.length; i++) {
+      let rowName = `${sheetsDetails[currentSheet]}${i}`;
+      rowData.push(rowName);
+      compiledRows[rowName] = [];
+      for (let j = 0; j < tableState[i].length; j++) {
+        compiledTables[tableState[i][j].id] = [];
+        compiledRows[rowName].push(tableState[i][j].id);
+      };
+    };
+    sheetData["sheetName"] = sheetsDetails[currentSheet];
+    sheetData["sheetData"] = rowData;
+    compiledSheets.push(sheetData)
+
+    setCompiledTables(compiledTables);
+    setCompiledRows(compiledRows);
+    setCompiledSheets(compiledSheets);
+    setCurrentSheet(currentSheet+=1);
 		if (currentSheet == sheets ){
 			setPageType("generate");
 		} else {
