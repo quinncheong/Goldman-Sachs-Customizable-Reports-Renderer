@@ -156,7 +156,7 @@ export const FormatElementTile = ({
                 maxHeight: "40px",
                 minWidth: "150px",
                 minHeight: "40px",
-                backgroundColor: teal[500],
+                backgroundColor: "#186ADE",
               }}
               onClick={pushToGenerator}
             >
