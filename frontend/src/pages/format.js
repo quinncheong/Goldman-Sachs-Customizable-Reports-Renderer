@@ -1,9 +1,11 @@
 import Head from 'next/head';
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import { useRouter } from "next/router";
 import NextLink from 'next/link';
 import { Box, Button, Container, Divider, Grid, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FormatElementTile } from 'src/components/format/format-element-tile';
-import { FormatDetails } from 'src/components/format/format-details';
 
 const ReportFormat = () => (
     <>
@@ -57,26 +59,11 @@ const ReportFormat = () => (
                                 <Typography variant="h1">
                                     Filename
                                 </Typography>
-                                <Divider sx={{width: '100%'}} />
                             </Box> 
                         </Grid>
-                        <Grid item md={4} xs={12}>
+                        <Grid item xs={12}>
                             <FormatElementTile />
                         </Grid>
-                        <Grid item md={8} xs={12}>
-                        <Box
-                            sx={{
-                                alignItems: 'start',
-                                display: 'flex',
-                                flexGrow: 1,
-                                minHeight: '100%',
-                                backgroundColor: 'neutral.300',
-                                borderRadius: 2,
-                            }}
-                        >
-                            
-                        </Box>
-                        </Grid> 
                     </Grid>
                 </Box>
             </Container>
@@ -85,6 +72,4 @@ const ReportFormat = () => (
     );
     
     export default ReportFormat;
-
-
 
