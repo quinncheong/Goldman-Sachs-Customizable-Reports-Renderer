@@ -6,36 +6,25 @@ import { Box, Button, Container, Divider, Grid, Typography, IconButton } from "@
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { FormatElementTile } from "./format-element-tile";
 
-export const ReportFormat = ({ setPageType, ...props }) => {
-  const router = useRouter();
+export const ReportFormat = ({setPageType, sheets, sheetsDetails, jsonData, ...props}) => {
+    const router = useRouter();
 
-  const handleBackClick = () => {
-    setPageType("sheets");
-  };
+    const [currentSheet, setCurrentSheet] = useState(0);
 
-  return (
-    <>
-      <Head>
-        <title>Report Formatting</title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          alignItems: "start",
-          display: "flex",
-          flexGrow: 1,
-          minHeight: "100%",
-          marginTop: "30px",
-        }}
-      >
-        <Container maxWidth={false}>
-          <Typography sx={{ mb: 3 }} variant="h4">
-            <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
-              <ArrowLeftIcon size="lg" />
-            </IconButton>
-            Format Report
-          </Typography>
-          <Box
+    const handleBackClick = () => {
+        setPageType("sheets");
+    };
+
+    console.log(sheetsDetails);
+
+    return <>
+        <Head>
+            <title>
+            Report Formatting
+            </title>
+        </Head>
+        <Box
+            component="main"
             sx={{
               alignItems: "start",
               display: "flex",
@@ -56,7 +45,25 @@ export const ReportFormat = ({ setPageType, ...props }) => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Typography variant="h1">Filename</Typography>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Box 
+                                sx={{ 
+                                    px: 2,
+                                    alignItems: "left",
+                                    display: "flex",
+                                    justifyContent: 'flex-start'
+                                }}
+                            >
+                                <Typography variant="h1">
+                                    Filename
+                                </Typography>
+                            </Box> 
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormatElementTile sheets={sheets} sheetsDetails={sheetsDetails} currentSheet={currentSheet} setCurrentSheet={setCurrentSheet} setPageType={setPageType} />
+                        </Grid>
+                    </Grid>
                 </Box>
               </Grid>
               <Grid item xs={12}>
