@@ -116,7 +116,8 @@ export const Sheets = ({
               sx={{ display: "flex", m: "auto", mt: 1 }}
               color="primary"
               variant="contained"
-              onClick={(e) => setPageType("generate")}
+              // onClick={(e) => setPageType("generate")}
+              onClick={(e) => setPageType("format")}
             >
               Next
             </Button>

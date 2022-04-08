@@ -12,6 +12,7 @@ import axios from "axios";
 // Report generation
 import { Generator } from "../components/dashboard/generator/generator";
 import { Sheets } from "../components/dashboard/sheets/sheets";
+import { ReportFormat } from "../components/dashboard/format/format";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { Load } from "../components/dashboard/load";
 import { SelectProjects } from "../components/dashboard/select-project";
@@ -389,6 +390,8 @@ const Dashboard = () => {
         ></Sheets>
       )}
 
+      {pageType === "format" && <ReportFormat setPageType={setPageType} jsonData={jsonData} />}
+      
       {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />}
 
       {pageType === "load" && (<Load setPageType={setPageType} />)}

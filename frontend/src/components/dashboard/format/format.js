@@ -1,14 +1,19 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
-import { Box, Button, Container, Divider, Grid, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { FormatElementTile } from 'src/components/format/format-element-tile';
+import { Box, Button, Container, Divider, Grid, Typography, IconButton } from '@mui/material';
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import { FormatElementTile } from './format-element-tile';
 
-const ReportFormat = () => (
-    <>
+export const ReportFormat = ({setPageType, ...props}) => {
+    const router = useRouter();
+
+    const handleBackClick = () => {
+        setPageType("sheets");
+    };
+
+    return <>
         <Head>
             <title>
             Report Formatting
@@ -20,21 +25,17 @@ const ReportFormat = () => (
             alignItems: 'start',
             display: 'flex',
             flexGrow: 1,
-            minHeight: '100%'
+            minHeight: '100%',
+            marginTop: '30px'
             }}
         >
             <Container maxWidth={false}>
-                <NextLink
-                    href="/"
-                    passHref
-                >
-                    <Button
-                    component="a"
-                    startIcon={<ArrowBackIcon fontSize="small" />}
-                    >
-                    Dashboard
-                    </Button>
-                </NextLink>
+            <Typography sx={{ mb: 3 }} variant="h4">
+                <IconButton onClick={handleBackClick} sx={{ ml: 1 }}>
+                <ArrowLeftIcon size="lg" />
+                </IconButton>
+                Format Report
+            </Typography>
                 <Box
                     sx={{
                         alignItems: 'start',
@@ -69,7 +70,7 @@ const ReportFormat = () => (
             </Container>
         </Box>
         </>
-    );
+    };
     
-    export default ReportFormat;
+    // export default ReportFormat;
 
