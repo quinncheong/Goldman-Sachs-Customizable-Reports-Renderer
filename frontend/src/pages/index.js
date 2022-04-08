@@ -15,6 +15,7 @@ import { Sheets } from "../components/dashboard/sheets/sheets";
 import { ReportFormat } from "../components/dashboard/format/format";
 import { DataMapper } from "src/components/dashboard/dataMapper/data-mapper";
 import { Load } from "../components/dashboard/load";
+import { Download } from "src/components/download/download";
 import { SelectProjects } from "../components/dashboard/select-project";
 import { DisplayExistingData } from "src/components/dashboard/display-existing-data";
 import { javaTemplateEndpoint } from "../config/endpoints";
@@ -46,7 +47,52 @@ const Dashboard = () => {
   const [sheetHasSaved, setSheetHasSaved] = useState(false);
 
   // Data retrieved from the upload API
-  const [jsonDataTypes, setJsonDataTypes] = useState(null);
+  const [jsonDataTypes, setJsonDataTypes] = useState({
+    JSON0: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+        assetCode: {
+          datatype: "str",
+          row_count: 18,
+        },
+        budget: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON1: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+    JSON2: {
+      rows: {
+        instrumentType: {
+          datatype: "str",
+          row_count: 18,
+        },
+        Money: {
+          datatype: "str",
+          row_count: 18,
+        },
+      },
+    },
+  });
 
   // This section contains the design schemes for final report generation
   // Finalised schema
@@ -157,6 +203,7 @@ const Dashboard = () => {
       }
     });
   }, [])
+
 
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -541,8 +588,6 @@ const Dashboard = () => {
           setSheetsDetails={setSheetsDetails}
           setPageType={setPageType}
           jsonData={jsonData}
-          compiledJson={compiledJson}
-          setcompiledJson={setCompiledJson}
         ></Sheets>
       )}
 
@@ -551,17 +596,35 @@ const Dashboard = () => {
           setPageType={setPageType}
           sheets={sheets}
           sheetsDetails={sheetsDetails}
-          jsonData={jsonData}
+          compiledTables={compiledTables}
+          setCompiledTables={setCompiledTables}
+          compiledRows={compiledRows}
+          setCompiledRows={setCompiledRows}
+          compiledSheets={compiledSheets}
+          setCompiledSheets={setCompiledSheets}
         />
       )}
 
       {/* {pageType === "generate" && <DataMapper setPageType={setPageType} jsonData={jsonData} />} */}
 
       {pageType === "generate" && (
-        <DataMapper setPageType={setPageType} jsonData={jsonData} jsonDataTypes={jsonDataTypes} />
+        <DataMapper
+          setPageType={setPageType}
+          compiledSheets={compiledSheets}
+          compiledRows={compiledRows}
+          compiledTables={compiledTables}
+          setCompiledSheets={setCompiledSheets}
+          setCompiledRows={setCompiledRows}
+          setCompiledTables={setCompiledTables}
+          jsonData={jsonData}
+          jsonDataTypes={jsonDataTypes}
+        />
       )}
 
       {pageType === "load" && <Load storedData={storedData} setPageType={setPageType} sendRawJson={sendRawJson} project={project}/>}
+      
+      {pageType === "download" && <Download setPageType={setPageType} />}
+
     </>
   );
 };
