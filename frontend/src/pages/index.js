@@ -23,6 +23,7 @@ import { javaTemplateEndpoint } from "../config/endpoints";
 // Backend Connector Functions
 import {
   analyseJsonData,
+  createReport,
   getAllProjects,
   getAllReports,
   getAllTemplates,
@@ -34,6 +35,7 @@ const Dashboard = () => {
   const [reports, setReports] = useState([]);
   const [project, setProject] = useState(1);
   const [allProjects, setAllProjects] = useState([]);
+  const [storedData, setStoredData] = useState(null);
 
   const [reportTemplateType, setReportTemplateType] = useState("Simple");
   const [reportTemplates, setReportTemplates] = useState([]);
@@ -94,11 +96,114 @@ const Dashboard = () => {
 
   // This section contains the design schemes for final report generation
   // Finalised schema
-  const [compiledSheets, setCompiledSheets] = useState([]);
+  const [compiledSheets, setCompiledSheets] = useState([
+    { sheetName: "Pension Investment Status", sheetData: ["row1", "row2", "row3"] },
+    { sheetName: "Stock Balance", sheetData: ["row4"] },
+  ]);
 
-  const [compiledRows, setCompiledRows] = useState({});
+  const [compiledRows, setCompiledRows] = useState({
+    "row1": ["t1"],
+    "row2": ["t2", "t3"],
+    "row3": ["t4"],
+    "row4": ["t5"],
+  });
 
-  const [compiledTables, setCompiledTables] = useState({});
+  const [compiledTables, setCompiledTables] = useState({
+    "t1": [
+      {colName:"assetCode", colData: { data: "json1.json", sum: false }},
+      {colName:"assetName", colData: { data: "json1.json", sum: false }},
+      {colName:"previousMonthNAV", colData: { data: "json4.json", sum: true }},
+      {colName:"inflow", colData: { data: "json3.json", sum: false }}, 
+      {colName:"daysInflow", colData: { data: "json3.json", sum: false }}, 
+      {colName:"outflow", colData: { data: "json2.json", sum: false }},
+      {colName:"daysOutflow", colData: { data: "json2.json", sum: false }},
+      {colName:"currentMonthNAV", colData: { data: "json4.json", sum: true }},
+      {colName:"exposure", colData: { data: "json4.json", sum: true }},
+      {colName:"compositionRate", colData: { data: "json4.json", sum: true }} 
+    ],
+    "t2": [
+      {colName: "checkInflow", colData: { data: "json5.json", sum: false }},
+      {colName: "checkOutflow", colData: { data: "json6.json", sum: false }},
+      {colName: "totalTransDaysOutflow", colData: { data: "json6.json", sum: false }} 
+    ],
+    "t3": [
+      {colName: "checkInflow", colData: { data: "json5.json", sum: false }},
+      {colName: "checkOutflow", colData: { data: "json6.json", sum: false }},
+      {colName: "totalTransDaysOutflow", colData: { data: "json6.json", sum: false }} 
+    ],
+    "t4": [
+      {colName: " ", colData: { data: "provided.json", sum: false }},
+      {colName: "Previous Month-End Unrealized Gain/Loss(10)", colData: { data: "provided.json", sum: false }},
+      {colName: "Current Month-End Unrealized Gain/Loss(10)", colData: { data: "provided.json", sum: false }}, 
+      {colName: "Current Month Realized Gain/Loss", colData: { data: "provided.json", sum: false }},
+      {colName: "Current Month Unrealized Gain/Loss Increment(10)", colData: { data: "provided.json", sum: false }}, 
+      {colName: "Current Month Unrealized and Realized Gain/Loss", colData: { data: "provided.json", sum: false }} 
+    ],
+    "t5": [
+      {security_cd: " ", colData: { data: "json7.json", sum: false }},
+      {securityDescription: " ", colData: { data: "json7.json", sum: false }},
+      {market_value_bs: " ", colData: { data: "json7.json", sum: false }},
+      {trade_ccy_cd: " ", colData: { data: "json7.json", sum: false }},
+    ]
+  });
+
+  const createCompiledJson = () => {
+    let metadataObject = {
+      filename: "complex.xlsx",
+      // project: project,
+      project: 14,
+      reportTemplateType,
+      files: [],
+    };
+
+    let sheetDefinition = {};
+    compiledSheets.map(function (obj) {
+      sheetDefinition[obj.sheetName] = obj.sheetData;
+    });
+    
+    let rowDefinition = {};
+    Object.entries(compiledRows).map(([row, tables]) => {
+      rowDefinition[row] = {}
+      tables.map(function (table) {
+        let tempObj = {};
+        compiledTables[table].map(function (column) {
+          tempObj[column['colName']] = column['colData'];
+          rowDefinition[row][table] = tempObj;
+          if (!metadataObject['files'].includes(column['colData']['data'])) {
+            metadataObject['files'].push(column['colData']['data']);
+          }
+        })
+      })
+    });
+    
+    let compiledObject = {};
+    Object.entries(sheetDefinition).map(([sheet, rows]) => {
+      compiledObject[sheet] = []
+      rows.map(function (row) {
+        let tempArr = [];
+        Object.entries(rowDefinition[row]).map(([tableName, tableItems]) => {
+          tempArr.push(tableItems);
+        })
+        compiledObject[sheet].push(tempArr);
+      })
+    })
+    
+    return {
+      metadata: metadataObject,
+      compiled: compiledObject,
+    };
+  }
+  
+  useEffect(() => {
+    let reqBean = createCompiledJson();
+    createReport(reqBean).then((res) => {
+      console.log(res);
+      if (res.code >= 400) {
+        return res.error;
+      }
+    });
+  }, [])
+
 
   const [jsonData, setJsonData] = useState({
     Simple: {
@@ -280,21 +385,34 @@ const Dashboard = () => {
     },
   });
 
-  // retrieve projects
-  useEffect(() => {
-    const retrieveProjects = async () => {
-      try {
-        let newProjects = await getAllProjects();
-        setAllProjects(newProjects);
-      } catch {
-        setAllProjects([]);
-      }
-    };
+  const retrieveProjects = async () => {
+    try {
+      let newProjects = await getAllProjects();
+      setAllProjects(newProjects);
+    } catch {
+      setAllProjects([]);
+    }
+  }
 
+  useEffect(() => {
     retrieveProjects();
   }, [setProject]);
 
-  // retrieve data
+  // retrieve storedData
+  const retrieveStoredData = async () => {
+    try {
+      const fileType = "json";
+      let newStoredData = await getAllReports(fileType);
+      console.log(newStoredData);
+      setStoredData(newStoredData);
+    } catch {
+      setStoredData({});
+    }
+  }
+
+  useEffect(() => {
+    retrieveStoredData();
+  }, [project])
 
   // retrieve reports
   useEffect(() => {
@@ -383,6 +501,7 @@ const Dashboard = () => {
         if (res.code >= 400) {
           return res.error;
         }
+        
 
         analyseJsonData(metadataObject).then((analyseRes) => {
           if (analyseRes.code >= 400) {
@@ -394,6 +513,7 @@ const Dashboard = () => {
           setJsonDataTypes(analyseRes.data.success);
           setPageType("sheets");
         });
+        retrieveStoredData();
       });
     });
   };
@@ -501,9 +621,10 @@ const Dashboard = () => {
         />
       )}
 
-      {pageType === "load" && <Load setPageType={setPageType} />}
-
+      {pageType === "load" && <Load storedData={storedData} setPageType={setPageType} sendRawJson={sendRawJson} project={project}/>}
+      
       {pageType === "download" && <Download setPageType={setPageType} />}
+
     </>
   );
 };

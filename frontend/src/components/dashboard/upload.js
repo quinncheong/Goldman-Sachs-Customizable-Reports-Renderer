@@ -69,18 +69,6 @@ export const Upload = ({
           marginTop: 2,
         }}
       >
-        <Button
-          sx={{ mr: 2 }}
-          endIcon={<UploadIcon fontSize="large" />}
-          variant="contained"
-          component="label"
-          disabled={!selectedTemplateType}
-        >
-          <Typography color="" variant="body2">
-            Upload JSON
-          </Typography>
-          <input type="file" onChange={sendRawJson} hidden multiple />
-        </Button>
 
         <Button
           sx={{ mr: 6 }}
@@ -91,7 +79,7 @@ export const Upload = ({
           onClick={(event) => {setPageType("load")}}
         >
           <Typography color="" variant="body2">
-            Load Existing Data
+            Load Data
           </Typography>
           {/* <input type="file" onChange={sendRawJson} hidden multiple /> */}
         </Button>
