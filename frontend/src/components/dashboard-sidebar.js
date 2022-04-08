@@ -48,7 +48,8 @@ const items = [
     title: "Data Files",
   },
   {
-    href: "/settings",
+    // href: "/settings",
+    href: "/format",
     icon: <CogIcon fontSize="small" />,
     title: "Settings",
   },
