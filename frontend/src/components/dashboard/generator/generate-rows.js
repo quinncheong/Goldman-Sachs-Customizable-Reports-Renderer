@@ -38,12 +38,6 @@ export const GenerateRows = ({ jsonName, data, ...props }) => {
     { field: "col3", headerName: "Data Size", width: 120 },
   ];
 
-  const handleStateChange = (gridState, e, details) => {
-    console.log(gridState);
-    console.log(e);
-    console.log(details);
-  };
-
   return (
     <form {...props}>
       <Card sx={{ width: "100%" }}>
@@ -62,7 +56,6 @@ export const GenerateRows = ({ jsonName, data, ...props }) => {
             checkboxSelection
             rows={rows}
             columns={columns}
-            onStateChange={handleStateChange}
           />
         </CardContent>
 

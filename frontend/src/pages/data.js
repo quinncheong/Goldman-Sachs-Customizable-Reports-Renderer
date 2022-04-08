@@ -9,7 +9,6 @@ import { getAllReports } from "../utils/backend-calls";
 
 const Data = () => {
   const router = useRouter();
-  console.log(router);
 
   const [storedData, setStoredData] = useState([]);
   // retrieve storedData

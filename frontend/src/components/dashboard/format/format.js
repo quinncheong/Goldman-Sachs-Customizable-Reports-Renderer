@@ -7,6 +7,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import { FormatElementTile } from "./format-element-tile";
 
 export const ReportFormat = ({
+  reportName,
   setPageType,
   sheets,
   sheetsDetails,
@@ -77,7 +78,7 @@ export const ReportFormat = ({
                           justifyContent: "flex-start",
                         }}
                       >
-                        <Typography variant="h1">Filename</Typography>
+                        <Typography variant="h1">Filename: {reportName}</Typography>
                       </Box>
                     </Grid>
                     <Grid item xs={12}>

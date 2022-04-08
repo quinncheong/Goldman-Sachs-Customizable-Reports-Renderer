@@ -56,7 +56,6 @@ export const Sheets = ({
     const reportName = e.target.value;
     setReportName(reportName);
 
-    console.log(reportName)
   };
 
   const handleSave = (e) => {

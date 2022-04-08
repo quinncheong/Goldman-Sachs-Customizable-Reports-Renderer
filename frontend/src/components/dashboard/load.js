@@ -42,7 +42,6 @@ export const Load = ({
   };
 
   const router = useRouter();
-  console.log(router);
 
   return (
     <>

@@ -10,7 +10,6 @@ import { customers } from "../__mocks__/customers";
 
 const Customers = () => {
   const router = useRouter();
-  console.log(router)
   
   return (
     <>

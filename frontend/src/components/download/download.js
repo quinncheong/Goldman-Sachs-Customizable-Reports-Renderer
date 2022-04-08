@@ -72,7 +72,7 @@ export const Download = ({setPageType, reportUrl, ...props}) => {
                     sx={{ 
                         mt: 3, 
                         mx: 1, 
-                        backgroundColor: teal[500],
+                        // backgroundColor: "#186ADE",
                         maxWidth: "150px",
                         maxHeight: "40px",
                         minWidth: "150px",

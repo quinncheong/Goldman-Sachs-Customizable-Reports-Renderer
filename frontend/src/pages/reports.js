@@ -9,7 +9,6 @@ import { getAllReports } from "../utils/backend-calls";
 
 const Reports = () => {
   const router = useRouter();
-  console.log(router);
   
   const [reports, setReports] = useState([]);
   // retrieve reports

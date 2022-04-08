@@ -27,7 +27,6 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const router = useRouter();
-  console.log(router);
 
   const getCurrentPath = () => {
     let path = router.asPath;

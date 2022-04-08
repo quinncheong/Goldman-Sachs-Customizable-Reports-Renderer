@@ -571,6 +571,7 @@ const Dashboard = () => {
 
       {pageType === "format" && (
         <ReportFormat
+          reportName={reportName}
           setPageType={setPageType}
           sheets={sheets}
           sheetsDetails={sheetsDetails}

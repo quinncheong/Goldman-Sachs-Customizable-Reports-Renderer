@@ -11,7 +11,6 @@ export const GenerateRows = ({
   tableId,
   ...props
 }) => {
-  console.log(datapoints);
 
   const handleStateChange = (selectedInputs) => {
     let compiledTablesClone = { ...compiledTables };
