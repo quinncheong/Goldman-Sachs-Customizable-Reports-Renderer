@@ -3,7 +3,7 @@ import { DateTime, Interval } from "luxon"
 
 import { createRequire } from "module"; // Bring in the ability to create the 'require' method
 const require = createRequire(import.meta.url); // construct the require method
-const jsonReportBodyTemplate = require("./data/standard_report_5_5_5.json") // use the require method
+const jsonReportBodyTemplate = require("./data/standard_report_10_10_10.json") // use the require method
 
 console.log(jsonReportBodyTemplate)
 
@@ -34,4 +34,4 @@ const make_batch_call = async (count) =>  {
     }
 }
 
-make_batch_call(10)
+make_batch_call(50)
