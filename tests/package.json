@@ -1,0 +1,20 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "upload_test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "luxon": "^2.3.2"
+  },
+  "devDependencies": {
+    "artillery": "^2.0.0-14"
+  }
+}

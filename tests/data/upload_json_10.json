@@ -1,0 +1,268 @@
+{
+    "metadata": { 
+        "project": 18,
+        "files": [
+                "json1.json",
+                "json2.json",
+                "json3.json",
+                "json4.json",
+                "json5.json",
+                "json6.json",
+                "json7.json",
+                "provided.json"
+        ]
+    },
+    "data": {
+        "json1.json": {
+            "rows": [
+                {
+                    "groupAccount": "132132",
+                    "outflow": 23854338,
+                    "assetCode": "100",
+                    "assetName": "クッキー",
+                    "daysOutflow": 10.40232405527246,
+                    "daysOutflowCalc": 7833894
+                },
+                {
+                    "groupAccount": "132132",
+                    "outflow": 0,
+                    "assetCode": "200",
+                    "assetName": "MONDAY(MON)",
+                    "daysOutflow": 0,
+                    "daysOutflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "outflow": 16540500,
+                    "assetCode": "300",
+                    "assetName": "チョコレート(CHOC)",
+                    "daysOutflow": 24,
+                    "daysOutflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "outflow": 0,
+                    "assetCode": "400",
+                    "assetName": "コーヒー(COF)",
+                    "daysOutflow": 0,
+                    "daysOutflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "outflow": 0,
+                    "assetCode": "500",
+                    "assetName": "PA(パイナップル)",
+                    "daysOutflow": 0,
+                    "daysOutflowCalc": 0
+                }
+            ]
+        },
+        "json2.json": {
+            "rows": [
+                {
+                "groupAccount": "132132",
+                "outflow": 23854338,
+                "assetCode": "100",
+                "assetName": "クッキー",
+                "daysOutflow": 10.40232405527246,
+                "daysOutflowCalc": 7833894
+                },
+                {
+                "groupAccount": "132132",
+                "outflow": 0,
+                "assetCode": "200",
+                "assetName": "MONDAY(MON)",
+                "daysOutflow": 0,
+                "daysOutflowCalc": 0
+                },
+                {
+                "groupAccount": "132132",
+                "outflow": 16540500,
+                "assetCode": "300",
+                "assetName": "チョコレート(CHOC)",
+                "daysOutflow": 24,
+                "daysOutflowCalc": 0
+                },
+                {
+                "groupAccount": "132132",
+                "outflow": 0,
+                "assetCode": "400",
+                "assetName": "コーヒー(COF)",
+                "daysOutflow": 0,
+                "daysOutflowCalc": 0
+                },
+                {
+                "groupAccount": "132132",
+                "outflow": 0,
+                "assetCode": "500",
+                "assetName": "PA(パイナップル)",
+                "daysOutflow": 0,
+                "daysOutflowCalc": 0
+                }
+            ]
+        },
+        "json3.json": {
+            "rows": [
+                {
+                    "groupAccount": "132132",
+                    "daysInflow": 24,
+                    "assetCode": "100",
+                    "reportDate_Day": 30,
+                    "assetName": "クッキー",
+                    "inflow": 16540500,
+                    "daysInflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "daysInflow": 15,
+                    "assetCode": "200",
+                    "reportDate_Day": 30,
+                    "assetName": "MONDAY(MON)",
+                    "inflow": 16020444,
+                    "daysInflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "daysInflow": 0,
+                    "assetCode": "300",
+                    "reportDate_Day": 30,
+                    "assetName": "チョコレート(CHOC)",
+                    "inflow": 0,
+                    "daysInflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "daysInflow": 0,
+                    "assetCode": "400",
+                    "reportDate_Day": 30,
+                    "assetName": "コーヒー(COF)",
+                    "inflow": 0,
+                    "daysInflowCalc": 0
+                },
+                {
+                    "groupAccount": "132132",
+                    "daysInflow": 0,
+                    "assetCode": "500",
+                    "reportDate_Day": 30,
+                    "assetName": "PA(パイナップル)",
+                    "inflow": 0,
+                    "daysInflowCalc": 0
+                }
+            ]
+        },
+        "json4.json": {
+            "rows": [
+                {
+                    "currentMonthNAV": 8060568,
+                    "groupAccount": "132132",
+                    "assetCode": "100",
+                    "exposure": 8060568,
+                    "assetName": "クッキー",
+                    "previousMonthNAV": 15386579,
+                    "compositionRate": 0.002542778584331914
+                },
+                {
+                    "currentMonthNAV": 1536697544,
+                    "groupAccount": "132132",
+                    "assetCode": "200",
+                    "exposure": 1536697544,
+                    "assetName": "MONDAY(MON)",
+                    "previousMonthNAV": 1517092239,
+                    "compositionRate": 0.4847650445326743
+                },
+                {
+                    "currentMonthNAV": 131622258,
+                    "groupAccount": "132132",
+                    "assetCode": "300",
+                    "exposure": 131622258,
+                    "assetName": "チョコレート(CHOC)",
+                    "previousMonthNAV": 146077741,
+                    "compositionRate": 0.04152142365945055
+                },
+                {
+                    "currentMonthNAV": 148841273,
+                    "groupAccount": "132132",
+                    "assetCode": "400",
+                    "exposure": 148841273,
+                    "assetName": "コーヒー(COF)",
+                    "previousMonthNAV": 144401851,
+                    "compositionRate": 0.0469533166209999
+                },
+                {
+                    "currentMonthNAV": 1344762582,
+                    "groupAccount": "132132",
+                    "assetCode": "500",
+                    "exposure": 1344762582,
+                    "assetName": "PA(パイナップル)",
+                    "previousMonthNAV": 1332687412,
+                    "compositionRate": 0.4242174366025433
+                }
+            ]
+        },
+        "json5.json": {
+            "rows": [
+                {
+                    "groupAccount": "132132",
+                    "totalTransDaysInflow": 0,
+                    "reportDate_Day": 30,
+                    "checkInflow": 32560944
+                }
+            ]
+        },
+        "json6.json": {
+            "rows": [
+                {
+                    "groupAccount": "132132",
+                    "checkOutflow": 40394838,
+                    "totalTransDaysOutflow": 7833894
+                }
+            ]
+        },
+        "json7.json": {
+            "rows": [
+                {
+                    "security_cd": "XY0000000001",
+                    "trade_ccy_cd": "USD",
+                    "securityDescription": "POLLPOLLOFFSHORE",
+                    "market_value_bs": 131622258
+                },
+                {
+                    "security_cd": "00ABC1111111111",
+                    "trade_ccy_cd": "JPY",
+                    "securityDescription": "ANEWCOMPANY1",
+                    "market_value_bs": 1344762582
+                },
+                {
+                    "security_cd": "1820MN444221",
+                    "trade_ccy_cd": "USD",
+                    "securityDescription": "APPLEPIE1010",
+                    "market_value_bs": 1561662185
+                },
+                {
+                    "security_cd": "LMB100100101",
+                    "trade_ccy_cd": "USD",
+                    "securityDescription": "OCEANWAVELP",
+                    "market_value_bs": 55714753
+                },
+                {
+                    "security_cd": "FG120012001",
+                    "trade_ccy_cd": "USD",
+                    "securityDescription": "JAMESANDCO1221",
+                    "market_value_bs": 93126520
+                }
+            ]
+        },
+        "provided.json": {
+            "rows": [
+                {
+                    " ": "Off-Balance Sheet Swaps(9)",
+                    "Previous Month-End Unrealized Gain/Loss(10)": " ",
+                    "Current Month-End Unrealized Gain/Loss(10)": " ",
+                    "Current Month Realized Gain/Loss": " ",
+                    "Current Month Unrealized Gain/Loss Increment(10)": 0,
+                    "Current Month Unrealized and Realized Gain/Loss": 0
+                }
+            ]
+        }
+    }
+}
