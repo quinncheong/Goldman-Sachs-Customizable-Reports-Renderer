@@ -12,13 +12,9 @@
 ### Customisable Report Rendering
 To design a system that streamlines the report generation process by having a highly customizable, scalable, intuitive and automated report rendering solution.
 
-### Constraints
-* The solution should not use vendor rendering products on the market.
-* We encourage implementation based on open-source projects. Java based solution is preferable.
-* The solution should allow concurrently rendering multiple reports. It is up-to participants to evaluate system performance and scalability.
-* The solution should allow similar reports sharing the same Excel template. A simple UI should be provided to Add/Delete/View templates.
-* The rendering request should be triggered over HTTP. JSON dataset should be retrieved over HTTP.
-
+<div align="center">
+  <img src="images/dashboard.png" alt="Dashboard" width="70%">
+</div>
 
 ## Built With
 
@@ -36,7 +32,7 @@ To design a system that streamlines the report generation process by having a hi
 * [Java Spring Boot](https://spring.io/)
 
 ## Our Solution
-
+![Setup](images/setup.gif)
 > Setting up a project
 
 ![Naming](images/naming.gif)
@@ -45,8 +41,10 @@ To design a system that streamlines the report generation process by having a hi
 ![Drag and drop](images/dnd.gif)
 > Drag and drop capabilities for organising tables on a sheet
 
+![Column selection](images/columns.gif)
 > Selecting columns for each respective table 
 
+![Output](images/output.gif)
 > Output Excel Report
 
 ### Architecture
