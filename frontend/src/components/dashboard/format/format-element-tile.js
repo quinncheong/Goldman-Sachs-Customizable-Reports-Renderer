@@ -216,7 +216,7 @@ export const FormatElementTile = ({
                                       mb: 2,
                                     }}
                                     onClick={() => {
-                                      const newState = [...state];
+                                      const newState = [...tableState];
                                       newState[ind].splice(index, 1);
                                       setTableState(newState.filter((group) => group.length));
                                     }}
