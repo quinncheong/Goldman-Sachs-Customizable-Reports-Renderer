@@ -39,14 +39,21 @@ To design a system that streamlines the report generation process by having a hi
 
 > Setting up a project
 
+![Naming](images/naming.gif)
 > File and sheets naming
 
+![Drag and drop](images/dnd.gif)
 > Drag and drop capabilities for organising tables on a sheet
 
 > Selecting columns for each respective table 
 
 > Output Excel Report
 
+### Architecture
+<div align="center">
+  <img src="images/sa.png" alt="Logo">
+</div>
+  
 ### Performance 
 
 Measured on a t2-medium AWS EC2 instance (4gb RAM, 30gb Memory)
