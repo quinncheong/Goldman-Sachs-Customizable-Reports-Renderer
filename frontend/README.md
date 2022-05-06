@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/dashboard.png" alt="dashboard" width="1179" height="669">
+  <img src="../images/dashboard.png" alt="dashboard">
 </div>
 
 > Dashboard made with [MUI's](https://mui.com/) components, [React](https://reactjs.org/) and of course [Next.js](https://nextjs.org/)!
