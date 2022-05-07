@@ -1,3 +1,5 @@
+<div id="top"></div>
+
 <div align="center">
   <img src="images/logo.png" alt="Logo">
 
@@ -5,6 +7,36 @@
     This outlines the codebase of our submission for Goldmans Sachs Engineering Engage 2021 Hackathon
   </p>
 </div>
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#customisable-report-rendering">Customisable Report Rendering</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#built-with">Built With</a>
+      <ul>
+        <li><a href="#frontend">Frontend</a></li>
+        <li><a href="#backend">Backend</a></li>
+        <li><a href="#api">API</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#our-solution">Our Solution</a>
+      <ul>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#performance">Performance</a></li>
+      </ul>
+    </li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -16,11 +48,16 @@ To design a system that streamlines the report generation process by having a hi
   <img src="images/dashboard.png" alt="Dashboard" width="70%">
 </div>
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Built With
 
 ### Frontend
 * [Material UI](https://mui.com/)
 * [React](https://reactjs.org/)
+
+### Backend
+* [Java Spring Boot](https://spring.io/)
 
 ### API 
 * [ExcelWriter](https://xlsxwriter.readthedocs.io/index.html#)
@@ -28,8 +65,8 @@ To design a system that streamlines the report generation process by having a hi
 * [Pandas](https://pandas.pydata.org/)
 * [Python](https://python.org/)
 
-### Backend
-* [Java Spring Boot](https://spring.io/)
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 ## Our Solution
 ![Setup](images/setup.gif)
@@ -47,10 +84,14 @@ To design a system that streamlines the report generation process by having a hi
 ![Output](images/output.gif)
 > Output Excel Report
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Architecture
 <div align="center">
   <img src="images/sa.png" alt="Logo">
 </div>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
   
 ### Performance 
 
@@ -63,6 +104,8 @@ Measured on a t2-medium AWS EC2 instance (4gb RAM, 30gb Memory)
 
 * Concurrent load scales well with small-sized, single sheet reports
 * Considerable load scalability with medium-sized reports
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
