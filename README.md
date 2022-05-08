@@ -69,19 +69,34 @@ To design a system that streamlines the report generation process by having a hi
 
 
 ## Our Solution
-![Setup](images/setup.gif)
+<div>
+  <img src="images/setup.gif" alt="setup" width="600px">
+</div>
+
 > Setting up a project
 
-![Naming](images/naming.gif)
+<div>
+  <img src="images/naming.gif" alt="naming" width="600px">
+</div>
+
 > File and sheets naming
 
-![Drag and drop](images/dnd.gif)
+<div>
+  <img src="images/dnd.gif" alt="dnd" width="600px">
+</div>
+
 > Drag and drop capabilities for organising tables on a sheet
 
-![Column selection](images/columns.gif)
+<div>
+  <img src="images/columns.gif" alt="columns" width="600px">
+</div>
+
 > Selecting columns for each respective table 
 
-![Output](images/output.gif)
+<div>
+  <img src="images/output.gif" alt="output" width="600px">
+</div>
+
 > Output Excel Report
 
 <p align="right">(<a href="#top">back to top</a>)</p>
