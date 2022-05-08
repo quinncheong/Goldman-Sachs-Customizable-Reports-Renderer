@@ -1,8 +1,8 @@
 <div id="top"></div>
 
 <div align="center">
-  <img src="images/logo.png" alt="Logo">
-
+  <img src="images/logo.png" alt="Logo" width="100px">
+  <h3 align="center">Bulletin by Goldman Sachs</h3>
   <p align="center">
     This outlines the codebase of our submission for Goldmans Sachs Engineering Engage 2021 Hackathon
   </p>
